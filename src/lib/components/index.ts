@@ -2,6 +2,7 @@
 export { default as SkipLink } from './SkipLink.svelte';
 
 // UI components
+export { default as GridPattern } from './GridPattern.svelte';
 export { default as NumberCounter } from './NumberCounter.svelte';
 export { default as ProgressBar } from './ProgressBar.svelte';
 export { default as ShimmerText } from './ShimmerText.svelte';
