@@ -27,3 +27,4 @@ export { default as LogEntrySkeleton } from './LogEntrySkeleton.svelte';
 
 // Interactive components
 export { default as SwipeableItem } from './SwipeableItem.svelte';
+export { default as PullToRefresh } from './PullToRefresh.svelte';
