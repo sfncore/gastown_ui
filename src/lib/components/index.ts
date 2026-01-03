@@ -14,6 +14,7 @@ export type { StatusIndicatorProps } from './StatusIndicator.svelte';
 // Layout components
 export { default as AgentDetailLayout } from './AgentDetailLayout.svelte';
 export { default as DashboardLayout } from './DashboardLayout.svelte';
+export { default as LogsLayout } from './LogsLayout.svelte';
 export { default as QueueLayout } from './QueueLayout.svelte';
 export { default as WorkflowLayout } from './WorkflowLayout.svelte';
 
