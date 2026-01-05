@@ -35,6 +35,7 @@ export function prefersReducedMotion(): boolean {
 /**
  * Apply stagger delays to children of a container.
  * Handles items beyond the 8 that CSS nth-child covers.
+ * Uses requestAnimationFrame to batch DOM writes and prevent layout thrashing.
  *
  * @param container - The parent element with .stagger class
  * @param delayMs - Delay between each item (default: 50ms)
@@ -45,31 +46,40 @@ export function applyStaggerDelays(
 ): void {
 	if (prefersReducedMotion()) return;
 
-	const children = container.children;
+	// Batch DOM writes in a single animation frame to prevent layout thrashing
+	requestAnimationFrame(() => {
+		const children = container.children;
+		const length = children.length;
 
-	// Only need to handle items 9+ (0-indexed: 8+)
-	// Items 1-8 are handled by CSS nth-child selectors
-	for (let i = 8; i < children.length; i++) {
-		const child = children[i] as HTMLElement;
-		child.style.setProperty('--stagger-delay', `${i * delayMs}ms`);
-	}
+		// Only need to handle items 9+ (0-indexed: 8+)
+		// Items 1-8 are handled by CSS nth-child selectors
+		for (let i = 8; i < length; i++) {
+			const child = children[i] as HTMLElement;
+			child.style.setProperty('--stagger-delay', `${i * delayMs}ms`);
+		}
+	});
 }
 
 /**
- * Clear stagger delays from children
+ * Clear stagger delays from children.
+ * Uses requestAnimationFrame to batch DOM writes and prevent layout thrashing.
  *
  * @param container - The parent element
  */
 export function clearStaggerDelays(container: HTMLElement): void {
-	const children = container.children;
-	for (let i = 0; i < children.length; i++) {
-		const child = children[i] as HTMLElement;
-		child.style.removeProperty('--stagger-delay');
-	}
+	requestAnimationFrame(() => {
+		const children = container.children;
+		const length = children.length;
+		for (let i = 0; i < length; i++) {
+			const child = children[i] as HTMLElement;
+			child.style.removeProperty('--stagger-delay');
+		}
+	});
 }
 
 /**
- * Svelte action for applying stagger delays
+ * Svelte action for applying stagger delays.
+ * Uses debounced MutationObserver to prevent layout thrashing from rapid updates.
  *
  * @example
  * <ul use:stagger>
@@ -85,26 +95,39 @@ export function stagger(
 	node: HTMLElement,
 	options: { delay?: number } = {}
 ): { update: (options: { delay?: number }) => void; destroy: () => void } {
-	const delay = options.delay ?? STAGGER_DELAY;
+	let currentDelay = options.delay ?? STAGGER_DELAY;
+	let rafId: number | null = null;
 
 	// Initial application
-	applyStaggerDelays(node, delay);
+	applyStaggerDelays(node, currentDelay);
+
+	// Debounced handler to prevent rapid re-application
+	const handleMutation = () => {
+		// Cancel any pending RAF to debounce rapid mutations
+		if (rafId !== null) {
+			cancelAnimationFrame(rafId);
+		}
+		rafId = requestAnimationFrame(() => {
+			applyStaggerDelays(node, currentDelay);
+			rafId = null;
+		});
+	};
 
 	// Set up mutation observer to handle dynamic content
-	const observer = new MutationObserver(() => {
-		applyStaggerDelays(node, delay);
-	});
-
+	const observer = new MutationObserver(handleMutation);
 	observer.observe(node, { childList: true });
 
 	return {
 		update(newOptions: { delay?: number }) {
-			const newDelay = newOptions.delay ?? STAGGER_DELAY;
+			currentDelay = newOptions.delay ?? STAGGER_DELAY;
 			clearStaggerDelays(node);
-			applyStaggerDelays(node, newDelay);
+			applyStaggerDelays(node, currentDelay);
 		},
 		destroy() {
 			observer.disconnect();
+			if (rafId !== null) {
+				cancelAnimationFrame(rafId);
+			}
 			clearStaggerDelays(node);
 		}
 	};

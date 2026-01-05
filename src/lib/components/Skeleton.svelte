@@ -4,9 +4,10 @@
 
 	/**
 	 * Skeleton loading variant definitions using tailwind-variants
+	 * Uses shimmer-effect class for GPU-accelerated animation (transform instead of backgroundPosition)
 	 */
 	const skeletonVariants = tv({
-		base: 'bg-muted animate-shimmer bg-gradient-to-r from-muted via-muted/50 to-muted bg-[length:200%_100%] motion-reduce:animate-none motion-reduce:bg-muted/80',
+		base: 'shimmer-effect motion-reduce:bg-muted/80 motion-reduce:[&::after]:hidden',
 		variants: {
 			type: {
 				text: 'h-4 rounded',

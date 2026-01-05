@@ -4,12 +4,13 @@
 
 	/**
 	 * Status indicator variant definitions using tailwind-variants
+	 * Uses glow-pulse-effect for GPU-accelerated glow animation (opacity instead of box-shadow)
 	 */
 	const statusVariants = tv({
 		base: 'w-2 h-2 rounded-full inline-block flex-shrink-0',
 		variants: {
 			status: {
-				running: 'bg-status-online animate-glow-pulse',
+				running: 'bg-status-online glow-pulse-effect',
 				idle: 'bg-status-idle',
 				error: 'bg-status-offline animate-shake',
 				warning: 'bg-status-pending',

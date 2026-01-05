@@ -378,6 +378,94 @@
 	}
 }
 
+/* === Animation Performance: will-change hints === */
+/* Applied judiciously to animated elements for compositor layer promotion */
+@layer utilities {
+	/* Blur-fade animations: promote to compositor layer during animation */
+	.animate-blur-fade-up,
+	.animate-blur-fade-down,
+	.animate-blur-fade-left,
+	.animate-blur-fade-right {
+		will-change: transform, opacity;
+	}
+
+	/* Scale animations */
+	.animate-scale-in,
+	.animate-scale-out {
+		will-change: transform, opacity;
+	}
+
+	/* Slide animations */
+	.animate-slide-in-up,
+	.animate-slide-in-down,
+	.animate-slide-in-left,
+	.animate-slide-in-right {
+		will-change: transform, opacity;
+	}
+
+	/* Spin animation */
+	.animate-spin,
+	.animate-spin-slow,
+	.animate-spin-fast {
+		will-change: transform;
+	}
+
+	/* Remove will-change after animation completes to free memory */
+	/* For one-shot animations, use animation-fill-mode: forwards and JS cleanup */
+}
+
+/* === Performant Glow Pulse Effect === */
+/* Uses opacity (composited) instead of animating box-shadow (triggers repaint) */
+@layer components {
+	.glow-pulse-effect {
+		position: relative;
+		/* Set color for the glow to inherit from */
+		color: hsl(var(--status-online));
+	}
+
+	.glow-pulse-effect::before {
+		content: '';
+		position: absolute;
+		inset: -4px;
+		border-radius: inherit;
+		background: currentColor;
+		filter: blur(8px);
+		animation: glow-pulse 2s ease-in-out infinite;
+		will-change: opacity;
+		z-index: -1;
+	}
+
+	/* Primary color glow variant */
+	.glow-pulse-effect-primary {
+		color: hsl(var(--primary));
+	}
+}
+
+/* === Performant Shimmer Effect === */
+/* Uses transform (composited) instead of backgroundPosition (triggers repaint) */
+@layer components {
+	.shimmer-effect {
+		position: relative;
+		overflow: hidden;
+		background: hsl(var(--muted));
+	}
+
+	.shimmer-effect::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			hsl(var(--muted-foreground) / 0.1) 50%,
+			transparent 100%
+		);
+		transform: translateX(-100%);
+		animation: shimmer 2s infinite linear;
+		will-change: transform;
+	}
+}
+
 /* === Reduced Motion Preference === */
 @media (prefers-reduced-motion: reduce) {
 	*,
@@ -416,15 +504,29 @@
 	}
 
 	/* Disable shimmer effect */
-	.animate-shimmer {
+	.animate-shimmer,
+	.shimmer-effect::after {
 		animation: none !important;
-		background-position: 0% 0% !important;
+		transform: none !important;
+	}
+
+	/* Hide shimmer overlay in reduced motion */
+	.shimmer-effect::after {
+		display: none !important;
 	}
 
 	/* Replace glow pulse with static glow */
-	.animate-glow-pulse {
+	.animate-glow-pulse,
+	.glow-pulse-effect::before {
 		animation: none !important;
-		box-shadow: 0 0 20px 0 hsl(var(--primary) / 0.3) !important;
+		opacity: 0.7 !important;
+	}
+
+	/* Remove will-change in reduced motion (no animations = no need for layer promotion) */
+	[class*="animate-"],
+	.shimmer-effect::after,
+	.glow-pulse-effect::before {
+		will-change: auto !important;
 	}
 }
 

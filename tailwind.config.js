@@ -168,26 +168,28 @@ export default {
 					'50%': { backgroundPosition: '50% 100%' }
 				},
 
+				// Performance-optimized: uses transform instead of backgroundPosition
 				'shimmer': {
-					'0%': { backgroundPosition: '-200% 0' },
-					'100%': { backgroundPosition: '200% 0' }
+					'0%': { transform: 'translateX(-100%)' },
+					'100%': { transform: 'translateX(100%)' }
 				},
 
+				// Performance-optimized: uses only transform/opacity (composited properties)
 				'blur-fade-up': {
-					'0%': { opacity: '0', transform: 'translateY(20px)', filter: 'blur(10px)' },
-					'100%': { opacity: '1', transform: 'translateY(0)', filter: 'blur(0)' }
+					'0%': { opacity: '0', transform: 'translateY(20px) scale(0.98)' },
+					'100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
 				},
 				'blur-fade-down': {
-					'0%': { opacity: '0', transform: 'translateY(-20px)', filter: 'blur(10px)' },
-					'100%': { opacity: '1', transform: 'translateY(0)', filter: 'blur(0)' }
+					'0%': { opacity: '0', transform: 'translateY(-20px) scale(0.98)' },
+					'100%': { opacity: '1', transform: 'translateY(0) scale(1)' }
 				},
 				'blur-fade-left': {
-					'0%': { opacity: '0', transform: 'translateX(20px)', filter: 'blur(10px)' },
-					'100%': { opacity: '1', transform: 'translateX(0)', filter: 'blur(0)' }
+					'0%': { opacity: '0', transform: 'translateX(20px) scale(0.98)' },
+					'100%': { opacity: '1', transform: 'translateX(0) scale(1)' }
 				},
 				'blur-fade-right': {
-					'0%': { opacity: '0', transform: 'translateX(-20px)', filter: 'blur(10px)' },
-					'100%': { opacity: '1', transform: 'translateX(0)', filter: 'blur(0)' }
+					'0%': { opacity: '0', transform: 'translateX(-20px) scale(0.98)' },
+					'100%': { opacity: '1', transform: 'translateX(0) scale(1)' }
 				},
 
 				'grid-pulse': {
@@ -200,9 +202,10 @@ export default {
 					'100%': { backgroundPosition: '200% 0%' }
 				},
 
+				// Performance-optimized: uses opacity instead of animating box-shadow
 				'glow-pulse': {
-					'0%, 100%': { boxShadow: '0 0 20px 0 hsl(var(--primary) / 0.3)' },
-					'50%': { boxShadow: '0 0 40px 10px hsl(var(--primary) / 0.5)' }
+					'0%, 100%': { opacity: '0.5' },
+					'50%': { opacity: '1' }
 				},
 
 				'pulse-status': {
