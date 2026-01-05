@@ -97,8 +97,9 @@
 					{#each data.convoys as convoy (convoy.id)}
 						{@const config = statusConfig[convoy.status]}
 						{@const isExpanded = expanded.has(convoy.id)}
-						<article
-							class="panel-glass p-4 transition-all duration-200 hover:shadow-lg hover:border-accent/50 {config.borderClass}"
+						<a
+							href="/convoys/{convoy.id}"
+							class="block panel-glass p-4 transition-all duration-200 hover:shadow-lg hover:border-accent/50 {config.borderClass}"
 						>
 							<!-- Header -->
 							<header class="flex items-start justify-between gap-3">
@@ -189,7 +190,7 @@
 									</div>
 								{/if}
 							{/if}
-						</article>
+						</a>
 					{/each}
 				</div>
 			{/if}
