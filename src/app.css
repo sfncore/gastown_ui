@@ -158,24 +158,24 @@
 	.popover-glass {
 		@apply bg-popover/85 backdrop-blur-xl border border-border rounded-lg shadow-lg;
 	}
-}
 
-/* Fallback for browsers without backdrop-filter support */
-@supports not (backdrop-filter: blur(1px)) {
-	.panel-glass {
-		@apply bg-background/95 border border-border rounded-lg;
-	}
+	/* Fallback for browsers without backdrop-filter support (checks both standard and webkit) */
+	@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+		.panel-glass {
+			@apply bg-background/95 border border-border rounded-lg;
+		}
 
-	.panel-glass-strong {
-		@apply bg-background border border-border rounded-lg;
-	}
+		.panel-glass-strong {
+			@apply bg-background border border-border rounded-lg;
+		}
 
-	.card-glass {
-		@apply bg-card/95 border border-border rounded-lg shadow-md;
-	}
+		.card-glass {
+			@apply bg-card/95 border border-border rounded-lg shadow-md;
+		}
 
-	.popover-glass {
-		@apply bg-popover/95 border border-border rounded-lg shadow-lg;
+		.popover-glass {
+			@apply bg-popover/95 border border-border rounded-lg shadow-lg;
+		}
 	}
 }
 
