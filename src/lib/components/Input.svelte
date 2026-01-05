@@ -1,26 +1,26 @@
-<script lang="ts">
+<script lang="ts" module>
 	import { tv, type VariantProps } from 'tailwind-variants';
-	import { cn } from '$lib/utils';
 
 	/**
-	 * Industrial-style input component with icon prefix, corner accents,
-	 * password visibility toggle, and validation states.
+	 * Input variant definitions using tailwind-variants
+	 * Follows shadcn/ui patterns with extended features for labels, icons, and validation
 	 */
-	const inputVariants = tv({
+	export const inputVariants = tv({
 		slots: {
 			wrapper: 'relative w-full',
 			label: 'block text-sm font-medium text-foreground mb-1.5',
 			container: [
-				'relative flex items-center w-full',
-				'bg-input border border-border rounded-lg',
-				'transition-all duration-200 ease-out',
-				'focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/20'
+				'relative flex items-center w-full h-10',
+				'bg-background border border-input rounded-md',
+				'transition-colors duration-150',
+				'has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-2'
 			],
 			input: [
-				'flex-1 w-full bg-transparent text-foreground placeholder:text-muted-foreground',
-				'text-sm outline-none',
-				'py-2.5 px-3',
-				'disabled:cursor-not-allowed disabled:opacity-50'
+				'flex-1 h-full w-full bg-transparent text-foreground placeholder:text-muted-foreground',
+				'text-sm px-3 py-2',
+				'focus-visible:outline-none',
+				'disabled:cursor-not-allowed disabled:opacity-50',
+				'file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground'
 			],
 			iconWrapper: 'flex items-center justify-center text-muted-foreground pl-3',
 			actionWrapper: 'flex items-center justify-center pr-2',
@@ -41,16 +41,19 @@
 			},
 			size: {
 				sm: {
-					input: 'py-1.5 px-2.5 text-xs',
+					container: 'h-9',
+					input: 'px-2.5 text-xs',
 					iconWrapper: 'pl-2.5',
 					label: 'text-xs'
 				},
 				md: {
-					input: 'py-2.5 px-3 text-sm',
+					container: 'h-10',
+					input: 'px-3 text-sm',
 					iconWrapper: 'pl-3'
 				},
 				lg: {
-					input: 'py-3 px-4 text-base',
+					container: 'h-11',
+					input: 'px-4 text-base',
 					iconWrapper: 'pl-4',
 					label: 'text-base'
 				}
@@ -58,11 +61,11 @@
 			validationState: {
 				default: {},
 				error: {
-					container: 'border-destructive focus-within:border-destructive focus-within:ring-destructive/20',
+					container: 'border-destructive has-[:focus-visible]:ring-destructive/20',
 					helperText: 'text-destructive'
 				},
 				success: {
-					container: 'border-status-online focus-within:border-status-online focus-within:ring-status-online/20',
+					container: 'border-status-online has-[:focus-visible]:ring-status-online/20',
 					helperText: 'text-status-online'
 				}
 			},
@@ -90,9 +93,26 @@
 
 	type InputVariantProps = VariantProps<typeof inputVariants>;
 
-	interface Props extends InputVariantProps {
-		// Core props
-		type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search';
+	export interface InputProps {
+		type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'file';
+		variant?: InputVariantProps['variant'];
+		size?: InputVariantProps['size'];
+		validationState?: InputVariantProps['validationState'];
+		label?: string;
+		helperText?: string;
+		errorMessage?: string;
+		disabled?: boolean;
+		required?: boolean;
+		class?: string;
+	}
+</script>
+
+<script lang="ts">
+	import { cn } from '$lib/utils';
+
+	interface Props extends Omit<InputVariantProps, keyof InputProps>, InputProps {
+		// Core props (file type added for file uploads)
+		type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'url' | 'search' | 'file';
 		value?: string;
 		placeholder?: string;
 		name?: string;
