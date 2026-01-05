@@ -1,42 +1,133 @@
-import type { Handle } from '@sveltejs/kit';
+/**
+ * Server Hooks
+ *
+ * Handles server-side request processing:
+ * - Session extraction from HttpOnly cookies
+ * - Security headers (CSP, HSTS, etc.)
+ * - Request authentication
+ */
 
+import type { Handle } from '@sveltejs/kit';
+import { getAccessToken, getRefreshToken } from '$lib/auth/cookies';
+import type { SessionData } from '$lib/auth/types';
+
+// Extend App.Locals with session data
+declare global {
+	namespace App {
+		interface Locals {
+			session: SessionData;
+		}
+	}
+}
+
+/**
+ * Content Security Policy directives
+ */
 const CSP_DIRECTIVES = [
 	"default-src 'self'",
-	"script-src 'self' 'unsafe-inline'",
+	"script-src 'self' 'unsafe-inline'", // unsafe-inline needed for Svelte
 	"style-src 'self' 'unsafe-inline'",
-	"connect-src 'self' wss:",
-	"img-src 'self' data:",
+	"img-src 'self' data: https:",
 	"font-src 'self'",
-	"frame-ancestors 'none'"
-].join('; ');
+	"connect-src 'self' wss:",
+	"frame-ancestors 'none'",
+	"base-uri 'self'",
+	"form-action 'self'"
+];
 
-const securityHeaders = {
+/**
+ * Security headers applied to all responses
+ */
+const SECURITY_HEADERS: Record<string, string> = {
+	'Content-Security-Policy': CSP_DIRECTIVES.join('; '),
 	'X-Frame-Options': 'DENY',
 	'X-Content-Type-Options': 'nosniff',
+	'X-XSS-Protection': '1; mode=block',
 	'Referrer-Policy': 'strict-origin-when-cross-origin',
 	'Permissions-Policy': 'camera=(), microphone=(), geolocation=()'
 };
 
-const hstsHeader = {
-	'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload'
-};
+/**
+ * HSTS header (production only)
+ */
+const HSTS_HEADER = 'max-age=31536000; includeSubDomains; preload';
 
+/**
+ * Decode JWT payload without verification
+ * Note: Actual verification should happen with your auth backend
+ */
+function decodeJwtPayload(token: string): Record<string, unknown> | null {
+	try {
+		const parts = token.split('.');
+		if (parts.length !== 3) return null;
+
+		const payload = parts[1];
+		const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+		return JSON.parse(decoded);
+	} catch {
+		return null;
+	}
+}
+
+/**
+ * Extract session from cookies
+ */
+function extractSession(cookies: import('@sveltejs/kit').Cookies): SessionData {
+	const accessToken = getAccessToken(cookies);
+	const refreshToken = getRefreshToken(cookies);
+
+	if (!accessToken) {
+		return {
+			user: null,
+			accessToken: null,
+			refreshToken: null,
+			expiresAt: null
+		};
+	}
+
+	// Decode token to get user info
+	const payload = decodeJwtPayload(accessToken);
+
+	if (!payload) {
+		return {
+			user: null,
+			accessToken: null,
+			refreshToken: null,
+			expiresAt: null
+		};
+	}
+
+	return {
+		user: {
+			id: String(payload.sub ?? ''),
+			email: String(payload.email ?? ''),
+			name: payload.name as string | undefined,
+			roles: payload.roles as string[] | undefined
+		},
+		accessToken,
+		refreshToken,
+		expiresAt: payload.exp ? Number(payload.exp) * 1000 : null
+	};
+}
+
+/**
+ * Main request handler
+ */
 export const handle: Handle = async ({ event, resolve }) => {
+	// Extract session from cookies
+	event.locals.session = extractSession(event.cookies);
+
+	// Resolve the request
 	const response = await resolve(event);
 
-	// Apply CSP
-	response.headers.set('Content-Security-Policy', CSP_DIRECTIVES);
-
-	// Apply security headers
-	for (const [key, value] of Object.entries(securityHeaders)) {
-		response.headers.set(key, value);
+	// Add security headers
+	for (const [header, value] of Object.entries(SECURITY_HEADERS)) {
+		response.headers.set(header, value);
 	}
 
 	// Apply HSTS only in production
 	if (import.meta.env.PROD) {
-		for (const [key, value] of Object.entries(hstsHeader)) {
-			response.headers.set(key, value);
-		}
+		response.headers.set('Strict-Transport-Security', HSTS_HEADER);
 	}
 
 	return response;

@@ -31,3 +31,19 @@ export {
 	type ServiceWorkerRegistrationResult
 } from './serviceWorker';
 export * as sw from './sw';
+
+// Export auth utilities (client-side only)
+export {
+	createAuthStore,
+	initializeAuth,
+	login,
+	logout,
+	refreshToken,
+	getAuthState,
+	isAuthenticated,
+	getUser,
+	type User,
+	type AuthState,
+	type LoginCredentials,
+	type AuthResponse
+} from './auth';
