@@ -16,14 +16,30 @@
 	let escalationCount = $state(0);
 
 	// Navigation items for bottom nav (reactive for badge updates)
+	// Grouped: Core → Operations → Communication → Monitoring → System
+	// Primary items shown in bottom nav: Dashboard, Work, Agents, Mail + More
 	const navItems = $derived([
+		// Core (primary visibility)
 		{ id: 'dashboard', label: 'Dashboard', href: '/', icon: '🏠' },
-		{ id: 'agents', label: 'Agents', href: '/agents', icon: '🤖' },
 		{ id: 'work', label: 'Work', href: '/work', icon: '🎯' },
-		{ id: 'convoys', label: 'Convoys', href: '/convoys', icon: '🚛' },
-		{ id: 'queue', label: 'Queue', href: '/queue', icon: '📋' },
+		{ id: 'agents', label: 'Agents', href: '/agents', icon: '🤖' },
 		{ id: 'mail', label: 'Mail', href: '/mail', icon: '📬', badge: unreadMail || undefined },
+		// Core (in overflow)
+		{ id: 'queue', label: 'Queue', href: '/queue', icon: '📋' },
+		// Operations
+		{ id: 'convoys', label: 'Convoys', href: '/convoys', icon: '🚛' },
+		{ id: 'workflows', label: 'Workflows', href: '/workflows', icon: '⚗️' },
+		{ id: 'rigs', label: 'Rigs', href: '/rigs', icon: '🏭' },
+		// Communication
 		{ id: 'escalations', label: 'Alerts', href: '/escalations', icon: '🚨', badge: escalationCount || undefined },
+		// Monitoring
+		{ id: 'health', label: 'Health', href: '/health', icon: '🩺' },
+		{ id: 'activity', label: 'Activity', href: '/activity', icon: '📊' },
+		{ id: 'watchdog', label: 'Watchdog', href: '/watchdog', icon: '🐺' },
+		// System
+		{ id: 'crew', label: 'Crew', href: '/crew', icon: '👷' },
+		{ id: 'dogs', label: 'Dogs', href: '/dogs', icon: '🐕' },
+		{ id: 'settings', label: 'Settings', href: '/settings', icon: '⚙️' },
 		{ id: 'logs', label: 'Logs', href: '/logs', icon: '📜' }
 	]);
 
