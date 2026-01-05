@@ -2,6 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+/**
+ * Gas Town Design System - CSS Custom Properties
+ *
+ * This file implements shadcn/ui design tokens for SvelteKit.
+ * All colors use HSL format without the hsl() wrapper for Tailwind alpha support.
+ *
+ * Token Categories:
+ * ─────────────────────────────────────────────────────────────────────────────
+ * CORE SEMANTIC (shadcn standard):
+ *   --background, --foreground      Base surface and text colors
+ *   --card, --card-foreground       Card surfaces
+ *   --popover, --popover-foreground Floating elements
+ *   --primary, --primary-foreground Brand/action color
+ *   --secondary, --secondary-foreground Secondary actions
+ *   --muted, --muted-foreground     Subtle backgrounds/text
+ *   --accent, --accent-foreground   Highlights/hover states
+ *   --destructive, --destructive-foreground Error/danger states
+ *   --border                        Default border color
+ *   --input                         Form input borders
+ *   --ring                          Focus ring color
+ *   --radius                        Default border radius
+ *
+ * EXTENDED (Gas Town specific):
+ *   --success, --warning, --info    Semantic feedback colors
+ *   --status-online/offline/pending/idle  Agent status indicators
+ *   --shadow-*                      Elevation shadows
+ *   --duration-*, --ease-*          Animation tokens
+ *   --space-*                       Spacing scale (4px grid)
+ *   --touch-target-min              WCAG 2.5.5 touch target (48px)
+ *
+ * Theme Switching:
+ *   Light theme: :root selector
+ *   Dark theme: .dark class (toggled via JS)
+ *
+ * Usage in Components:
+ *   - Use Tailwind classes: bg-background, text-foreground, border-border
+ *   - Or CSS: background: hsl(var(--background));
+ *   - Never use hardcoded hex/rgb values in components
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+
 @layer base {
 	:root {
 		/* === Gas Town Design System === */
