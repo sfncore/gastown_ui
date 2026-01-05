@@ -210,12 +210,23 @@
 											<pre
 												class="whitespace-pre-wrap text-sm text-foreground bg-muted/30 p-4 rounded-md font-mono">{message.body}</pre>
 										</div>
-										<div class="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
-											<span>From: {message.from}</span>
-											<span>ID: {message.id}</span>
-											{#if message.threadId}
-												<span>Thread: {message.threadId.slice(-8)}</span>
-											{/if}
+										<div class="mt-3 flex items-center justify-between">
+											<div class="flex items-center gap-4 text-xs text-muted-foreground">
+												<span>From: {message.from}</span>
+												<span>ID: {message.id}</span>
+												{#if message.threadId}
+													<span>Thread: {message.threadId.slice(-8)}</span>
+												{/if}
+											</div>
+											<a
+												href="/mail/{message.id}"
+												class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-accent hover:text-accent/80 bg-accent/10 hover:bg-accent/20 rounded-md transition-colors"
+											>
+												View full message
+												<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+												</svg>
+											</a>
 										</div>
 									</div>
 								{/if}
