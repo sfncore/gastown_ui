@@ -1,11 +1,10 @@
-<script lang="ts">
+<script context="module" lang="ts">
 	import { tv, type VariantProps } from 'tailwind-variants';
-	import { cn } from '$lib/utils';
 
 	/**
 	 * LogEntry variant definitions using tailwind-variants
 	 */
-	const logEntryVariants = tv({
+	export const logEntryVariants = tv({
 		base: 'flex items-start gap-3 py-2 px-3 border-b border-border animate-blur-fade-up',
 		variants: {
 			level: {
@@ -19,6 +18,20 @@
 			level: 'INF'
 		}
 	});
+
+	/**
+	 * Props type derived from variant definitions
+	 */
+	export type LogEntryProps = VariantProps<typeof logEntryVariants> & {
+		timestamp: string;
+		message: string;
+		delay?: number;
+		class?: string;
+	};
+</script>
+
+<script lang="ts">
+	import { cn } from '$lib/utils';
 
 	/**
 	 * Badge variant definitions for log levels
@@ -37,16 +50,6 @@
 			level: 'INF'
 		}
 	});
-
-	/**
-	 * Props type derived from variant definitions
-	 */
-	export type LogEntryProps = VariantProps<typeof logEntryVariants> & {
-		timestamp: string;
-		message: string;
-		delay?: number;
-		class?: string;
-	};
 
 	// Component props
 	let {

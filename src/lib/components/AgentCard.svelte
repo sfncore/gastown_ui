@@ -1,13 +1,10 @@
-<script lang="ts">
+<script context="module" lang="ts">
 	import { tv, type VariantProps } from 'tailwind-variants';
-	import { cn } from '$lib/utils';
-	import StatusIndicator from './StatusIndicator.svelte';
-	import ProgressBar from './ProgressBar.svelte';
 
 	/**
 	 * AgentCard variant definitions using tailwind-variants
 	 */
-	const agentCardVariants = tv({
+	export const agentCardVariants = tv({
 		base: 'panel-glass p-4 space-y-3 transition-all duration-200 hover:shadow-lg hover:border-accent/50',
 		variants: {
 			status: {
@@ -32,6 +29,12 @@
 		progress?: number;
 		class?: string;
 	};
+</script>
+
+<script lang="ts">
+	import { cn } from '$lib/utils';
+	import StatusIndicator from './StatusIndicator.svelte';
+	import ProgressBar from './ProgressBar.svelte';
 
 	// Component props
 	let {

@@ -1,11 +1,10 @@
-<script lang="ts">
+<script context="module" lang="ts">
 	import { tv, type VariantProps } from 'tailwind-variants';
-	import { cn } from '$lib/utils';
 
 	/**
 	 * ShimmerText variant definitions using tailwind-variants
 	 */
-	const shimmerTextVariants = tv({
+	export const shimmerTextVariants = tv({
 		base: 'inline-block bg-clip-text text-transparent bg-[length:200%_100%]',
 		variants: {
 			shimmer: {
@@ -34,6 +33,10 @@
 		text: string;
 		class?: string;
 	};
+</script>
+
+<script lang="ts">
+	import { cn } from '$lib/utils';
 
 	// Component props
 	let {

@@ -1,11 +1,10 @@
-<script lang="ts">
+<script context="module" lang="ts">
 	import { tv, type VariantProps } from 'tailwind-variants';
-	import { cn } from '$lib/utils';
 
 	/**
 	 * GridPattern variant definitions using tailwind-variants
 	 */
-	const gridPatternVariants = tv({
+	export const gridPatternVariants = tv({
 		base: 'absolute inset-0 pointer-events-none z-0',
 		variants: {
 			variant: {
@@ -31,6 +30,10 @@
 		opacity?: number;
 		color?: string;
 	};
+</script>
+
+<script lang="ts">
+	import { cn } from '$lib/utils';
 
 	// Component props
 	let {
