@@ -27,6 +27,9 @@
 		return segment || 'dashboard';
 	});
 
+	// Hide nav on certain routes (login, etc.)
+	const hideNav = $derived($page.url.pathname === '/login');
+
 	// Preload routes on hover for instant navigation
 	function handleNavHover(href: string) {
 		preloadRoute(href);
@@ -45,21 +48,23 @@
 <Announcer />
 
 <!-- Main content area -->
-<div id="main-content" tabindex="-1" class="min-h-screen pb-20 md:pb-0">
+<div id="main-content" tabindex="-1" class="min-h-screen {hideNav ? '' : 'pb-20 md:pb-0'}">
 	{@render children()}
 </div>
 
 <!-- Bottom navigation (mobile) with preload on hover -->
-<nav class="md:hidden">
-	{#each navItems as item}
-		<a
-			href={item.href}
-			class="sr-only"
-			onmouseenter={() => handleNavHover(item.href)}
-			onfocus={() => handleNavHover(item.href)}
-		>
-			{item.label}
-		</a>
-	{/each}
-</nav>
-<BottomNav items={navItems} {activeId} />
+{#if !hideNav}
+	<nav class="md:hidden">
+		{#each navItems as item}
+			<a
+				href={item.href}
+				class="sr-only"
+				onmouseenter={() => handleNavHover(item.href)}
+				onfocus={() => handleNavHover(item.href)}
+			>
+				{item.label}
+			</a>
+		{/each}
+	</nav>
+	<BottomNav items={navItems} {activeId} />
+{/if}
