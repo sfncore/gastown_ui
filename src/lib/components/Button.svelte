@@ -1,94 +1,96 @@
-<script lang="ts">
+<script lang="ts" module>
 	import { tv, type VariantProps } from 'tailwind-variants';
-	import { cn } from '$lib/utils';
-	import type { Snippet } from 'svelte';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
 
 	/**
-	 * Button variant definitions using tailwind-variants
-	 * Supports: Primary, Secondary, Danger, Ghost variants
-	 * Features: Icon support, full width, loading states, sizes
+	 * Button variant definitions using tailwind-variants (shadcn pattern)
+	 *
+	 * Variants: default, destructive, outline, secondary, ghost, link
+	 * Sizes: default (h-10), sm (h-9), lg (h-11), icon (h-10 w-10)
 	 */
-	const buttonVariants = tv({
+	export const buttonVariants = tv({
 		base: [
-			'inline-flex items-center justify-center gap-2',
+			'inline-flex items-center justify-center gap-2 whitespace-nowrap',
 			'font-medium text-sm',
-			'rounded-lg border',
-			'transition-colors duration-150',
+			'rounded-md',
+			'ring-offset-background transition-colors duration-150',
 			'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
 			'disabled:pointer-events-none disabled:opacity-50',
 			'touch-target-interactive'
 		],
 		variants: {
 			variant: {
-				primary: [
-					'bg-primary text-primary-foreground border-primary',
+				default: [
+					'bg-primary text-primary-foreground',
 					'hover:bg-primary/90',
 					'active:bg-primary/80'
 				],
-				secondary: [
-					'bg-secondary text-secondary-foreground border-secondary',
-					'hover:bg-secondary/80',
-					'active:bg-secondary/70'
-				],
-				danger: [
-					'bg-destructive text-destructive-foreground border-destructive',
+				destructive: [
+					'bg-destructive text-destructive-foreground',
 					'hover:bg-destructive/90',
 					'active:bg-destructive/80'
 				],
+				outline: [
+					'border border-input bg-background',
+					'hover:bg-accent hover:text-accent-foreground',
+					'active:bg-accent/80'
+				],
+				secondary: [
+					'bg-secondary text-secondary-foreground',
+					'hover:bg-secondary/80',
+					'active:bg-secondary/70'
+				],
 				ghost: [
-					'bg-transparent text-foreground border-transparent',
-					'hover:bg-muted',
-					'active:bg-muted/80'
+					'hover:bg-accent hover:text-accent-foreground',
+					'active:bg-accent/80'
+				],
+				link: [
+					'text-primary underline-offset-4',
+					'hover:underline'
 				]
 			},
 			size: {
-				sm: 'h-9 px-3 text-xs',
-				md: 'h-10 px-4 text-sm',
-				lg: 'h-12 px-6 text-base'
+				default: 'h-10 px-4 py-2',
+				sm: 'h-9 rounded-md px-3',
+				lg: 'h-11 rounded-md px-8',
+				icon: 'h-10 w-10'
 			},
 			fullWidth: {
 				true: 'w-full',
 				false: ''
-			},
-			iconOnly: {
-				true: 'aspect-square p-0',
-				false: ''
 			}
 		},
-		compoundVariants: [
-			// Icon-only sizing adjustments
-			{ iconOnly: true, size: 'sm', class: 'h-9 w-9' },
-			{ iconOnly: true, size: 'md', class: 'h-10 w-10' },
-			{ iconOnly: true, size: 'lg', class: 'h-12 w-12' }
-		],
 		defaultVariants: {
-			variant: 'primary',
-			size: 'md',
-			fullWidth: false,
-			iconOnly: false
+			variant: 'default',
+			size: 'default',
+			fullWidth: false
 		}
 	});
 
-	type ButtonVariants = VariantProps<typeof buttonVariants>;
+	export type ButtonVariants = VariantProps<typeof buttonVariants>;
 
-	interface Props extends HTMLButtonAttributes {
+	export interface ButtonProps {
 		variant?: ButtonVariants['variant'];
 		size?: ButtonVariants['size'];
 		fullWidth?: boolean;
-		iconOnly?: boolean;
 		loading?: boolean;
-		class?: string;
+	}
+</script>
+
+<script lang="ts">
+	import { cn } from '$lib/utils';
+	import type { Snippet } from 'svelte';
+	import type { HTMLButtonAttributes } from 'svelte/elements';
+
+	interface Props extends HTMLButtonAttributes, ButtonProps {
 		children?: Snippet;
 		iconLeft?: Snippet;
 		iconRight?: Snippet;
 	}
 
 	let {
-		variant = 'primary',
-		size = 'md',
+		variant = 'default',
+		size = 'default',
 		fullWidth = false,
-		iconOnly = false,
 		loading = false,
 		disabled = false,
 		type = 'button',
@@ -110,7 +112,7 @@
 
 <button
 	type={type}
-	class={cn(buttonVariants({ variant, size, fullWidth, iconOnly }), className)}
+	class={cn(buttonVariants({ variant, size, fullWidth }), className)}
 	disabled={isDisabled}
 	aria-disabled={isDisabled}
 	aria-label={ariaLabel}
@@ -144,11 +146,11 @@
 		</span>
 	{/if}
 
-	{#if children && !iconOnly}
+	{#if children && size !== 'icon'}
 		<span class={loading ? 'opacity-0' : ''}>
 			{@render children()}
 		</span>
-	{:else if children && iconOnly}
+	{:else if children && size === 'icon'}
 		<span class="sr-only">
 			{@render children()}
 		</span>
@@ -157,7 +159,7 @@
 		{/if}
 	{/if}
 
-	{#if iconRight && !loading && !iconOnly}
+	{#if iconRight && !loading && size !== 'icon'}
 		<span class="flex-shrink-0" aria-hidden="true">
 			{@render iconRight()}
 		</span>
