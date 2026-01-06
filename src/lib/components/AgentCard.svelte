@@ -70,7 +70,6 @@
 		progress?: number;
 		class?: string;
 		// Mobile-rich props
-		icon?: string;
 		uptime?: string;
 		errorMessage?: string;
 		expandable?: boolean;
@@ -84,7 +83,19 @@
 	import StatusIndicator from './StatusIndicator.svelte';
 	import ProgressBar from './ProgressBar.svelte';
 	import type { Snippet } from 'svelte';
-	import { ChevronDown, ClipboardList, Clock, AlertTriangle, Search, RefreshCw } from 'lucide-svelte';
+	import {
+		ChevronDown,
+		ClipboardList,
+		Clock,
+		AlertTriangle,
+		Search,
+		RefreshCw,
+		// Status icons (replacing emojis)
+		Zap,
+		Moon,
+		AlertCircle,
+		CheckCircle2
+	} from 'lucide-svelte';
 
 	// Component props with slot snippets
 	interface Props extends Omit<AgentCardProps, 'expanded'> {
@@ -101,7 +112,6 @@
 		progress = 0,
 		class: className = '',
 		// Mobile-rich props
-		icon = '',
 		uptime = '',
 		errorMessage = '',
 		expandable = false,
@@ -144,16 +154,16 @@
 		complete: 'Complete'
 	} as const;
 
-	// Default icons by status
-	const defaultIcons = {
-		running: '⚡',
-		idle: '💤',
-		error: '⚠️',
-		complete: '✅'
+	// Default Lucide icons by status (replacing emojis)
+	const statusIcons = {
+		running: Zap,
+		idle: Moon,
+		error: AlertCircle,
+		complete: CheckCircle2
 	} as const;
 
-	// Get display icon
-	const displayIcon = $derived(icon || defaultIcons[status ?? 'idle']);
+	// Get the icon component for current status
+	const StatusIcon = $derived(statusIcons[status ?? 'idle']);
 
 	// Toggle expanded state
 	function toggleExpanded() {
@@ -179,11 +189,11 @@
 	onclick={expandable ? toggleExpanded : undefined}
 	onkeydown={expandable ? handleKeyDown : undefined}
 >
-	<!-- Hero Section with Icon -->
+	<!-- Hero Section with Lucide Icon -->
 	{#if !compact}
 		<div class={styles.hero()}>
 			<div class={styles.heroIcon()}>
-				{displayIcon}
+				<StatusIcon class="w-7 h-7" strokeWidth={2} />
 			</div>
 		</div>
 	{/if}
