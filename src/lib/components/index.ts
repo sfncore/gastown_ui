@@ -7,6 +7,7 @@ export { default as SkipLink } from './SkipLink.svelte';
 export { default as AgentCard } from './AgentCard.svelte';
 export { default as Badge, badgeVariants, type BadgeVariant, type BadgeSize, type BadgeProps } from './Badge.svelte';
 export { default as BottomNav } from './BottomNav.svelte';
+export { default as Sidebar } from './Sidebar.svelte';
 export { default as Button, buttonVariants, type ButtonProps, type ButtonVariants } from './Button.svelte';
 export { default as GridPattern } from './GridPattern.svelte';
 export { default as Icon } from './Icon.svelte';

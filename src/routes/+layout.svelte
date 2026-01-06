@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../app.css';
-	import { SkipLink, Announcer, BottomNav, GlobalSearch } from '$lib/components';
+	import { SkipLink, Announcer, BottomNav, Sidebar, GlobalSearch } from '$lib/components';
 	import { preloadRoute } from '$lib/preload';
 	import { page } from '$app/stores';
 	import { afterNavigate } from '$app/navigation';
@@ -11,6 +11,9 @@
 	}
 
 	let { children }: Props = $props();
+
+	// Sidebar collapse state (persisted via Sidebar component)
+	let sidebarCollapsed = $state(false);
 
 	// Badge counts (fetched from API)
 	let unreadMail = $state(0);
@@ -129,41 +132,74 @@
 <!-- Screen reader announcements for route changes -->
 <Announcer message={routeAnnouncement} clearAfter={3000} />
 
-<!-- Global search (always rendered, handles its own visibility) -->
+<!-- Layout wrapper with responsive sidebar/bottom nav -->
 {#if !hideNav}
-	<!-- Desktop: Fixed in top-right corner -->
-	<div class="hidden md:block fixed top-4 right-4 z-40">
-		<GlobalSearch />
-	</div>
+	<!-- Desktop layout with sidebar (hidden on mobile) -->
+	<div class="hidden lg:flex min-h-screen">
+		<!-- Sidebar navigation -->
+		<Sidebar
+			items={navItems}
+			{activeId}
+			bind:collapsed={sidebarCollapsed}
+		/>
 
-	<!-- Mobile: Floating action button above bottom nav -->
-	<div class="md:hidden fixed bottom-24 right-4 z-40">
-		<GlobalSearch class="rounded-full p-3 shadow-lg" />
-	</div>
-{/if}
+		<!-- Main content area -->
+		<div class="flex-1 flex flex-col min-h-screen">
+			<!-- Global search in header for desktop -->
+			<div class="fixed top-4 right-4 z-40">
+				<GlobalSearch />
+			</div>
 
-<!-- Main content area -->
-<div
-	bind:this={mainContentRef}
-	id="main-content"
-	tabindex="-1"
-	class="min-h-screen {hideNav ? '' : 'pb-20'} outline-none"
->
-	{@render children()}
-</div>
-
-<!-- Bottom navigation with preload on hover -->
-{#if !hideNav}
-	<nav class="sr-only">
-		{#each navItems as item}
-			<a
-				href={item.href}
-				onmouseenter={() => handleNavHover(item.href)}
-				onfocus={() => handleNavHover(item.href)}
+			<main
+				bind:this={mainContentRef}
+				id="main-content"
+				tabindex="-1"
+				class="flex-1 outline-none"
 			>
-				{item.label}
-			</a>
-		{/each}
-	</nav>
-	<BottomNav items={navItems} {activeId} />
+				{@render children()}
+			</main>
+		</div>
+	</div>
+
+	<!-- Mobile/Tablet layout with bottom nav (hidden on desktop) -->
+	<div class="lg:hidden">
+		<!-- Global search (mobile) -->
+		<div class="fixed bottom-24 right-4 z-40">
+			<GlobalSearch class="rounded-full p-3 shadow-lg" />
+		</div>
+
+		<!-- Main content area -->
+		<div
+			bind:this={mainContentRef}
+			id="main-content"
+			tabindex="-1"
+			class="min-h-screen pb-20 outline-none"
+		>
+			{@render children()}
+		</div>
+
+		<!-- Bottom navigation with preload on hover -->
+		<nav class="sr-only">
+			{#each navItems as item}
+				<a
+					href={item.href}
+					onmouseenter={() => handleNavHover(item.href)}
+					onfocus={() => handleNavHover(item.href)}
+				>
+					{item.label}
+				</a>
+			{/each}
+		</nav>
+		<BottomNav items={navItems} {activeId} />
+	</div>
+{:else}
+	<!-- Login page - no navigation -->
+	<div
+		bind:this={mainContentRef}
+		id="main-content"
+		tabindex="-1"
+		class="min-h-screen outline-none"
+	>
+		{@render children()}
+	</div>
 {/if}
