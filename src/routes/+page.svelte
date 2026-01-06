@@ -32,7 +32,7 @@
 	]);
 </script>
 
-<DashboardLayout title={townName?.toLowerCase?.() ?? 'gastown'} {systemStatus}>
+<DashboardLayout title={(townName ?? 'gastown').replace(/_exp$/i, '')} {systemStatus}>
 	<!-- Left Column: Agents -->
 	{#snippet agents()}
 		{#if error}
