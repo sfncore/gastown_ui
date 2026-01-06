@@ -8,9 +8,19 @@
 		title?: string;
 		systemStatus?: 'running' | 'idle' | 'error' | 'warning';
 		class?: string;
-		stats?: Snippet;
+		/** Left column: Agents panel (desktop 3-column) */
 		agents?: Snippet;
+		/** Center column: Workflows + Queue (desktop 3-column) */
+		workflows?: Snippet;
+		queue?: Snippet;
+		/** Right column: Stats + Actions (desktop 3-column) */
+		stats?: Snippet;
+		actions?: Snippet;
+		/** Bottom: Full-width logs */
+		logs?: Snippet;
+		/** Legacy: Activity feed */
 		activity?: Snippet;
+		/** Default slot for custom content */
 		children?: Snippet;
 		footer?: Snippet;
 	}
@@ -19,12 +29,21 @@
 		title = 'Gas Town',
 		systemStatus = 'running',
 		class: className = '',
-		stats,
 		agents,
+		workflows,
+		queue,
+		stats,
+		actions,
+		logs,
 		activity,
 		children,
 		footer
 	}: Props = $props();
+
+	// Determine if we have 3-column content
+	const hasThreeColumnContent = $derived(
+		!!(agents || workflows || queue || stats || actions)
+	);
 </script>
 
 <div class={cn('relative min-h-screen bg-background', className)}>
@@ -59,25 +78,79 @@
 
 		<!-- Main content area -->
 		<main class="flex-1 container py-6 space-y-6">
-			<!-- Stats section -->
-			{#if stats}
-				<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-					{@render stats()}
-				</section>
+			<!-- Desktop 3-Column Layout (xl and above) -->
+			{#if hasThreeColumnContent}
+				<div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+					<!-- Left Column: Agents (4 cols on desktop) -->
+					{#if agents}
+						<section class="xl:col-span-4 space-y-4">
+							<h2 class="text-lg font-semibold text-foreground">Agents</h2>
+							<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-1 gap-4">
+								{@render agents()}
+							</div>
+						</section>
+					{/if}
+
+					<!-- Center Column: Workflows + Queue (5 cols on desktop) -->
+					{#if workflows || queue}
+						<section class="xl:col-span-5 space-y-6">
+							{#if workflows}
+								<div class="space-y-4">
+									<h2 class="text-lg font-semibold text-foreground">Workflows</h2>
+									<div class="panel-glass divide-y divide-border overflow-hidden rounded-lg">
+										{@render workflows()}
+									</div>
+								</div>
+							{/if}
+
+							{#if queue}
+								<div class="space-y-4">
+									<h2 class="text-lg font-semibold text-foreground">Queue</h2>
+									<div class="panel-glass divide-y divide-border overflow-hidden rounded-lg">
+										{@render queue()}
+									</div>
+								</div>
+							{/if}
+						</section>
+					{/if}
+
+					<!-- Right Column: Stats + Actions (3 cols on desktop) -->
+					{#if stats || actions}
+						<section class="xl:col-span-3 space-y-6">
+							{#if stats}
+								<div class="space-y-4">
+									<h2 class="text-lg font-semibold text-foreground">System Stats</h2>
+									<div class="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-1 gap-4">
+										{@render stats()}
+									</div>
+								</div>
+							{/if}
+
+							{#if actions}
+								<div class="space-y-4">
+									<h2 class="text-lg font-semibold text-foreground">Quick Actions</h2>
+									<div class="flex flex-col gap-2">
+										{@render actions()}
+									</div>
+								</div>
+							{/if}
+						</section>
+					{/if}
+				</div>
+
+				<!-- Bottom: Full-width Logs -->
+				{#if logs}
+					<section class="space-y-4">
+						<h2 class="text-lg font-semibold text-foreground">Activity Logs</h2>
+						<div class="panel-glass divide-y divide-border overflow-hidden rounded-lg max-h-80 overflow-y-auto">
+							{@render logs()}
+						</div>
+					</section>
+				{/if}
 			{/if}
 
-			<!-- Agent grid -->
-			{#if agents}
-				<section class="space-y-4">
-					<h2 class="text-lg font-medium text-foreground">Agents</h2>
-					<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-						{@render agents()}
-					</div>
-				</section>
-			{/if}
-
-			<!-- Activity feed -->
-			{#if activity}
+			<!-- Legacy: Activity feed (non-3-column mode) -->
+			{#if activity && !hasThreeColumnContent}
 				<section class="space-y-4">
 					<h2 class="text-lg font-medium text-foreground">Recent Activity</h2>
 					<div class="panel-glass divide-y divide-border overflow-hidden">
