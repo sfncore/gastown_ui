@@ -99,6 +99,7 @@ export default {
 			},
 
 			fontSize: {
+				// === Base Scale ===
 				'2xs': ['0.625rem', { lineHeight: '0.875rem' }],
 				'xs': ['0.75rem', { lineHeight: '1rem' }],
 				'sm': ['0.875rem', { lineHeight: '1.25rem' }],
@@ -108,7 +109,38 @@ export default {
 				'2xl': ['1.5rem', { lineHeight: '2rem' }],
 				'3xl': ['1.875rem', { lineHeight: '2.25rem' }],
 				'4xl': ['2.25rem', { lineHeight: '2.5rem' }],
-				'5xl': ['3rem', { lineHeight: '1' }]
+				'5xl': ['3rem', { lineHeight: '1' }],
+				'6xl': ['3.75rem', { lineHeight: '1' }],
+				'7xl': ['4.5rem', { lineHeight: '1' }],
+
+				// === Display Typography (for hero sections, headlines) ===
+				'display-2xl': ['4.5rem', { lineHeight: '1', letterSpacing: '-0.02em', fontWeight: '700' }],
+				'display-xl': ['3.75rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '700' }],
+				'display-lg': ['3rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '600' }],
+				'display-md': ['2.25rem', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '600' }],
+				'display-sm': ['1.875rem', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '600' }],
+
+				// === Body Typography ===
+				'body-lg': ['1.125rem', { lineHeight: '1.75rem' }],
+				'body-md': ['1rem', { lineHeight: '1.625rem' }],
+				'body-sm': ['0.875rem', { lineHeight: '1.5rem' }],
+				'body-xs': ['0.75rem', { lineHeight: '1.25rem' }],
+
+				// === Label Typography (for UI labels, buttons, form labels) ===
+				'label-lg': ['0.9375rem', { lineHeight: '1.25rem', fontWeight: '500', letterSpacing: '0.01em' }],
+				'label-md': ['0.875rem', { lineHeight: '1.25rem', fontWeight: '500', letterSpacing: '0.01em' }],
+				'label-sm': ['0.75rem', { lineHeight: '1rem', fontWeight: '500', letterSpacing: '0.02em' }],
+				'label-xs': ['0.625rem', { lineHeight: '0.875rem', fontWeight: '500', letterSpacing: '0.04em' }]
+			},
+
+			// === Letter Spacing Scale ===
+			letterSpacing: {
+				'tighter': '-0.05em',
+				'tight': '-0.025em',
+				'normal': '0em',
+				'wide': '0.025em',
+				'wider': '0.05em',
+				'widest': '0.1em'
 			},
 
 			spacing: {
@@ -138,15 +170,34 @@ export default {
 			},
 
 			boxShadow: {
+				// === 5-Level Shadow System ===
+				'xs': 'var(--shadow-xs)',
 				'sm': 'var(--shadow-sm)',
 				'md': 'var(--shadow-md)',
 				'lg': 'var(--shadow-lg)',
 				'xl': 'var(--shadow-xl)',
+				'2xl': 'var(--shadow-2xl)',
+				'inner': 'var(--shadow-inner)',
+				'none': 'none',
+
+				// === Utility Shadows ===
 				'glow': 'var(--shadow-glow)',
 				'focus': 'var(--shadow-focus)',
-				// Gas Town glow effects
-				'glow-primary': '0 0 20px -5px #EF6F2E, 0 0 40px -10px #B85422',
-				'glow-accent': '0 0 20px -5px #3B82F6, 0 0 40px -10px #1D4ED8'
+
+				// === Colored Status Shadows (for glow effects) ===
+				'glow-primary': '0 0 20px -5px hsl(var(--primary) / 0.5), 0 0 40px -10px hsl(var(--primary) / 0.3)',
+				'glow-success': '0 0 20px -5px hsl(var(--success) / 0.5), 0 0 40px -10px hsl(var(--success) / 0.3)',
+				'glow-warning': '0 0 20px -5px hsl(var(--warning) / 0.5), 0 0 40px -10px hsl(var(--warning) / 0.3)',
+				'glow-destructive': '0 0 20px -5px hsl(var(--destructive) / 0.5), 0 0 40px -10px hsl(var(--destructive) / 0.3)',
+				'glow-info': '0 0 20px -5px hsl(var(--info) / 0.5), 0 0 40px -10px hsl(var(--info) / 0.3)',
+				'glow-accent': '0 0 20px -5px hsl(var(--accent) / 0.5), 0 0 40px -10px hsl(var(--accent) / 0.3)',
+
+				// === Elevation Shadows (card/popover depth) ===
+				'elevation-1': 'var(--shadow-sm)',
+				'elevation-2': 'var(--shadow-md)',
+				'elevation-3': 'var(--shadow-lg)',
+				'elevation-4': 'var(--shadow-xl)',
+				'elevation-5': 'var(--shadow-2xl)'
 			},
 
 			minHeight: {
@@ -154,6 +205,36 @@ export default {
 			},
 			minWidth: {
 				'touch': 'var(--touch-target-min)'
+			},
+
+			// === Transition Duration Scale ===
+			transitionDuration: {
+				'instant': 'var(--duration-instant)',
+				'fast': 'var(--duration-fast)',
+				'normal': 'var(--duration-normal)',
+				'slow': 'var(--duration-slow)',
+				'slower': 'var(--duration-slower)',
+				'0': '0ms',
+				'75': '75ms',
+				'100': '100ms',
+				'150': '150ms',
+				'200': '200ms',
+				'300': '300ms',
+				'500': '500ms',
+				'700': '700ms',
+				'1000': '1000ms'
+			},
+
+			// === Transition Timing Functions ===
+			transitionTimingFunction: {
+				'ease-out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
+				'ease-out-quart': 'cubic-bezier(0.25, 1, 0.5, 1)',
+				'ease-out-back': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+				'ease-spring': 'var(--ease-spring)',
+				'ease-smooth': 'var(--ease-out)',
+				'ease-bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+				'ease-in-expo': 'cubic-bezier(0.7, 0, 0.84, 0)',
+				'ease-in-out-expo': 'cubic-bezier(0.87, 0, 0.13, 1)'
 			},
 
 			animationDelay: {
