@@ -6,16 +6,19 @@
 	 * Button variant definitions using tailwind-variants (shadcn pattern)
 	 *
 	 * Variants: default, destructive, outline, secondary, ghost, link
-	 * Sizes: default (h-10), sm (h-9), lg (h-11), icon (h-10 w-10)
+	 * Sizes: default (h-10), sm (h-9), lg (h-11), icon (h-12 w-12, 48px touch target)
 	 */
 	export const buttonVariants = tv({
 		base: [
 			'inline-flex items-center justify-center gap-2 whitespace-nowrap',
 			'font-medium text-sm',
 			'rounded-md',
-			'ring-offset-background transition-colors duration-150',
+			'ring-offset-background',
+			'transition-all duration-150 ease-out',
+			'hover:-translate-y-px hover:shadow-sm',
+			'active:translate-y-0 active:shadow-none',
 			'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-			'disabled:pointer-events-none disabled:opacity-50',
+			'disabled:pointer-events-none disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none',
 			'[&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0'
 		],
 		variants: {
@@ -27,8 +30,8 @@
 				],
 				destructive: [
 					'bg-destructive text-destructive-foreground',
-					'hover:bg-destructive/90',
-					'active:bg-destructive/80'
+					'hover:bg-destructive/80 hover:shadow-destructive/25',
+					'active:bg-destructive/70'
 				],
 				outline: [
 					'border border-input bg-background',
@@ -46,14 +49,15 @@
 				],
 				link: [
 					'text-primary underline-offset-4',
-					'hover:underline'
+					'hover:underline',
+					'hover:translate-y-0 hover:shadow-none'
 				]
 			},
 			size: {
 				default: 'h-10 px-4 py-2',
 				sm: 'h-9 rounded-md px-3',
 				lg: 'h-11 rounded-md px-8',
-				icon: 'h-10 w-10'
+				icon: 'h-12 w-12 min-h-touch min-w-touch'
 			},
 			fullWidth: {
 				true: 'w-full',

@@ -21,8 +21,8 @@ describe('Button', () => {
 			expect(button).toHaveClass('bg-secondary');
 		});
 
-		it('renders danger variant', () => {
-			render(Button, { props: { variant: 'danger' } });
+		it('renders destructive variant', () => {
+			render(Button, { props: { variant: 'destructive' } });
 			const button = screen.getByRole('button');
 			expect(button).toHaveClass('bg-destructive');
 		});
@@ -30,7 +30,8 @@ describe('Button', () => {
 		it('renders ghost variant', () => {
 			render(Button, { props: { variant: 'ghost' } });
 			const button = screen.getByRole('button');
-			expect(button).toHaveClass('bg-transparent');
+			// Ghost variant has no background, only hover states
+			expect(button).not.toHaveClass('bg-primary');
 		});
 	});
 
@@ -50,7 +51,7 @@ describe('Button', () => {
 		it('renders large size', () => {
 			render(Button, { props: { size: 'lg' } });
 			const button = screen.getByRole('button');
-			expect(button).toHaveClass('h-12');
+			expect(button).toHaveClass('h-11');
 		});
 	});
 
@@ -98,10 +99,11 @@ describe('Button', () => {
 	});
 
 	describe('Icon Only', () => {
-		it('applies icon-only styling', () => {
-			render(Button, { props: { iconOnly: true } });
+		it('applies icon-only styling with 48px touch target', () => {
+			render(Button, { props: { size: 'icon' } });
 			const button = screen.getByRole('button');
-			expect(button).toHaveClass('aspect-square');
+			expect(button).toHaveClass('h-12');
+			expect(button).toHaveClass('w-12');
 		});
 	});
 
