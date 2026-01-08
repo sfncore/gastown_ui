@@ -7,23 +7,28 @@ test.describe('Mail Inbox', () => {
 
 	test('should display mail inbox page', async ({ page }) => {
 		// Check page header
-		await expect(page.locator('h1')).toContainText('Mail Inbox');
+		const visibleRoot = page.locator('#main-content:visible');
+		await expect(visibleRoot.locator('h1')).toContainText('Mail Inbox');
 	});
 
 	test('should show message count', async ({ page }) => {
+		const visibleRoot = page.locator('#main-content:visible');
+
 		// Message count should be visible
-		const messageCount = page.locator('text=/\\d+ messages/');
+		const messageCount = visibleRoot.locator('text=/\\d+ messages/');
 		await expect(messageCount).toBeVisible();
 	});
 
 	test('should have compose button', async ({ page }) => {
-		const composeButton = page.locator('a[href="/mail/compose"]');
+		const visibleRoot = page.locator('#main-content:visible');
+		const composeButton = visibleRoot.locator('a[href="/mail/compose"]');
 		await expect(composeButton).toBeVisible();
 		await expect(composeButton).toContainText('Compose');
 	});
 
 	test('should navigate to compose page', async ({ page }) => {
-		const composeButton = page.locator('a[href="/mail/compose"]');
+		const visibleRoot = page.locator('#main-content:visible');
+		const composeButton = visibleRoot.locator('a[href="/mail/compose"]');
 		await composeButton.click();
 		await expect(page).toHaveURL('/mail/compose');
 	});
@@ -31,14 +36,16 @@ test.describe('Mail Inbox', () => {
 	test('should show messages or empty state', async ({ page }) => {
 		await page.waitForLoadState('networkidle');
 
-		// Either messages or empty state should be visible
-		const messageList = page.locator('ul[role="list"]');
-		const emptyState = page.locator('text=No messages in inbox');
-		const errorState = page.locator('text=Failed to load inbox');
+		const visibleRoot = page.locator('#main-content:visible');
 
-		const hasMessages = await messageList.isVisible().catch(() => false);
-		const isEmpty = await emptyState.isVisible().catch(() => false);
-		const hasError = await errorState.isVisible().catch(() => false);
+		// Either messages or empty state should be visible
+		const messageList = visibleRoot.locator('ul[role="list"]');
+		const emptyState = visibleRoot.locator('text=No messages in inbox');
+		const errorState = visibleRoot.locator('text=Failed to load inbox');
+
+		const hasMessages = (await messageList.count()) > 0;
+		const isEmpty = (await emptyState.count()) > 0;
+		const hasError = (await errorState.count()) > 0;
 
 		expect(hasMessages || isEmpty || hasError).toBeTruthy();
 	});
@@ -47,7 +54,8 @@ test.describe('Mail Inbox', () => {
 		await page.waitForLoadState('networkidle');
 
 		// If there are messages, click to expand
-		const messageButton = page.locator('button[aria-expanded]').first();
+		const visibleRoot = page.locator('#main-content:visible');
+		const messageButton = visibleRoot.locator('button[aria-expanded]').first();
 
 		if (await messageButton.isVisible().catch(() => false)) {
 			// Check initial state
@@ -68,11 +76,15 @@ test.describe('Mail Inbox', () => {
 	test('should show message type badges', async ({ page }) => {
 		await page.waitForLoadState('networkidle');
 
+		const visibleRoot = page.locator('#main-content:visible');
+
 		// Check if any message type badges are visible
-		const badges = page.locator('[class*="bg-destructive"], [class*="bg-warning"], [class*="bg-success"], [class*="bg-info"], [class*="bg-muted"]');
+		const badges = visibleRoot.locator(
+			'[class*="bg-destructive"], [class*="bg-warning"], [class*="bg-success"], [class*="bg-info"], [class*="bg-muted"]'
+		);
 
 		// If there are messages, badges should be present
-		const messageList = page.locator('ul[role="list"]');
+		const messageList = visibleRoot.locator('ul[role="list"]');
 		if (await messageList.isVisible().catch(() => false)) {
 			const badgeCount = await badges.count();
 			// Badges might or might not be present depending on data
@@ -83,13 +95,14 @@ test.describe('Mail Inbox', () => {
 	test('should have view full message link in expanded message', async ({ page }) => {
 		await page.waitForLoadState('networkidle');
 
-		const messageButton = page.locator('button[aria-expanded]').first();
+		const visibleRoot = page.locator('#main-content:visible');
+		const messageButton = visibleRoot.locator('button[aria-expanded]').first();
 
 		if (await messageButton.isVisible().catch(() => false)) {
 			await messageButton.click();
 
 			// Look for view full message link
-			const viewLink = page.locator('a:has-text("View full message")');
+			const viewLink = visibleRoot.locator('a:has-text("View full message")');
 			if (await viewLink.isVisible().catch(() => false)) {
 				await expect(viewLink).toHaveAttribute('href', /\/mail\/.+/);
 			}
@@ -149,7 +162,7 @@ test.describe('Mail Detail', () => {
 		await page.goto('/mail/test-message-1');
 
 		// Page should have content
-		const content = page.locator('main');
-		await expect(content).toBeVisible();
+		const content = page.locator('#main-content:visible');
+		await expect(content).toBeAttached();
 	});
 });

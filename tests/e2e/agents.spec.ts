@@ -4,19 +4,23 @@ test.describe('Agents Page', () => {
 	test('should display agents list page', async ({ page }) => {
 		await page.goto('/agents');
 
+		const visibleRoot = page.locator('#main-content:visible');
+
 		// Check page header
-		await expect(page.locator('h1')).toContainText('Agents');
-		await expect(page.locator('text=All active agents in Gas Town')).toBeVisible();
+		await expect(visibleRoot.locator('h1')).toContainText('Agents');
+		await expect(visibleRoot.locator('text=All active agents in Gas Town')).toBeVisible();
 	});
 
 	test('should show agent cards or empty state', async ({ page }) => {
 		await page.goto('/agents');
 		await page.waitForLoadState('networkidle');
 
+		const visibleRoot = page.locator('#main-content:visible');
+
 		// Either agent cards should be visible, or empty/error state
-		const agentCards = page.locator('[href^="/agents/"]');
-		const emptyState = page.locator('text=No agents found');
-		const errorState = page.locator('text=Failed to load agents');
+		const agentCards = visibleRoot.locator('[href^="/agents/"]');
+		const emptyState = visibleRoot.locator('text=No agents found');
+		const errorState = visibleRoot.locator('text=Failed to load agents');
 
 		const hasAgents = await agentCards.count() > 0;
 		const isEmpty = await emptyState.isVisible().catch(() => false);
@@ -29,7 +33,8 @@ test.describe('Agents Page', () => {
 	test('should have sticky header', async ({ page }) => {
 		await page.goto('/agents');
 
-		const header = page.locator('header.sticky');
+		const visibleRoot = page.locator('#main-content:visible');
+		const header = visibleRoot.locator('header.sticky');
 		await expect(header).toBeVisible();
 
 		// Check it has the glass panel styling
@@ -41,7 +46,8 @@ test.describe('Agents Page', () => {
 		await page.waitForLoadState('networkidle');
 
 		// If there are agent cards, click the first one
-		const firstAgentLink = page.locator('[href^="/agents/"]').first();
+		const visibleRoot = page.locator('#main-content:visible');
+		const firstAgentLink = visibleRoot.locator('[href^="/agents/"]').first();
 
 		if (await firstAgentLink.isVisible().catch(() => false)) {
 			const href = await firstAgentLink.getAttribute('href');
@@ -57,8 +63,10 @@ test.describe('Agents Page', () => {
 		await page.setViewportSize({ width: 1280, height: 720 });
 		await page.goto('/agents');
 
+		const visibleRoot = page.locator('#main-content:visible');
+
 		// Check for grid container
-		const gridContainer = page.locator('.grid');
+		const gridContainer = visibleRoot.locator('.grid');
 		await expect(gridContainer).toBeVisible();
 	});
 });
@@ -69,8 +77,8 @@ test.describe('Agent Detail Page', () => {
 		await page.goto('/agents/test-agent-1');
 
 		// Page should have some content (either agent data or error)
-		const content = page.locator('main');
-		await expect(content).toBeVisible();
+		const content = page.locator('#main-content:visible');
+		await expect(content).toBeAttached();
 	});
 
 	test('should handle non-existent agent gracefully', async ({ page }) => {

@@ -1,0 +1,132 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - link "Skip to main content" [ref=e3] [cursor=pointer]:
+    - /url: "#main-content"
+  - status [ref=e4]
+  - generic [ref=e5]:
+    - complementary "Main navigation" [ref=e6]:
+      - generic [ref=e8]:
+        - img [ref=e9]
+        - generic [ref=e12]: Gas Town
+      - navigation "Sidebar navigation" [ref=e13]:
+        - group "Main" [ref=e14]:
+          - heading "Main" [level=2] [ref=e15]
+          - list [ref=e16]:
+            - listitem [ref=e17]:
+              - link "Dashboard" [ref=e18] [cursor=pointer]:
+                - /url: /
+                - img [ref=e21]
+                - generic [ref=e24]: Dashboard
+            - listitem [ref=e25]:
+              - link "Work" [ref=e26] [cursor=pointer]:
+                - /url: /work
+                - img [ref=e29]
+                - generic [ref=e33]: Work
+            - listitem [ref=e34]:
+              - link "Agents" [ref=e35] [cursor=pointer]:
+                - /url: /agents
+                - img [ref=e38]
+                - generic [ref=e41]: Agents
+            - listitem [ref=e42]:
+              - link "1 notifications Mail" [ref=e43] [cursor=pointer]:
+                - /url: /mail
+                - generic [ref=e44]:
+                  - img [ref=e46]
+                  - generic "1 notifications" [ref=e49]: "1"
+                - generic [ref=e50]: Mail
+        - group "Operations" [ref=e52]:
+          - heading "Operations" [level=2] [ref=e53]
+          - list [ref=e54]:
+            - listitem [ref=e55]:
+              - link "Queue" [ref=e56] [cursor=pointer]:
+                - /url: /queue
+                - img [ref=e59]
+                - generic [ref=e62]: Queue
+            - listitem [ref=e63]:
+              - link "Convoys" [ref=e64] [cursor=pointer]:
+                - /url: /convoys
+                - img [ref=e67]
+                - generic [ref=e72]: Convoys
+            - listitem [ref=e73]:
+              - link "Workflows" [ref=e74] [cursor=pointer]:
+                - /url: /workflows
+                - img [ref=e77]
+                - generic [ref=e79]: Workflows
+        - group "System" [ref=e81]:
+          - heading "System" [level=2] [ref=e82]
+          - list [ref=e83]:
+            - listitem [ref=e84]:
+              - link "Rigs" [ref=e85] [cursor=pointer]:
+                - /url: /rigs
+                - img [ref=e88]
+                - generic [ref=e90]: Rigs
+            - listitem [ref=e91]:
+              - link "Alerts" [ref=e92] [cursor=pointer]:
+                - /url: /escalations
+                - img [ref=e95]
+                - generic [ref=e98]: Alerts
+            - listitem [ref=e99]:
+              - link "Health" [ref=e100] [cursor=pointer]:
+                - /url: /health
+                - img [ref=e103]
+                - generic [ref=e106]: Health
+            - listitem [ref=e107]:
+              - link "Activity" [ref=e108] [cursor=pointer]:
+                - /url: /activity
+                - img [ref=e111]
+                - generic [ref=e113]: Activity
+            - listitem [ref=e114]:
+              - link "Watchdog" [ref=e115] [cursor=pointer]:
+                - /url: /watchdog
+                - img [ref=e118]
+                - generic [ref=e121]: Watchdog
+            - listitem [ref=e122]:
+              - link "Crew" [ref=e123] [cursor=pointer]:
+                - /url: /crew
+                - img [ref=e126]
+                - generic [ref=e131]: Crew
+            - listitem [ref=e132]:
+              - link "Dogs" [ref=e133] [cursor=pointer]:
+                - /url: /dogs
+                - img [ref=e136]
+                - generic [ref=e140]: Dogs
+            - listitem [ref=e141]:
+              - link "Settings" [ref=e142] [cursor=pointer]:
+                - /url: /settings
+                - img [ref=e145]
+                - generic [ref=e148]: Settings
+            - listitem [ref=e149]:
+              - link "Logs" [ref=e150] [cursor=pointer]:
+                - /url: /logs
+                - img [ref=e153]
+                - generic [ref=e156]: Logs
+      - button "Collapse sidebar" [expanded] [ref=e158] [cursor=pointer]:
+        - generic [ref=e159]: «
+        - generic [ref=e160]: Collapse
+    - generic [ref=e161]:
+      - button "Open search (Press ⌘+K)" [ref=e163] [cursor=pointer]:
+        - img [ref=e164]
+        - generic [ref=e167]: Search...
+        - generic [ref=e168]: ⌘K
+      - main [ref=e169]:
+        - generic [ref=e170]:
+          - generic:
+            - img
+          - generic [ref=e171]:
+            - generic [ref=e174]:
+              - generic [ref=e175]:
+                - heading "Mail Inbox" [level=1] [ref=e176]
+                - paragraph [ref=e177]: 0 messages
+              - link "Compose" [ref=e178] [cursor=pointer]:
+                - /url: /mail/compose
+                - img [ref=e179]
+                - text: Compose
+            - region "Pull to refresh content" [ref=e180]:
+              - button "Refresh content" [ref=e181] [cursor=pointer]: Refresh
+              - status "Pull to refresh" [ref=e182]:
+                - img [ref=e183]
+              - main [ref=e189]:
+                - paragraph [ref=e191]: No messages in inbox
+```

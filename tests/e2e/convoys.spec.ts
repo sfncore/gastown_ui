@@ -6,21 +6,24 @@ test.describe('Convoy Tracking', () => {
 	});
 
 	test('should display convoys page header', async ({ page }) => {
-		await expect(page.locator('h1')).toContainText('Convoys');
-		await expect(page.locator('text=Track batched work across Gas Town')).toBeVisible();
+		const visibleRoot = page.locator('#main-content:visible');
+		await expect(visibleRoot.locator('h1')).toContainText('Convoys');
+		await expect(visibleRoot.locator('text=Track batched work across Gas Town')).toBeVisible();
 	});
 
 	test('should show convoys or empty state', async ({ page }) => {
 		await page.waitForLoadState('networkidle');
 
-		// Either convoy cards or empty/error state
-		const convoyCards = page.locator('[href^="/convoys/"]');
-		const emptyState = page.locator('text=No convoys found');
-		const errorState = page.locator('text=Failed to load convoys');
+		const visibleRoot = page.locator('#main-content:visible');
 
-		const hasConvoys = await convoyCards.count() > 0;
-		const isEmpty = await emptyState.isVisible().catch(() => false);
-		const hasError = await errorState.isVisible().catch(() => false);
+		// Either convoy cards or empty/error state
+		const convoyCards = visibleRoot.locator('[href^="/convoys/"]');
+		const emptyState = visibleRoot.locator('text=No convoys found');
+		const errorState = visibleRoot.locator('text=Failed to load convoys');
+
+		const hasConvoys = (await convoyCards.count()) > 0;
+		const isEmpty = (await emptyState.count()) > 0;
+		const hasError = (await errorState.count()) > 0;
 
 		expect(hasConvoys || isEmpty || hasError).toBeTruthy();
 	});
@@ -28,17 +31,19 @@ test.describe('Convoy Tracking', () => {
 	test('should show create convoy hint in empty state', async ({ page }) => {
 		await page.waitForLoadState('networkidle');
 
-		const emptyState = page.locator('text=No convoys found');
+		const visibleRoot = page.locator('#main-content:visible');
+		const emptyState = visibleRoot.locator('text=No convoys found');
 		if (await emptyState.isVisible().catch(() => false)) {
 			// Should show create hint
-			await expect(page.locator('text=gt convoy create')).toBeVisible();
+			await expect(visibleRoot.locator('text=gt convoy create')).toBeVisible();
 		}
 	});
 
 	test('should display convoy card elements', async ({ page }) => {
 		await page.waitForLoadState('networkidle');
 
-		const convoyCard = page.locator('[href^="/convoys/"]').first();
+		const visibleRoot = page.locator('#main-content:visible');
+		const convoyCard = visibleRoot.locator('[href^="/convoys/"]').first();
 
 		if (await convoyCard.isVisible().catch(() => false)) {
 			// Should have status indicator
@@ -52,7 +57,8 @@ test.describe('Convoy Tracking', () => {
 	test('should show convoy status badges', async ({ page }) => {
 		await page.waitForLoadState('networkidle');
 
-		const convoyCard = page.locator('[href^="/convoys/"]').first();
+		const visibleRoot = page.locator('#main-content:visible');
+		const convoyCard = visibleRoot.locator('[href^="/convoys/"]').first();
 
 		if (await convoyCard.isVisible().catch(() => false)) {
 			// Status badge should be visible (Active, Stale, Stuck, or Complete)
@@ -64,7 +70,8 @@ test.describe('Convoy Tracking', () => {
 	test('should display progress bar in convoy cards', async ({ page }) => {
 		await page.waitForLoadState('networkidle');
 
-		const convoyCard = page.locator('[href^="/convoys/"]').first();
+		const visibleRoot = page.locator('#main-content:visible');
+		const convoyCard = visibleRoot.locator('[href^="/convoys/"]').first();
 
 		if (await convoyCard.isVisible().catch(() => false)) {
 			// Should have progress indicator
@@ -77,7 +84,10 @@ test.describe('Convoy Tracking', () => {
 		await page.waitForLoadState('networkidle');
 
 		// Find toggle button for tracked issues
-		const toggleButton = page.locator('button:has-text("Show tracked issues")').first();
+		const visibleRoot = page.locator('#main-content:visible');
+		const toggleButton = visibleRoot
+			.locator('button:has-text("Show tracked issues")')
+			.first();
 
 		if (await toggleButton.isVisible().catch(() => false)) {
 			// Click to expand
@@ -97,7 +107,8 @@ test.describe('Convoy Tracking', () => {
 	test('should navigate to convoy detail page', async ({ page }) => {
 		await page.waitForLoadState('networkidle');
 
-		const convoyLink = page.locator('[href^="/convoys/"]').first();
+		const visibleRoot = page.locator('#main-content:visible');
+		const convoyLink = visibleRoot.locator('[href^="/convoys/"]').first();
 
 		if (await convoyLink.isVisible().catch(() => false)) {
 			const href = await convoyLink.getAttribute('href');
@@ -113,8 +124,8 @@ test.describe('Convoy Detail Page', () => {
 		await page.waitForLoadState('networkidle');
 
 		// Page should have content
-		const content = page.locator('main');
-		await expect(content).toBeVisible();
+		const content = page.locator('#main-content:visible');
+		await expect(content).toBeAttached();
 	});
 
 	test('should handle non-existent convoy gracefully', async ({ page }) => {

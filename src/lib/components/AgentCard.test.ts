@@ -57,8 +57,9 @@ describe('AgentCard', () => {
 		it('renders error status with shake animation', () => {
 			render(AgentCard, { props: { name: 'Agent', status: 'error' } });
 			const article = screen.getByRole('article');
-			expect(article).toHaveClass('border-status-offline/30');
-			expect(article).toHaveClass('animate-shake');
+			expect(article).toHaveClass('border-status-offline/60');
+			expect(article).toHaveClass('shadow-glow-destructive');
+			expect(article).toHaveClass('animate-[pulse-status_2s_ease-in-out_infinite]');
 		});
 
 		it('renders complete status', () => {
@@ -152,7 +153,7 @@ describe('AgentCard', () => {
 		it('has hover shadow effect', () => {
 			render(AgentCard, { props: { name: 'Agent' } });
 			const article = screen.getByRole('article');
-			expect(article).toHaveClass('hover:shadow-lg');
+			expect(article).toHaveClass('hover:shadow-elevation-3');
 		});
 	});
 
@@ -188,11 +189,11 @@ describe('AgentCard', () => {
 			expect(container.querySelector('header')).toBeInTheDocument();
 		});
 
-		it('uses footer for progress bar section', () => {
-			const { container } = render(AgentCard, {
+		it('renders a progress label when running', () => {
+			render(AgentCard, {
 				props: { name: 'Agent', status: 'running', progress: 50 }
 			});
-			expect(container.querySelector('footer')).toBeInTheDocument();
+			expect(screen.getByText('50%')).toBeInTheDocument();
 		});
 
 		it('uses h3 for agent name', () => {
