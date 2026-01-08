@@ -1,11 +1,16 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import { tv } from 'tailwind-variants';
-	import { GridPattern } from '$lib/components';
+	import { GridPattern, PullToRefresh } from '$lib/components';
 	import { cn } from '$lib/utils';
 	import type { PageData } from './$types';
 	import { Plus, ChevronDown, ChevronRight } from 'lucide-svelte';
 
 	let { data }: { data: PageData } = $props();
+
+	async function refresh() {
+		await invalidateAll();
+	}
 
 	// Track which message is expanded
 	let expandedId = $state<string | null>(null);
@@ -111,7 +116,8 @@
 			</div>
 		</header>
 
-		<main class="container py-6">
+		<PullToRefresh onRefresh={refresh} class="flex-1">
+		<main class="container py-6" data-scrollable>
 			{#if data.error}
 				<div class="panel-glass p-6 border-status-offline/30">
 					<p class="text-status-offline font-medium">Failed to load inbox</p>
@@ -231,5 +237,6 @@
 				</div>
 			{/if}
 		</main>
+		</PullToRefresh>
 	</div>
 </div>

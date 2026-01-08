@@ -3,7 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { cn } from '$lib/utils';
-	import { GridPattern } from '$lib/components';
+	import { GridPattern, PullToRefresh } from '$lib/components';
 	import { onMount, onDestroy } from 'svelte';
 	import type { ActivityEvent } from './+page.server';
 	import { RefreshCw, Activity } from 'lucide-svelte';
@@ -248,8 +248,9 @@
 			</div>
 		</header>
 
-		<!-- Activity stream -->
-		<main class="flex-1 container py-4">
+		<!-- Activity stream with pull-to-refresh for mobile -->
+		<PullToRefresh onRefresh={refresh} class="flex-1">
+		<main class="container py-4" data-scrollable>
 			{#if data.error}
 				<div class="panel-glass p-8 text-center">
 					<p class="text-destructive font-medium">Error loading activity</p>
@@ -337,5 +338,6 @@
 				</div>
 			{/if}
 		</main>
+		</PullToRefresh>
 	</div>
 </div>

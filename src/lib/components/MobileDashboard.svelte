@@ -20,6 +20,7 @@
 	import SwipeableTabs from './SwipeableTabs.svelte';
 	import StatusIndicator from './StatusIndicator.svelte';
 	import GridPattern from './GridPattern.svelte';
+	import PullToRefresh from './PullToRefresh.svelte';
 	import type { Snippet, ComponentType } from 'svelte';
 	import { Bot, FlaskConical, ClipboardList, ScrollText } from 'lucide-svelte';
 
@@ -47,6 +48,8 @@
 		logs?: Snippet;
 		/** Tab change callback */
 		onTabChange?: (tabId: string) => void;
+		/** Pull-to-refresh callback for all tabs */
+		onRefresh?: () => Promise<void>;
 	}
 
 	let {
@@ -62,7 +65,8 @@
 		flows,
 		queue,
 		logs,
-		onTabChange
+		onTabChange,
+		onRefresh
 	}: Props = $props();
 
 	// Tab definitions
@@ -126,33 +130,65 @@
 			class="flex-1"
 		>
 			{#snippet content(tabId)}
-				<div class="min-h-[calc(100vh-180px)] p-4">
-					{#if tabId === 'agents' && agents}
-						{@render agents()}
-					{:else if tabId === 'flows' && flows}
-						{@render flows()}
-					{:else if tabId === 'queue' && queue}
-						{@render queue()}
-					{:else if tabId === 'logs' && logs}
-						{@render logs()}
-					{:else}
-						<!-- Empty state -->
-						<div class="flex flex-col items-center justify-center h-64 text-muted-foreground">
-							<span class="mb-2">
-								{#if tabId === 'agents'}
-									<Bot size={48} strokeWidth={1.5} />
-								{:else if tabId === 'flows'}
-									<FlaskConical size={48} strokeWidth={1.5} />
-								{:else if tabId === 'queue'}
-									<ClipboardList size={48} strokeWidth={1.5} />
-								{:else}
-									<ScrollText size={48} strokeWidth={1.5} />
-								{/if}
-							</span>
-							<p class="text-sm">No content available</p>
+				{#if onRefresh}
+					<PullToRefresh {onRefresh} class="min-h-[calc(100vh-180px)]">
+						<div class="p-4" data-scrollable>
+							{#if tabId === 'agents' && agents}
+								{@render agents()}
+							{:else if tabId === 'flows' && flows}
+								{@render flows()}
+							{:else if tabId === 'queue' && queue}
+								{@render queue()}
+							{:else if tabId === 'logs' && logs}
+								{@render logs()}
+							{:else}
+								<!-- Empty state -->
+								<div class="flex flex-col items-center justify-center h-64 text-muted-foreground">
+									<span class="mb-2">
+										{#if tabId === 'agents'}
+											<Bot size={48} strokeWidth={1.5} />
+										{:else if tabId === 'flows'}
+											<FlaskConical size={48} strokeWidth={1.5} />
+										{:else if tabId === 'queue'}
+											<ClipboardList size={48} strokeWidth={1.5} />
+										{:else}
+											<ScrollText size={48} strokeWidth={1.5} />
+										{/if}
+									</span>
+									<p class="text-sm">No content available</p>
+								</div>
+							{/if}
 						</div>
-					{/if}
-				</div>
+					</PullToRefresh>
+				{:else}
+					<div class="min-h-[calc(100vh-180px)] p-4">
+						{#if tabId === 'agents' && agents}
+							{@render agents()}
+						{:else if tabId === 'flows' && flows}
+							{@render flows()}
+						{:else if tabId === 'queue' && queue}
+							{@render queue()}
+						{:else if tabId === 'logs' && logs}
+							{@render logs()}
+						{:else}
+							<!-- Empty state -->
+							<div class="flex flex-col items-center justify-center h-64 text-muted-foreground">
+								<span class="mb-2">
+									{#if tabId === 'agents'}
+										<Bot size={48} strokeWidth={1.5} />
+									{:else if tabId === 'flows'}
+										<FlaskConical size={48} strokeWidth={1.5} />
+									{:else if tabId === 'queue'}
+										<ClipboardList size={48} strokeWidth={1.5} />
+									{:else}
+										<ScrollText size={48} strokeWidth={1.5} />
+									{/if}
+								</span>
+								<p class="text-sm">No content available</p>
+							</div>
+						{/if}
+					</div>
+				{/if}
 			{/snippet}
 		</SwipeableTabs>
 	</div>
