@@ -20,6 +20,7 @@ export { default as StatusIndicator, statusIndicatorVariants, type StatusIndicat
 export { default as StatusBadge, statusBadgeVariants, type StatusBadgeProps, type StatusBadgeVariants } from './StatusBadge.svelte';
 export { default as EmptyState, emptyStateVariants, emptyStatePresets, type EmptyStatePreset, type EmptyStateProps, type EmptyStateVariants } from './EmptyState.svelte';
 export { default as StatsCard, statsCardVariants, type TrendDirection, type SparklinePoint, type StatusBreakdown, type StatsCardProps, type StatsCardVariants } from './StatsCard.svelte';
+export { default as DataTable, dataTableVariants, type Column, type DataTableProps, type DataTableVariants } from './DataTable.svelte';
 
 // Layout components
 export { default as AgentDetailLayout } from './AgentDetailLayout.svelte';
