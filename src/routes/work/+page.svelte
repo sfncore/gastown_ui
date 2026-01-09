@@ -3,6 +3,7 @@
 	import { ClipboardList, PenLine, Target, Truck, ChevronDown, CheckSquare, Bug, Lightbulb, BookOpen, Plus } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import { hapticMedium, hapticSuccess, hapticError } from '$lib/utils/haptics';
+	import { z } from 'zod';
 
 	let { data } = $props();
 	
@@ -14,6 +15,24 @@
 	let issuePriority = $state(2);
 	let issueSubmitting = $state(false);
 	let issueMessage = $state<{ type: 'success' | 'error'; text: string } | null>(null);
+	let issueErrors = $state<Record<string, string>>({});
+
+	// Validation schemas
+	const issueSchema = z.object({
+		title: z.string().min(3, 'Title must be at least 3 characters'),
+		type: z.enum(['task', 'bug', 'feature', 'epic']),
+		priority: z.number().min(0).max(4)
+	});
+
+	const convoySchema = z.object({
+		name: z.string().min(3, 'Convoy name must be at least 3 characters'),
+		issues: z.array(z.string()).min(1, 'Select at least one issue')
+	});
+
+	const slingSchema = z.object({
+		issue: z.string().min(1, 'Issue is required'),
+		rig: z.string().min(1, 'Rig is required')
+	});
 	
 	onMount(() => {
 		// Simulate data loading with small delay
@@ -25,12 +44,14 @@
 	let selectedIssues = $state<string[]>([]);
 	let convoySubmitting = $state(false);
 	let convoyMessage = $state<{ type: 'success' | 'error'; text: string } | null>(null);
+	let convoyErrors = $state<Record<string, string>>({});
 
 	// Sling form state
 	let slingIssue = $state('');
 	let slingRig = $state('');
 	let slingSubmitting = $state(false);
 	let slingMessage = $state<{ type: 'success' | 'error'; text: string } | null>(null);
+	let slingErrors = $state<Record<string, string>>({});
 
 	// Local copy of issues that updates after creation
 	let localIssues = $state<typeof data.issues>([]);
@@ -57,8 +78,26 @@
 
 	async function handleCreateIssue(e: Event) {
 		e.preventDefault();
-		issueSubmitting = true;
 		issueMessage = null;
+		issueErrors = {};
+
+		// Validate form
+		const result = issueSchema.safeParse({
+			title: issueTitle,
+			type: issueType,
+			priority: issuePriority
+		});
+
+		if (!result.success) {
+			const fieldErrors = result.error.flatten().fieldErrors;
+			issueErrors = Object.fromEntries(
+				Object.entries(fieldErrors).map(([key, errors]) => [key, errors?.[0] || ''])
+			);
+			hapticError();
+			return;
+		}
+
+		issueSubmitting = true;
 		hapticMedium(); // Medium haptic on form submission
 
 		try {
@@ -72,16 +111,16 @@
 				})
 			});
 
-			const result = await res.json();
+			const data = await res.json();
 
 			if (!res.ok) {
-				throw new Error(result.error || 'Failed to create issue');
+				throw new Error(data.error || 'Failed to create issue');
 			}
 
 			hapticSuccess(); // Success haptic on successful submission
-			issueMessage = { type: 'success', text: `Created issue: ${result.id}` };
+			issueMessage = { type: 'success', text: `Created issue: ${data.id}` };
 			// Add to local issues list
-			localIssues = [...localIssues, result];
+			localIssues = [...localIssues, data];
 			// Reset form
 			issueTitle = '';
 			issueType = 'task';
@@ -96,8 +135,25 @@
 
 	async function handleCreateConvoy(e: Event) {
 		e.preventDefault();
-		convoySubmitting = true;
 		convoyMessage = null;
+		convoyErrors = {};
+
+		// Validate form
+		const result = convoySchema.safeParse({
+			name: convoyName,
+			issues: selectedIssues
+		});
+
+		if (!result.success) {
+			const fieldErrors = result.error.flatten().fieldErrors;
+			convoyErrors = Object.fromEntries(
+				Object.entries(fieldErrors).map(([key, errors]) => [key, errors?.[0] || ''])
+			);
+			hapticError();
+			return;
+		}
+
+		convoySubmitting = true;
 		hapticMedium(); // Medium haptic on form submission
 
 		try {
@@ -110,14 +166,14 @@
 				})
 			});
 
-			const result = await res.json();
+			const data = await res.json();
 
 			if (!res.ok) {
-				throw new Error(result.error || 'Failed to create convoy');
+				throw new Error(data.error || 'Failed to create convoy');
 			}
 
 			hapticSuccess(); // Success haptic on successful submission
-			convoyMessage = { type: 'success', text: result.message || 'Convoy created successfully' };
+			convoyMessage = { type: 'success', text: data.message || 'Convoy created successfully' };
 			// Reset form
 			convoyName = '';
 			selectedIssues = [];
@@ -131,8 +187,25 @@
 
 	async function handleSling(e: Event) {
 		e.preventDefault();
-		slingSubmitting = true;
 		slingMessage = null;
+		slingErrors = {};
+
+		// Validate form
+		const result = slingSchema.safeParse({
+			issue: slingIssue,
+			rig: slingRig
+		});
+
+		if (!result.success) {
+			const fieldErrors = result.error.flatten().fieldErrors;
+			slingErrors = Object.fromEntries(
+				Object.entries(fieldErrors).map(([key, errors]) => [key, errors?.[0] || ''])
+			);
+			hapticError();
+			return;
+		}
+
+		slingSubmitting = true;
 		hapticMedium(); // Medium haptic on form submission
 
 		try {
@@ -145,14 +218,14 @@
 				})
 			});
 
-			const result = await res.json();
+			const data = await res.json();
 
 			if (!res.ok) {
-				throw new Error(result.error || 'Failed to sling work');
+				throw new Error(data.error || 'Failed to sling work');
 			}
 
 			hapticSuccess(); // Success haptic on successful submission
-			slingMessage = { type: 'success', text: result.message || 'Work slung successfully' };
+			slingMessage = { type: 'success', text: data.message || 'Work slung successfully' };
 			// Reset form
 			slingIssue = '';
 			slingRig = '';
@@ -206,8 +279,12 @@
 							placeholder="Describe the task..."
 							class="w-full px-3 py-2 bg-input border border-border rounded-lg
 								   text-foreground placeholder:text-muted-foreground
-								   focus:outline-none focus:ring-2 focus:ring-ring"
+								   focus:outline-none focus:ring-2 focus:ring-ring
+								   {issueErrors.title ? 'border-destructive' : ''}"
 						/>
+						{#if issueErrors.title}
+							<p class="text-sm text-destructive mt-1">{issueErrors.title}</p>
+						{/if}
 					</div>
 
 					<!-- Issue Type Selector Component -->
@@ -285,18 +362,23 @@
 							placeholder="Name for the convoy..."
 							class="w-full px-3 py-2 bg-input border border-border rounded-lg
 								   text-foreground placeholder:text-muted-foreground
-								   focus:outline-none focus:ring-2 focus:ring-ring"
+								   focus:outline-none focus:ring-2 focus:ring-ring
+								   {convoyErrors.name ? 'border-destructive' : ''}"
 						/>
+						{#if convoyErrors.name}
+							<p class="text-sm text-destructive mt-1">{convoyErrors.name}</p>
+						{/if}
 					</div>
 
 					<div>
 						<span class="block text-sm font-medium text-foreground mb-2">
 							Select Issues ({selectedIssues.length} selected)
+							<span class="text-destructive">*</span>
 						</span>
 						{#if localIssues.length === 0}
 							<p class="text-sm text-muted-foreground">No open issues available</p>
 						{:else}
-							<div class="max-h-48 overflow-y-auto space-y-2 border border-border rounded-lg p-2">
+							<div class="max-h-48 overflow-y-auto space-y-2 border border-border rounded-lg p-2 {convoyErrors.issues ? 'border-destructive' : ''}">
 								{#each localIssues as issue}
 									<label
 										class="flex items-center gap-3 p-2 rounded hover:bg-muted/50 cursor-pointer"
@@ -317,6 +399,9 @@
 									</label>
 								{/each}
 							</div>
+						{/if}
+						{#if convoyErrors.issues}
+							<p class="text-sm text-destructive mt-1">{convoyErrors.issues}</p>
 						{/if}
 					</div>
 
@@ -362,7 +447,8 @@
 								required
 								class="w-full px-3 py-2 bg-muted/50 border border-border rounded-lg
 									   text-foreground focus:outline-none focus:ring-2 focus:ring-ring
-									   appearance-none pr-10"
+									   appearance-none pr-10
+									   {slingErrors.issue ? 'border-destructive' : ''}"
 							>
 								<option value="">Select an issue...</option>
 								{#each localIssues as issue}
@@ -373,6 +459,9 @@
 							</select>
 							<ChevronDown class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" strokeWidth={2} />
 						</div>
+						{#if slingErrors.issue}
+							<p class="text-sm text-destructive mt-1">{slingErrors.issue}</p>
+						{/if}
 					</div>
 
 					<div>
@@ -387,7 +476,8 @@
 								required
 								class="w-full px-3 py-2 bg-muted/50 border border-border rounded-lg
 									   text-foreground focus:outline-none focus:ring-2 focus:ring-ring
-									   appearance-none pr-10"
+									   appearance-none pr-10
+									   {slingErrors.rig ? 'border-destructive' : ''}"
 							>
 								<option value="">Select a rig...</option>
 								{#each data.rigs as rig}
@@ -396,6 +486,9 @@
 							</select>
 							<ChevronDown class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" strokeWidth={2} />
 						</div>
+						{#if slingErrors.rig}
+							<p class="text-sm text-destructive mt-1">{slingErrors.rig}</p>
+						{/if}
 					</div>
 
 					{#if slingMessage}
