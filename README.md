@@ -102,404 +102,59 @@ Do not introduce Playwright-based tests or references in plans or execution.
 
 ## Design System
 
-Gastown UI uses a comprehensive design token system following shadcn conventions. All
-styling flows through CSS custom properties defined in `src/app.css`, enabling
-consistent theming and future dark/light mode support.
+Semantic tokens in `src/app.css` following shadcn conventions:
 
-### Token Categories
-
-**Core Semantic Tokens** (for UI elements):
-- `--background/--foreground`: Page/app surfaces
-- `--card/--card-foreground`: Card surfaces
-- `--muted/--muted-foreground`: Subtle backgrounds, secondary text
-- `--border`, `--input`, `--ring`: Borders, inputs, focus rings
-
-**Feedback/Status Tokens** (for state indication):
-- `--success`: Completed, active, positive states
-- `--warning`: Pending, caution, needs attention
-- `--info`: Informational, in-progress
-- `--destructive`: Errors, critical, blocked
-
-**Agent Status Tokens** (for agent indicators):
-- `--status-online`: Running/active agents
-- `--status-offline`: Stopped/error agents
-- `--status-pending`: Starting/transitioning
-- `--status-idle`: Idle/waiting agents
-
-### Typography
-
-Three font families are defined:
-- `--font-sans` (Inter): Body text
-- `--font-display` (Space Grotesk): Headlines
-- `--font-mono` (JetBrains Mono): Code/technical text
-
-### Animation System
-
-Performance-optimized animations use compositor-friendly properties:
-- `will-change` hints applied during animation
-- Transform/opacity animations (no layout thrashing)
-- Reduced motion support via `prefers-reduced-motion`
-- Stagger animation system for list entrances
-
-```css
-/* Stagger container - children auto-delay */
-<div class="stagger">
-  <div class="animate-blur-fade-up">...</div>
-</div>
-```
-
-### Glass Morphism
-
-Panel variants with backdrop blur:
-- `.panel-glass`: Standard glass panel
-- `.panel-glass-strong`: More pronounced blur
-- `.card-glass`: Elevated glass cards
-- `.popover-glass`: Floating elements
-
-Includes graceful fallback for browsers without `backdrop-filter` support.
-
----
+- **Core**: `--background`, `--foreground`, `--card`, `--muted`, `--border`
+- **Status**: `--success`, `--warning`, `--info`, `--destructive`
+- **Agent**: `--status-online`, `--status-offline`, `--status-pending`, `--status-idle`
+- **Typography**: Inter (body), Space Grotesk (headlines), JetBrains Mono (code)
+- **Utilities**: `.panel-glass`, `.touch-target`, `.stagger` animations
 
 ## Component Library
 
-The component library in `src/lib/components/` provides 70+ reusable components
-built with Svelte 5 runes and `tailwind-variants` for variant-based styling.
-
-### Core Components
-
-| Component | Purpose |
-|-----------|---------|
-| `Button` | Primary action button with size/variant props |
-| `Badge` | Status/label badges with semantic colors |
-| `Input` | Form input with validation states |
-| `Switch` | Toggle switch with accessible labeling |
-| `Icon` | Lucide icon wrapper |
-
-### Layout Components
-
-| Component | Purpose |
-|-----------|---------|
-| `DashboardLayout` | Multi-column dashboard grid |
-| `AgentDetailLayout` | Agent detail page layout |
-| `PageHeader` | Page headers with breadcrumbs, live counts |
-| `SplitView` | Responsive split-pane layout |
-
-### Status & Feedback
-
-| Component | Purpose |
-|-----------|---------|
-| `StatusIndicator` | Colored dot with pulse animation |
-| `StatusBadge` | Badge with status-appropriate styling |
-| `ProgressBar` | Horizontal progress with color variants |
-| `CircularProgress` | Circular progress indicator |
-| `Toast` | Notification toasts |
-
-### Loading States
-
-| Component | Purpose |
-|-----------|---------|
-| `Skeleton` | Shimmer loading placeholder |
-| `SkeletonGroup` | Staggered skeleton animations |
-| `AgentCardSkeleton` | Agent card loading state |
-| `NavigationLoader` | Route transition indicator |
-
-### Accessibility Components
-
-| Component | Purpose |
-|-----------|---------|
-| `Announcer` | Screen reader announcements |
-| `LiveRegion` | ARIA live region wrapper |
-| `SkipLink` | Skip navigation link |
-| `KeyboardHelpDialog` | Keyboard shortcuts reference |
-
-### Mobile/PWA Components
-
-| Component | Purpose |
-|-----------|---------|
-| `BottomNav` | Touch-friendly bottom navigation |
-| `SwipeableItem` | Swipe-to-action list items |
-| `PullToRefresh` | Pull-to-refresh gesture |
-| `FloatingActionButton` | FAB with touch feedback |
-| `UpdatePrompt` | Service worker update prompt |
-| `OfflineIndicator` | Network status indicator |
-
-### Using tailwind-variants
-
-Components use `tailwind-variants` (tv) for type-safe variant styling:
-
-```typescript
-import { tv } from 'tailwind-variants';
-
-const button = tv({
-  base: 'inline-flex items-center justify-center rounded-lg font-medium',
-  variants: {
-    variant: {
-      primary: 'bg-primary text-primary-foreground',
-      secondary: 'bg-secondary text-secondary-foreground',
-    },
-    size: {
-      sm: 'h-8 px-3 text-sm',
-      md: 'h-10 px-4 text-sm',
-      lg: 'h-12 px-6 text-base',
-    },
-  },
-  defaultVariants: {
-    variant: 'primary',
-    size: 'md',
-  },
-});
-```
-
----
-
-## Shared Utilities
-
-### Logger (`$lib/utils/logger.ts`)
-
-Namespaced debug logging with environment-aware output control:
-
-```typescript
-import { createLogger, log } from '$lib/utils/logger';
-
-// Pre-built loggers
-log.ws.debug('Connection opened');
-log.api.info('Fetching agents');
-log.error.error('Something went wrong', error);
-
-// Custom namespaced logger
-const myLog = createLogger('MyModule');
-myLog.debug('Processing item', { id: 123 });
-```
-
-Features:
-- **Namespaced output**: Colored prefixes for easy filtering
-- **Log levels**: debug, info, warn, error with hierarchy
-- **Environment-aware**: Enabled in dev, disabled in prod
-- **Wildcard filtering**: Enable `Auth:*` to see all auth logs
-- **LocalStorage persistence**: Enabled namespaces survive refresh
-
-Browser console API:
-```javascript
-window.__gastwonLog.enable('WebSocket', 'API:*');
-window.__gastwonLog.disableAll();
-window.__gastwonLog.list(); // Show enabled namespaces
-```
-
-### Keyboard Shortcuts (`$lib/utils/keyboard.ts`)
-
-Global keyboard shortcut management:
-
-```typescript
-import { initializeKeyboardShortcuts } from '$lib/utils/keyboard';
-
-const manager = initializeKeyboardShortcuts();
-manager.register('search', {
-  keys: ['cmd', 'k'],
-  description: 'Open search',
-  action: () => openSearch(),
-  category: 'navigation',
-});
-```
-
-Features:
-- Platform-aware modifier keys (⌘ on Mac, Ctrl on Windows)
-- Automatic input field detection (shortcuts disabled in inputs)
-- Cmd+? opens help dialog
-- Category organization for help display
-
-### Touch Gestures (`$lib/utils/gestures.ts`)
-
-Swipe and pull-to-refresh detection:
-
-```typescript
-import { createSwipeDetector, createPullToRefreshDetector } from '$lib/utils/gestures';
-
-// Swipe detection
-const cleanup = createSwipeDetector(element, (event) => {
-  if (event.direction === 'left') handleSwipeLeft();
-}, { minDistance: 50 });
-
-// Pull-to-refresh
-const cleanup = createPullToRefreshDetector(scrollContainer, async () => {
-  await refreshData();
-});
-```
-
----
-
-## Real-Time Architecture
-
-### WebSocket Client (`$lib/stores/websocket.svelte.ts`)
-
-The WebSocket client provides reliable real-time communication with the Gas Town
-daemon, handling connection management automatically.
-
-**Connection States**:
-- `disconnected`: Not connected
-- `connecting`: Establishing connection
-- `connected`: Active connection
-- `reconnecting`: Attempting to reconnect
-
-**Automatic Reconnection**:
-Uses exponential backoff with jitter to prevent thundering herd:
-```
-delay = min(baseDelay * 2^attempt, maxDelay) + random_jitter
-```
-
-Default configuration:
-- Base delay: 1 second
-- Max delay: 30 seconds
-- 20% jitter factor
-
-**Heartbeat/Keep-Alive**:
-- Ping sent every 30 seconds
-- 5-second timeout for pong response
-- Dead connection detection and auto-reconnect
-
-**Network Integration**:
-Listens to browser online/offline events:
-- Goes offline → clean disconnect
-- Comes online → automatic reconnect attempt
-
-**Usage**:
-```typescript
-import { wsClient } from '$lib/stores/websocket.svelte';
-
-// Subscribe to messages
-const unsubscribe = wsClient.on<AgentStatusPayload>('agent_status', (payload) => {
-  updateAgent(payload.agentId, payload.status);
-});
-
-// Send messages
-wsClient.send('queue_update', { action: 'refresh' });
-
-// Monitor connection state
-$effect(() => {
-  if (wsClient.state === 'connected') {
-    showOnlineIndicator();
-  }
-});
-```
-
----
-
-## Accessibility
-
-### Touch Targets
-
-WCAG 2.5.5 AAA compliant touch targets (48px minimum):
-
-```css
-.touch-target {
-  min-height: var(--touch-target-min); /* 48px */
-  min-width: var(--touch-target-min);
-}
-
-.touch-target-interactive {
-  /* Adds active:scale-95 feedback */
-}
-
-.touch-gap {
-  gap: var(--touch-gap-min); /* 8px between targets */
-}
-```
-
-### Safe Areas
-
-Support for notched devices (iPhone, etc.):
-
-```css
-.pt-safe { padding-top: env(safe-area-inset-top); }
-.pb-safe { padding-bottom: env(safe-area-inset-bottom); }
-.px-safe { /* Left + right safe areas */ }
-.min-h-safe-screen { /* Full height minus safe areas */ }
-```
-
-### Screen Reader Support
-
-Live regions for dynamic content:
-```svelte
-<LiveRegion level="polite">
-  {statusMessage}
-</LiveRegion>
-
-<Announcer message={announcement} />
-```
-
-Focus management:
-```css
-.focus-ring {
-  @apply focus-visible:ring-2 focus-visible:ring-ring;
-}
-
-.sr-only { /* Visually hidden but accessible */ }
-.sr-only-focusable:focus { /* Visible on focus (skip links) */ }
-```
-
-### Reduced Motion
-
-Full `prefers-reduced-motion` support:
-- All animations respect user preference
-- Shimmer effects hidden
-- Stagger delays removed
-- Static alternatives shown
-
----
+70+ components in `src/lib/components/` using Svelte 5 runes and `tailwind-variants`:
+
+- **Core**: Button, Badge, Input, Switch, Icon
+- **Layout**: DashboardLayout, PageHeader, SplitView
+- **Status**: StatusIndicator, ProgressBar, Toast
+- **Loading**: Skeleton, SkeletonGroup, NavigationLoader
+- **A11y**: Announcer, LiveRegion, SkipLink, KeyboardHelpDialog
+- **Mobile**: BottomNav, SwipeableItem, PullToRefresh, OfflineIndicator
+
+## Utilities
+
+- **Logger** (`$lib/utils/logger.ts`): Namespaced debug logging, environment-aware
+- **Keyboard** (`$lib/utils/keyboard.ts`): Global shortcuts with platform detection
+- **Gestures** (`$lib/utils/gestures.ts`): Swipe and pull-to-refresh detection
+
+## Real-Time
+
+WebSocket client (`$lib/stores/websocket.svelte.ts`) with:
+- Exponential backoff reconnection (1s base, 30s max, 20% jitter)
+- Heartbeat/ping-pong (30s interval, 5s timeout)
+- Browser online/offline event integration
 
 ## Security
 
-### Content Security Policy
+Configured in `src/hooks.server.ts`:
+- CSP headers (self + fonts.googleapis.com)
+- CSRF double-submit cookie pattern
+- HttpOnly auth cookies
+- Security headers (X-Frame-Options, HSTS in prod, etc.)
 
-Strict CSP headers applied via `src/hooks.server.ts`:
+## Accessibility
 
-```
-default-src 'self';
-script-src 'self' 'unsafe-inline' 'unsafe-eval';
-style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-font-src 'self' https://fonts.gstatic.com;
-connect-src 'self' ws: wss:;
-frame-ancestors 'none';
-```
+- WCAG 2.5.5 AAA touch targets (48px min)
+- Safe area insets for notched devices
+- Screen reader live regions
+- `prefers-reduced-motion` support
 
-### CSRF Protection
-
-Double-submit cookie pattern for API routes:
-- CSRF token generated on first request
-- Token validated on state-changing requests (POST, PUT, DELETE)
-- 403 response on validation failure
-
-### Session Management
-
-HttpOnly cookies for auth tokens:
-- Access token: Short-lived, HttpOnly, Secure
-- Refresh token: Long-lived, HttpOnly, Secure, SameSite=Strict
-- JWT payload decoded server-side for session data
-
-### Security Headers
-
-Applied to all responses:
-- `X-Frame-Options: DENY`
-- `X-Content-Type-Options: nosniff`
-- `X-XSS-Protection: 1; mode=block`
-- `Referrer-Policy: strict-origin-when-cross-origin`
-- `Permissions-Policy: camera=(), microphone=(), geolocation=()`
-- `Strict-Transport-Security` (production only)
-
----
-
-## Environment Variables
-
-Create a `.env` file based on `.env.example`:
+## Environment
 
 ```bash
-# WebSocket endpoint for daemon connection
 VITE_WS_URL=ws://localhost:8080/ws
-
-# Enable mock API for development/testing
 VITE_MOCK_API=true
 ```
-
----
 
 ## Notes
 
