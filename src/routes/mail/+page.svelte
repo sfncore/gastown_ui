@@ -154,6 +154,7 @@
 			title="Mail Inbox"
 			subtitle="{data.messages.length} messages"
 			liveCount={data.unreadCount > 0 ? { count: data.unreadCount, label: 'unread', status: 'info' } : undefined}
+			showAccentBar={true}
 		>
 			{#snippet actions()}
 				<a

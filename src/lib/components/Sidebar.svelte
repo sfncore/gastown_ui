@@ -253,7 +253,7 @@
 	aria-label="Main navigation"
 >
 	<!-- Logo / Header -->
-	<div class="flex items-center h-16 px-4 border-b border-border shrink-0">
+	<div class="flex items-center h-[72px] px-4 border-b border-border shrink-0">
 		{#if collapsed}
 			<Fuel class="w-6 h-6 text-foreground" strokeWidth={2} aria-hidden="true" />
 		{:else}
@@ -370,12 +370,18 @@
 			aria-expanded={!collapsed}
 			aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
 		>
-			<span
-				class="text-xl w-6 h-6 flex items-center justify-center transition-transform duration-300"
-				style:transform={collapsed ? 'rotate(180deg)' : 'rotate(0deg)'}
-				aria-hidden="true"
-			>
-				&#x00AB;
+			<span class="w-5 h-5 flex items-center justify-center" aria-hidden="true">
+				{#if collapsed}
+					<!-- Expand icon: arrow pointing right into panel -->
+					<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+						<path d="M16.5 3C16.7761 3 17 3.22386 17 3.5V16.5C17 16.7761 16.7761 17 16.5 17C16.2239 17 16 16.7761 16 16.5V3.5C16 3.22386 16.2239 3 16.5 3ZM8.12793 5.16504C8.28958 4.98547 8.5524 4.95058 8.75293 5.06836L8.83496 5.12793L13.835 9.62793C13.9403 9.72275 14 9.85828 14 10C14 10.1063 13.9667 10.2093 13.9053 10.2939L13.835 10.3721L8.83496 14.8721C8.62972 15.0568 8.31267 15.0402 8.12793 14.835C7.94322 14.6297 7.95984 14.3127 8.16504 14.1279L12.1963 10.5H3.5C3.22386 10.5 3 10.2761 3 10C3 9.72386 3.22386 9.5 3.5 9.5H12.1963L8.16504 5.87207L8.09766 5.79688C7.95931 5.60979 7.96622 5.34471 8.12793 5.16504Z"/>
+					</svg>
+				{:else}
+					<!-- Collapse icon: sidebar panel -->
+					<svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+						<path d="M16.5 4C17.3284 4 18 4.67157 18 5.5V14.5C18 15.3284 17.3284 16 16.5 16H3.5C2.67157 16 2 15.3284 2 14.5V5.5C2 4.67157 2.67157 4 3.5 4H16.5ZM7 15H16.5C16.7761 15 17 14.7761 17 14.5V5.5C17 5.22386 16.7761 5 16.5 5H7V15ZM3.5 5C3.22386 5 3 5.22386 3 5.5V14.5C3 14.7761 3.22386 15 3.5 15H6V5H3.5Z"/>
+					</svg>
+				{/if}
 			</span>
 			{#if !collapsed}
 				<span class="text-sm font-medium">Collapse</span>

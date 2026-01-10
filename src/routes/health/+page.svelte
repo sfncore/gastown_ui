@@ -90,6 +90,7 @@
 				label: getStatusLabel(data.health.overallStatus).toLowerCase(),
 				status: data.health.overallStatus === 'healthy' ? 'success' : data.health.overallStatus === 'degraded' ? 'warning' : 'error'
 			} : undefined}
+			showAccentBar={true}
 		/>
 
 		<main class="container py-6 space-y-6">

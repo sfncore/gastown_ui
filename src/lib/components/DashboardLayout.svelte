@@ -56,6 +56,7 @@
 		<!-- Header using PageHeader component -->
 		<PageHeader
 			title={title}
+			showAccentBar={true}
 			liveCount={{
 				count: systemStatus === 'running' ? 1 : 0,
 				label: systemStatus === 'running' ? 'connected' : systemStatus === 'error' ? 'disconnected' : systemStatus,

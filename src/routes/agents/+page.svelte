@@ -85,6 +85,7 @@
 		<PageHeader
 			title="Agents"
 			subtitle="Showing {filteredAgents.length} of {data.agents.length} agents"
+			showAccentBar={true}
 		>
 			{#snippet actions()}
 				<!-- Status filter dropdown -->

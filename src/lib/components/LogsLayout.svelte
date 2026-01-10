@@ -63,7 +63,7 @@
 	<!-- Main content wrapper -->
 	<div class="relative z-10 flex flex-col min-h-screen">
 		<!-- Header using PageHeader component -->
-		<PageHeader {title}>
+		<PageHeader {title} showAccentBar={true}>
 			{#snippet actions()}
 				{#if headerActions}
 					{@render headerActions()}
