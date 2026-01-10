@@ -10,7 +10,7 @@
 
 | Priority | Items | Status |
 |----------|-------|--------|
-| P0 - Critical | 2 | Pending |
+| P0 - Critical | 2 | 1 Closed (false positive), 1 Deferred (needs decision) |
 | P1 - High | 4 | Pending |
 | P2 - Medium | 3 | Pending |
 
@@ -20,7 +20,7 @@
 
 ### P0-1: Security Audit - @html Usage Review
 
-**Status:** Verified - FALSE POSITIVE
+**Status:** ✅ CLOSED - FALSE POSITIVE (No action required)
 
 **Finding:** Initial audit flagged 15 `@html` usages in `seance/+page.svelte` as XSS risk.
 
@@ -45,7 +45,10 @@ const icons: Record<string, string> = {
 
 ### P0-2: Implement Production Authentication
 
-**Status:** TODO - Mock implementation in place
+**Status:** ⏸️ DEFERRED - Requires architecture decision
+
+> **Note:** Current mock implementation is intentional for development/demo.
+> This is blocked pending team decision on auth provider.
 
 **Current State:** Demo authentication that accepts any email with password "demo".
 
