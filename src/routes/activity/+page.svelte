@@ -187,10 +187,43 @@
 					</div>
 				</div>
 
+				<!-- Filter chips -->
+				<div class="flex flex-wrap gap-2 mb-3">
+					<button
+						type="button"
+						class={cn(
+							'px-3 py-1 text-xs font-medium rounded-full transition-colors',
+							selectedType === '' && !selectedActor
+								? 'bg-primary text-primary-foreground'
+								: 'bg-muted text-muted-foreground hover:bg-muted/80'
+						)}
+						onclick={() => clearFilters()}
+					>
+						All Events
+					</button>
+					{#each data.types as type}
+						<button
+							type="button"
+							class={cn(
+								'px-3 py-1 text-xs font-medium rounded-full transition-colors',
+								selectedType === type
+									? 'bg-primary text-primary-foreground'
+									: 'bg-muted text-muted-foreground hover:bg-muted/80'
+							)}
+							onclick={() => {
+								selectedType = type;
+								applyFilters();
+							}}
+						>
+							{type.replace(/_/g, ' ')}
+						</button>
+					{/each}
+				</div>
+
 				<!-- Filters -->
 				<div class="flex flex-wrap items-center gap-4">
-					<!-- Type filter -->
-					<div class="flex items-center gap-2">
+					<!-- Type filter (dropdown for narrow viewports) -->
+					<div class="hidden sm:flex items-center gap-2">
 						<span class="text-xs text-muted-foreground">Type:</span>
 						<select
 							bind:value={selectedType}
