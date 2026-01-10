@@ -15,6 +15,12 @@ export default defineConfig({
 				brotliSize: true
 			})
 	].filter(Boolean),
+	server: {
+		fs: {
+			// Allow serving files from parent directories (for monorepo/workspace setups)
+			allow: ['..', '../..', '../../..', '../../../..']
+		}
+	},
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}'],
 		globals: true,
