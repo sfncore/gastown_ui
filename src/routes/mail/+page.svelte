@@ -231,7 +231,7 @@
 												isSelected && 'bg-accent/10'
 											)}
 											onclick={() => selectMessage(message.id)}
-											aria-selected={isSelected}
+											aria-pressed={isSelected}
 										>
 											<div class="flex items-start gap-3">
 												<!-- Unread indicator -->

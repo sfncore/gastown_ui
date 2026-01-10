@@ -6,9 +6,10 @@
 	import { cn } from '$lib/utils';
 
 	const { data } = $props();
-	
+
 	let isLoading = $state(true);
-	let error = $state(data.error);
+	let localError = $state<string | null>(null);
+	const error = $derived(localError ?? data.error ?? null);
 
 	// Filter state
 	let filters = $state({
@@ -28,17 +29,17 @@
 	
 	async function handleRetry() {
 		isLoading = true;
-		error = null;
+		localError = null;
 		try {
 			const response = await fetch(window.location.href);
 			if (response.ok) {
 				// Reload page to get fresh data
 				window.location.reload();
 			} else {
-				error = 'Failed to refresh agents list';
+				localError = 'Failed to refresh agents list';
 			}
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to refresh agents';
+			localError = e instanceof Error ? e.message : 'Failed to refresh agents';
 		} finally {
 			isLoading = false;
 		}
@@ -46,16 +47,16 @@
 
 	async function refresh() {
 		isLoading = true;
-		error = null;
+		localError = null;
 		try {
 			const response = await fetch(window.location.href);
 			if (response.ok) {
 				window.location.reload();
 			} else {
-				error = 'Failed to refresh agents list';
+				localError = 'Failed to refresh agents list';
 			}
 		} catch (e) {
-			error = e instanceof Error ? e.message : 'Failed to refresh agents';
+			localError = e instanceof Error ? e.message : 'Failed to refresh agents';
 		} finally {
 			isLoading = false;
 		}

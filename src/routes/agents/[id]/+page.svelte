@@ -5,7 +5,7 @@
 
 	let { data } = $props();
 
-	const agent = data.agent;
+	const agent = $derived(data.agent);
 
 	// Role icons mapping
 	const roleIcons: Record<string, typeof Briefcase> = {
@@ -16,7 +16,7 @@
 		polecat: Users
 	};
 
-	const RoleIcon = roleIcons[agent.role || ''] || Briefcase;
+	const RoleIcon = $derived(roleIcons[agent.role || ''] || Briefcase);
 
 	// Status indicator map
 	const statusIndicatorMap = {
@@ -94,7 +94,7 @@
 					<!-- Icon -->
 					<div class="flex-shrink-0">
 						<div class="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center">
-							<svelte:component this={RoleIcon} class="w-10 h-10 text-primary" strokeWidth={2} />
+							<RoleIcon class="w-10 h-10 text-primary" strokeWidth={2} />
 						</div>
 					</div>
 
@@ -161,7 +161,7 @@
 						<div>
 							<p class="text-xs font-medium uppercase tracking-wide text-muted-foreground mb-1">Role</p>
 							<div class="flex items-center gap-2">
-								<svelte:component this={RoleIcon} class="w-4 h-4 text-muted-foreground" strokeWidth={2} />
+								<RoleIcon class="w-4 h-4 text-muted-foreground" strokeWidth={2} />
 								<p class="text-foreground">{roleLabels[agent.role] || agent.role}</p>
 							</div>
 						</div>

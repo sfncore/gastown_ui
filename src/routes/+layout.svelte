@@ -260,9 +260,9 @@
 			<!-- Global search in header for desktop -->
 			<div class="fixed top-4 right-4 z-40">
 				{#await import('$lib/components/GlobalSearch.svelte') then m}
-					<svelte:component this={m.default} />
+					<m.default />
 				{:catch}
-					<button class="w-10 h-10 rounded-lg bg-card border border-border" />
+					<button class="w-10 h-10 rounded-lg bg-card border border-border" aria-label="Loading search"></button>
 				{/await}
 			</div>
 
@@ -296,9 +296,9 @@
 			<span class="text-sm font-semibold text-foreground">Navigation</span>
 			<div class="ml-auto">
 				{#await import('$lib/components/GlobalSearch.svelte') then m}
-					<svelte:component this={m.default} class="rounded-lg" />
+					<m.default class="rounded-lg" />
 				{:catch}
-					<button class="w-10 h-10 rounded-lg bg-card border border-border" />
+					<button class="w-10 h-10 rounded-lg bg-card border border-border" aria-label="Loading search"></button>
 				{/await}
 			</div>
 		</div>
@@ -314,20 +314,21 @@
 		{/if}
 
 		<!-- Mobile sidebar drawer -->
-		<nav
+		<div
 			class="fixed inset-y-0 left-0 z-20 w-64 md:hidden transition-transform duration-300 ease-out transform"
 			style:transform={mobileDrawerOpen ? 'translateX(0)' : 'translateX(-100%)'}
-			role="navigation"
 			aria-label="Main navigation"
+			role="dialog"
 			aria-modal={mobileDrawerOpen}
-			tabindex={mobileDrawerOpen ? 0 : -1}
+			tabindex="-1"
+			inert={!mobileDrawerOpen}
 		>
 			<Sidebar
 				items={navItems}
 				{activeId}
 				class="h-screen"
 			/>
-		</nav>
+		</div>
 
 		<!-- Main content area with page transitions -->
 		<div
@@ -361,7 +362,7 @@
 		
 		<!-- Keyboard shortcuts help dialog (lazy loaded) -->
 		{#await import('$lib/components/KeyboardHelpDialog.svelte') then m}
-			<svelte:component this={m.default} />
+			<m.default />
 		{/await}
 		</div>
 {:else}

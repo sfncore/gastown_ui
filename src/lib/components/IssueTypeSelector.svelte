@@ -111,12 +111,12 @@
 
 <div class={cn(styles.container(), className)}>
 	{#if label}
-		<label class={styles.label()}>
+		<span id="issue-type-label" class={styles.label()}>
 			{label}
-		</label>
+		</span>
 	{/if}
 
-	<div class={styles.group()}>
+	<div class={styles.group()} aria-labelledby={label ? "issue-type-label" : undefined} role="radiogroup">
 		{#each options as option (option.value)}
 			<label 
 				class={cn(
@@ -139,7 +139,7 @@
 						class={cn(styles.icon(), getIconColor(option.value))} 
 						aria-hidden="true"
 					>
-						<svelte:component this={option.icon} strokeWidth={2} />
+						<option.icon strokeWidth={2} />
 					</span>
 				{/if}
 				

@@ -223,7 +223,6 @@
 	<nav
 		bind:this={navRef}
 		class="flex-1 overflow-y-auto py-4 px-2"
-		role="navigation"
 		aria-label="Sidebar navigation"
 		onkeydown={handleKeyDown}
 	>

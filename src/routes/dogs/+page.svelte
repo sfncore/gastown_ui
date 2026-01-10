@@ -160,14 +160,16 @@
 
 						<div class="p-4 rounded-lg bg-background/50 border border-border">
 							<p class="text-xs text-muted-foreground uppercase tracking-wide">Last Decision</p>
-							<div class="flex items-center gap-2 mt-2">
-								<svelte:component
-									this={getTriageIcon(data.dogs.boot.lastTriage)}
-									class="w-5 h-5 text-muted-foreground"
-									strokeWidth={2}
-								/>
-								<span class="font-semibold">{data.dogs.boot.lastTriage}</span>
-							</div>
+							{#if data.dogs.boot.lastTriage}
+								{@const TriageIcon = getTriageIcon(data.dogs.boot.lastTriage)}
+								<div class="flex items-center gap-2 mt-2">
+									<TriageIcon
+										class="w-5 h-5 text-muted-foreground"
+										strokeWidth={2}
+									/>
+									<span class="font-semibold">{data.dogs.boot.lastTriage}</span>
+								</div>
+							{/if}
 						</div>
 
 						<div class="p-4 rounded-lg bg-background/50 border border-border">
