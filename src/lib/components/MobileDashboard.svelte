@@ -97,8 +97,16 @@
 		}
 	]);
 
-	// Track active tab - user can change via swipe, starts at initialTab
-	let activeTab = $state(initialTab as 'agents' | 'flows' | 'queue' | 'logs');
+	// Track active tab - user can change via swipe
+	// Use explicit initialization in $effect to avoid state_referenced_locally
+	let activeTab = $state<'agents' | 'flows' | 'queue' | 'logs'>('agents');
+	let tabInitialized = false;
+	$effect(() => {
+		if (!tabInitialized) {
+			activeTab = initialTab;
+			tabInitialized = true;
+		}
+	});
 </script>
 
 <div class={cn('relative min-h-screen bg-background md:hidden', className)}>

@@ -122,6 +122,7 @@ export interface SheetNavItem {
 		role="dialog"
 		aria-modal="true"
 		aria-label={title}
+		tabindex="-1"
 		onkeydown={handleKeydown}
 	>
 		<div class="mx-2 mb-2 rounded-3xl border border-border/80 panel-glass-strong shadow-2xl animate-slide-in-up">

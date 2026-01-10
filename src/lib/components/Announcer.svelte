@@ -22,7 +22,10 @@
 
 	// Track displayed message for clearing (effect updates it when message changes)
 	let displayedMessage = $state('');
-	let currentPoliteness = $state<'polite' | 'assertive'>(politeness);
+	// Override politeness for event-driven announcements
+	let eventPolitenessOverride = $state<'polite' | 'assertive' | null>(null);
+	// Derive current politeness from prop or event override
+	const currentPoliteness = $derived(eventPolitenessOverride ?? politeness);
 
 	// Track event-driven timeout for cleanup
 	let eventTimeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -31,7 +34,7 @@
 	$effect(() => {
 		if (message) {
 			displayedMessage = message;
-			currentPoliteness = politeness;
+			eventPolitenessOverride = null; // Clear override when prop-driven
 
 			if (clearAfter > 0) {
 				const timeout = setTimeout(() => {
@@ -49,7 +52,7 @@
 			const { message: newMessage, priority = 'polite' } = event.detail;
 			if (newMessage) {
 				displayedMessage = newMessage;
-				currentPoliteness = priority;
+				eventPolitenessOverride = priority;
 
 				// Clear any existing timeout before setting new one
 				if (eventTimeoutId) {

@@ -16,20 +16,6 @@
 
 	let { collapsed = false, class: className = '' }: Props = $props();
 
-	// Get the appropriate icon based on current theme
-	const themeIcon = $derived.by(() => {
-		switch (themeStore.theme) {
-			case 'dark':
-				return Moon;
-			case 'light':
-				return Sun;
-			case 'system':
-				return Monitor;
-			default:
-				return Moon;
-		}
-	});
-
 	// Get label for screen readers and tooltips
 	const themeLabel = $derived.by(() => {
 		switch (themeStore.theme) {
@@ -63,7 +49,13 @@
 	title={themeLabel}
 >
 	<span class="w-6 h-6 flex items-center justify-center" aria-hidden="true">
-		<svelte:component this={themeIcon} size={20} strokeWidth={2} />
+		{#if themeStore.theme === 'dark'}
+			<Moon size={20} strokeWidth={2} />
+		{:else if themeStore.theme === 'light'}
+			<Sun size={20} strokeWidth={2} />
+		{:else}
+			<Monitor size={20} strokeWidth={2} />
+		{/if}
 	</span>
 	{#if !collapsed}
 		<span class="text-sm font-medium">{themeLabel}</span>

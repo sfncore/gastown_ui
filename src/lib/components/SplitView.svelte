@@ -31,20 +31,28 @@
 	}: Props = $props();
 
 	let containerRef = $state<HTMLDivElement>();
-	let dividerRef = $state<HTMLDivElement>();
+	let dividerRef = $state<HTMLButtonElement>();
 	let isResizing = $state(false);
-	let currentListWidth = $state(listWidth);
+	// Initialize with default, will be set from prop or localStorage in onMount
+	let currentListWidth = $state(30);
 	let isMobile = $state(false);
+	// Track if width has been initialized (from localStorage or prop)
+	let initialized = false;
 
-	// Load saved width from localStorage on mount
+	// Load saved width from localStorage on mount, fallback to prop
 	onMount(() => {
 		const saved = localStorage.getItem(storageKey);
 		if (saved) {
 			const parsed = parseInt(saved, 10);
 			if (!isNaN(parsed) && parsed > 0) {
 				currentListWidth = Math.min(parsed, 70); // Cap at 70%
+			} else {
+				currentListWidth = listWidth; // Use prop value
 			}
+		} else {
+			currentListWidth = listWidth; // Use prop value
 		}
+		initialized = true;
 
 		// Check if mobile
 		const checkMobile = () => {
@@ -113,24 +121,21 @@
 
 	<!-- Draggable Divider (desktop only) -->
 	{#if !isMobile}
-		<div
+		<button
+			type="button"
 			bind:this={dividerRef}
 			class={cn(
 				'w-1 bg-border cursor-col-resize transition-colors duration-200 hover:bg-primary/50 active:bg-primary',
+				'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
 				isResizing && 'bg-primary'
 			)}
 			onmousedown={startResize}
-			role="separator"
-			tabindex="0"
-			aria-label="Resize split view"
-			aria-valuenow={Math.round(currentListWidth)}
-			aria-valuemin={20}
-			aria-valuemax={70}
+			aria-label="Resize split view, {Math.round(currentListWidth)}% list width"
 		>
 			<div class="flex items-center justify-center h-full opacity-0 hover:opacity-100 transition-opacity">
 				<GripHorizontal class="w-4 h-4 text-primary" strokeWidth={2} />
 			</div>
-		</div>
+		</button>
 	{/if}
 
 	<!-- Content Panel -->

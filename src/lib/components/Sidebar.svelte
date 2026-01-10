@@ -275,6 +275,7 @@
 			aria-hidden="true"
 		></div>
 
+		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 		<nav
 			bind:this={navRef}
 			onscroll={updateScrollState}
