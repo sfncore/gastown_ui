@@ -27,11 +27,12 @@ declare global {
  */
 const CSP_DIRECTIVES = [
 	"default-src 'self'",
-	"script-src 'self' 'unsafe-inline'", // unsafe-inline needed for Svelte
-	"style-src 'self' 'unsafe-inline'",
-	"img-src 'self' data: https:",
-	"font-src 'self'",
-	"connect-src 'self' wss:",
+	"script-src 'self' 'unsafe-inline' 'unsafe-eval'", // unsafe-inline/eval needed for Svelte dev
+	"style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+	"style-src-elem 'self' 'unsafe-inline' https://fonts.googleapis.com",
+	"img-src 'self' data: blob: https:",
+	"font-src 'self' https://fonts.gstatic.com data:",
+	"connect-src 'self' ws: wss: http://localhost:*",
 	"frame-ancestors 'none'",
 	"base-uri 'self'",
 	"form-action 'self'"
