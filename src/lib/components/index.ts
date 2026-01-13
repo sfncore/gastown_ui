@@ -30,6 +30,7 @@ export { default as DataTable, dataTableVariants, type Column, type DataTablePro
 
 // Layout components
 export { default as AgentDetailLayout } from './AgentDetailLayout.svelte';
+export { default as Dashboard } from './Dashboard.svelte';
 export { default as DashboardLayout } from './DashboardLayout.svelte';
 export { default as LogsLayout } from './LogsLayout.svelte';
 export { default as PageHeader, pageHeaderVariants, type BreadcrumbItem, type LiveCount, type PageHeaderProps, type PageHeaderVariants } from './PageHeader.svelte';

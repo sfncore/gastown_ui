@@ -1,0 +1,606 @@
+2026/01/13 20:49:50 Daemon starting (PID 97959)
+2026/01/13 20:49:50 Daemon running, recovery heartbeat interval 3m0s
+2026/01/13 20:49:50 Feed curator started
+2026/01/13 20:49:50 Convoy watcher started
+2026/01/13 20:49:50 Heartbeat starting (recovery-focused)
+2026/01/13 20:49:50 Boot already running, skipping spawn
+2026/01/13 20:49:50 convoy watcher: detected close of hq-jhb
+2026/01/13 20:49:51 Heartbeat complete (#1)
+2026/01/13 20:52:50 Heartbeat starting (recovery-focused)
+2026/01/13 20:52:50 Boot already running, skipping spawn
+2026/01/13 20:52:51 Heartbeat complete (#2)
+2026/01/13 20:55:51 Heartbeat starting (recovery-focused)
+2026/01/13 20:55:51 Boot already running, skipping spawn
+2026/01/13 20:55:52 Heartbeat complete (#3)
+2026/01/13 20:58:52 Heartbeat starting (recovery-focused)
+2026/01/13 20:58:52 Spawning Boot for triage...
+2026/01/13 20:58:53 Boot spawned successfully
+2026/01/13 20:58:54 Heartbeat complete (#4)
+2026/01/13 20:59:56 convoy watcher: detected close of hq-lmj1
+2026/01/13 21:01:54 Heartbeat starting (recovery-focused)
+2026/01/13 21:01:54 Boot already running, skipping spawn
+2026/01/13 21:01:55 Heartbeat complete (#5)
+2026/01/13 21:04:55 Heartbeat starting (recovery-focused)
+2026/01/13 21:04:55 Boot already running, skipping spawn
+2026/01/13 21:04:56 Heartbeat complete (#6)
+2026/01/13 21:07:56 Heartbeat starting (recovery-focused)
+2026/01/13 21:07:56 Boot already running, skipping spawn
+2026/01/13 21:07:57 Heartbeat complete (#7)
+2026/01/13 21:10:57 Heartbeat starting (recovery-focused)
+2026/01/13 21:10:57 Boot already running, skipping spawn
+2026/01/13 21:10:58 Heartbeat complete (#8)
+2026/01/13 21:13:58 Heartbeat starting (recovery-focused)
+2026/01/13 21:13:58 Boot already running, skipping spawn
+2026/01/13 21:13:59 Heartbeat complete (#9)
+2026/01/13 21:16:59 Heartbeat starting (recovery-focused)
+2026/01/13 21:16:59 Boot already running, skipping spawn
+2026/01/13 21:17:00 Heartbeat complete (#10)
+2026/01/13 21:20:00 Heartbeat starting (recovery-focused)
+2026/01/13 21:20:00 Boot already running, skipping spawn
+2026/01/13 21:20:01 Heartbeat complete (#11)
+2026/01/13 21:23:01 Heartbeat starting (recovery-focused)
+2026/01/13 21:23:01 Boot already running, skipping spawn
+2026/01/13 21:23:02 Heartbeat complete (#12)
+2026/01/13 21:26:02 Heartbeat starting (recovery-focused)
+2026/01/13 21:26:02 Boot already running, skipping spawn
+2026/01/13 21:26:03 Heartbeat complete (#13)
+2026/01/13 21:28:34 convoy watcher: detected close of hq-xw16
+2026/01/13 21:29:03 Heartbeat starting (recovery-focused)
+2026/01/13 21:29:03 Boot already running, skipping spawn
+2026/01/13 21:29:04 Heartbeat complete (#14)
+2026/01/13 21:32:04 Heartbeat starting (recovery-focused)
+2026/01/13 21:32:04 Boot already running, skipping spawn
+2026/01/13 21:32:05 Heartbeat complete (#15)
+2026/01/13 21:35:05 Heartbeat starting (recovery-focused)
+2026/01/13 21:35:10 Deacon started successfully
+2026/01/13 21:35:10 Spawning Boot for triage...
+2026/01/13 21:35:11 Boot spawned successfully
+2026/01/13 21:35:11 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 21:35:17 Witness session for gastown_ui started successfully
+2026/01/13 21:35:17 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 21:36:31 Refinery session for gastown_ui started successfully
+2026/01/13 21:36:32 Heartbeat complete (#16)
+2026/01/13 21:39:32 Heartbeat starting (recovery-focused)
+2026/01/13 21:39:32 Boot already running, skipping spawn
+2026/01/13 21:39:32 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 21:39:32 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 21:40:47 Refinery session for gastown_ui started successfully
+2026/01/13 21:40:48 Heartbeat complete (#17)
+2026/01/13 21:43:48 Heartbeat starting (recovery-focused)
+2026/01/13 21:43:48 Boot already running, skipping spawn
+2026/01/13 21:43:48 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 21:43:54 Witness session for gastown_ui started successfully
+2026/01/13 21:43:54 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 21:45:09 Refinery session for gastown_ui started successfully
+2026/01/13 21:45:10 Heartbeat complete (#18)
+2026/01/13 21:48:10 Heartbeat starting (recovery-focused)
+2026/01/13 21:48:10 Boot already running, skipping spawn
+2026/01/13 21:48:10 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 21:48:10 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 21:49:24 Refinery session for gastown_ui started successfully
+2026/01/13 21:49:26 Heartbeat complete (#19)
+2026/01/13 21:52:26 Heartbeat starting (recovery-focused)
+2026/01/13 21:52:26 Boot already running, skipping spawn
+2026/01/13 21:52:26 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 21:52:26 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 21:53:40 Refinery session for gastown_ui started successfully
+2026/01/13 21:53:41 Heartbeat complete (#20)
+2026/01/13 21:56:41 Heartbeat starting (recovery-focused)
+2026/01/13 21:56:41 Boot already running, skipping spawn
+2026/01/13 21:56:41 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 21:56:41 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 21:57:56 Refinery session for gastown_ui started successfully
+2026/01/13 21:57:57 Heartbeat complete (#21)
+2026/01/13 22:00:57 Heartbeat starting (recovery-focused)
+2026/01/13 22:00:57 Boot already running, skipping spawn
+2026/01/13 22:00:57 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:00:57 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:02:11 Refinery session for gastown_ui started successfully
+2026/01/13 22:02:13 Heartbeat complete (#22)
+2026/01/13 22:05:13 Heartbeat starting (recovery-focused)
+2026/01/13 22:05:13 Boot already running, skipping spawn
+2026/01/13 22:05:13 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:05:13 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:06:27 Refinery session for gastown_ui started successfully
+2026/01/13 22:06:28 Heartbeat complete (#23)
+2026/01/13 22:09:28 Heartbeat starting (recovery-focused)
+2026/01/13 22:09:33 Deacon started successfully
+2026/01/13 22:09:33 Boot already running, skipping spawn
+2026/01/13 22:09:33 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:09:33 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:10:48 Refinery session for gastown_ui started successfully
+2026/01/13 22:10:49 Heartbeat complete (#24)
+2026/01/13 22:13:49 Heartbeat starting (recovery-focused)
+2026/01/13 22:13:54 Deacon started successfully
+2026/01/13 22:13:54 Boot already running, skipping spawn
+2026/01/13 22:13:54 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:13:54 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:15:08 Refinery session for gastown_ui started successfully
+2026/01/13 22:15:09 Heartbeat complete (#25)
+2026/01/13 22:18:17 Heartbeat starting (recovery-focused)
+2026/01/13 22:18:22 Deacon started successfully
+2026/01/13 22:18:22 Boot already running, skipping spawn
+2026/01/13 22:18:22 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:18:22 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:24:49 Refinery session for gastown_ui started successfully
+2026/01/13 22:24:50 Heartbeat complete (#26)
+2026/01/13 22:27:50 Heartbeat starting (recovery-focused)
+2026/01/13 22:27:55 Deacon started successfully
+2026/01/13 22:27:55 Boot already running, skipping spawn
+2026/01/13 22:27:55 Deacon heartbeat is stale (24m0s old), checking session...
+2026/01/13 22:27:55 Deacon stuck for 24m0s - nudging session
+2026/01/13 22:27:55 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:27:55 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:29:10 Refinery session for gastown_ui started successfully
+2026/01/13 22:29:11 Heartbeat complete (#27)
+2026/01/13 22:32:11 Heartbeat starting (recovery-focused)
+2026/01/13 22:32:16 Deacon started successfully
+2026/01/13 22:32:16 Boot already running, skipping spawn
+2026/01/13 22:32:16 Deacon heartbeat is stale (29m0s old), checking session...
+2026/01/13 22:32:16 Deacon stuck for 29m0s - nudging session
+2026/01/13 22:32:17 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:32:17 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:33:30 Refinery session for gastown_ui started successfully
+2026/01/13 22:33:31 Heartbeat complete (#28)
+2026/01/13 22:36:31 Heartbeat starting (recovery-focused)
+2026/01/13 22:36:36 Deacon started successfully
+2026/01/13 22:36:36 Boot already running, skipping spawn
+2026/01/13 22:36:36 Deacon heartbeat is stale (33m0s old), checking session...
+2026/01/13 22:36:36 Deacon stuck for 33m0s - restarting session
+2026/01/13 22:36:36 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:36:36 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:37:50 Refinery session for gastown_ui started successfully
+2026/01/13 22:37:51 Heartbeat complete (#29)
+2026/01/13 22:40:51 Heartbeat starting (recovery-focused)
+2026/01/13 22:40:56 Deacon started successfully
+2026/01/13 22:40:56 Boot already running, skipping spawn
+2026/01/13 22:40:56 Deacon heartbeat is stale (37m0s old), checking session...
+2026/01/13 22:40:56 Deacon stuck for 37m0s - restarting session
+2026/01/13 22:40:56 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:40:56 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:42:11 Refinery session for gastown_ui started successfully
+2026/01/13 22:42:12 Heartbeat complete (#30)
+2026/01/13 22:45:40 Heartbeat starting (recovery-focused)
+2026/01/13 22:45:45 Deacon started successfully
+2026/01/13 22:45:45 Boot already running, skipping spawn
+2026/01/13 22:45:45 Deacon heartbeat is stale (42m0s old), checking session...
+2026/01/13 22:45:45 Deacon stuck for 42m0s - restarting session
+2026/01/13 22:45:45 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:45:45 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:50:32 Refinery session for gastown_ui started successfully
+2026/01/13 22:50:33 Heartbeat complete (#31)
+2026/01/13 22:53:33 Heartbeat starting (recovery-focused)
+2026/01/13 22:53:38 Deacon started successfully
+2026/01/13 22:53:38 Boot already running, skipping spawn
+2026/01/13 22:53:38 Deacon heartbeat is stale (50m0s old), checking session...
+2026/01/13 22:53:38 Deacon stuck for 50m0s - restarting session
+2026/01/13 22:53:38 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:53:38 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:54:53 Refinery session for gastown_ui started successfully
+2026/01/13 22:54:54 Heartbeat complete (#32)
+2026/01/13 22:57:54 Heartbeat starting (recovery-focused)
+2026/01/13 22:57:59 Deacon started successfully
+2026/01/13 22:57:59 Boot already running, skipping spawn
+2026/01/13 22:57:59 Deacon heartbeat is stale (54m0s old), checking session...
+2026/01/13 22:57:59 Deacon stuck for 54m0s - restarting session
+2026/01/13 22:57:59 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:57:59 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 22:59:13 Refinery session for gastown_ui started successfully
+2026/01/13 22:59:15 Heartbeat complete (#33)
+2026/01/13 23:02:15 Heartbeat starting (recovery-focused)
+2026/01/13 23:02:20 Deacon started successfully
+2026/01/13 23:02:20 Boot already running, skipping spawn
+2026/01/13 23:02:20 Deacon heartbeat is stale (59m0s old), checking session...
+2026/01/13 23:02:20 Deacon stuck for 59m0s - restarting session
+2026/01/13 23:02:20 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:02:20 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:03:34 Refinery session for gastown_ui started successfully
+2026/01/13 23:03:35 Heartbeat complete (#34)
+2026/01/13 23:06:35 Heartbeat starting (recovery-focused)
+2026/01/13 23:06:40 Deacon started successfully
+2026/01/13 23:06:40 Boot already running, skipping spawn
+2026/01/13 23:06:40 Deacon heartbeat is stale (1h3m0s old), checking session...
+2026/01/13 23:06:40 Deacon stuck for 1h3m0s - restarting session
+2026/01/13 23:06:40 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:06:40 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:07:55 Refinery session for gastown_ui started successfully
+2026/01/13 23:07:56 Heartbeat complete (#35)
+2026/01/13 23:10:56 Heartbeat starting (recovery-focused)
+2026/01/13 23:11:01 Deacon started successfully
+2026/01/13 23:11:01 Boot already running, skipping spawn
+2026/01/13 23:11:01 Deacon heartbeat is stale (1h7m0s old), checking session...
+2026/01/13 23:11:01 Deacon stuck for 1h7m0s - restarting session
+2026/01/13 23:11:01 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:11:01 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:12:15 Refinery session for gastown_ui started successfully
+2026/01/13 23:12:17 Heartbeat complete (#36)
+2026/01/13 23:18:55 Heartbeat starting (recovery-focused)
+2026/01/13 23:19:00 Deacon started successfully
+2026/01/13 23:19:00 Boot already running, skipping spawn
+2026/01/13 23:19:00 Deacon heartbeat is stale (1h15m0s old), checking session...
+2026/01/13 23:19:00 Deacon stuck for 1h15m0s - restarting session
+2026/01/13 23:19:00 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:19:00 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:20:14 Refinery session for gastown_ui started successfully
+2026/01/13 23:20:16 Heartbeat complete (#37)
+2026/01/13 23:23:16 Heartbeat starting (recovery-focused)
+2026/01/13 23:23:21 Deacon started successfully
+2026/01/13 23:23:21 Boot already running, skipping spawn
+2026/01/13 23:23:21 Deacon heartbeat is stale (1h20m0s old), checking session...
+2026/01/13 23:23:21 Deacon stuck for 1h20m0s - restarting session
+2026/01/13 23:23:21 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:23:21 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:24:35 Refinery session for gastown_ui started successfully
+2026/01/13 23:24:36 Heartbeat complete (#38)
+2026/01/13 23:27:36 Heartbeat starting (recovery-focused)
+2026/01/13 23:27:41 Deacon started successfully
+2026/01/13 23:27:41 Boot already running, skipping spawn
+2026/01/13 23:27:41 Deacon heartbeat is stale (1h24m0s old), checking session...
+2026/01/13 23:27:41 Deacon stuck for 1h24m0s - restarting session
+2026/01/13 23:27:41 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:27:41 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:28:56 Refinery session for gastown_ui started successfully
+2026/01/13 23:28:57 Heartbeat complete (#39)
+2026/01/13 23:31:57 Heartbeat starting (recovery-focused)
+2026/01/13 23:32:02 Deacon started successfully
+2026/01/13 23:32:02 Boot already running, skipping spawn
+2026/01/13 23:32:02 Deacon heartbeat is stale (1h28m0s old), checking session...
+2026/01/13 23:32:02 Deacon stuck for 1h28m0s - restarting session
+2026/01/13 23:32:02 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:32:02 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:33:17 Refinery session for gastown_ui started successfully
+2026/01/13 23:33:18 Heartbeat complete (#40)
+2026/01/13 23:36:18 Heartbeat starting (recovery-focused)
+2026/01/13 23:36:23 Deacon started successfully
+2026/01/13 23:36:23 Boot already running, skipping spawn
+2026/01/13 23:36:23 Deacon heartbeat is stale (1h33m0s old), checking session...
+2026/01/13 23:36:23 Deacon stuck for 1h33m0s - restarting session
+2026/01/13 23:36:23 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:36:23 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:37:38 Refinery session for gastown_ui started successfully
+2026/01/13 23:37:39 Heartbeat complete (#41)
+2026/01/13 23:40:39 Heartbeat starting (recovery-focused)
+2026/01/13 23:40:44 Deacon started successfully
+2026/01/13 23:40:44 Boot already running, skipping spawn
+2026/01/13 23:40:44 Deacon heartbeat is stale (1h37m0s old), checking session...
+2026/01/13 23:40:44 Deacon stuck for 1h37m0s - restarting session
+2026/01/13 23:40:44 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:40:44 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:41:58 Refinery session for gastown_ui started successfully
+2026/01/13 23:42:00 Heartbeat complete (#42)
+2026/01/13 23:45:00 Heartbeat starting (recovery-focused)
+2026/01/13 23:45:05 Deacon started successfully
+2026/01/13 23:45:05 Boot already running, skipping spawn
+2026/01/13 23:45:05 Deacon heartbeat is stale (1h41m0s old), checking session...
+2026/01/13 23:45:05 Deacon stuck for 1h41m0s - restarting session
+2026/01/13 23:45:05 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:45:05 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:46:19 Refinery session for gastown_ui started successfully
+2026/01/13 23:46:21 Heartbeat complete (#43)
+2026/01/13 23:49:21 Heartbeat starting (recovery-focused)
+2026/01/13 23:49:25 Deacon started successfully
+2026/01/13 23:49:25 Boot already running, skipping spawn
+2026/01/13 23:49:25 Deacon heartbeat is stale (1h46m0s old), checking session...
+2026/01/13 23:49:25 Deacon stuck for 1h46m0s - restarting session
+2026/01/13 23:49:25 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:49:26 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:50:40 Refinery session for gastown_ui started successfully
+2026/01/13 23:50:41 Heartbeat complete (#44)
+2026/01/13 23:53:41 Heartbeat starting (recovery-focused)
+2026/01/13 23:53:46 Deacon started successfully
+2026/01/13 23:53:46 Boot already running, skipping spawn
+2026/01/13 23:53:46 Deacon heartbeat is stale (1h50m0s old), checking session...
+2026/01/13 23:53:46 Deacon stuck for 1h50m0s - restarting session
+2026/01/13 23:53:46 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:53:46 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:55:01 Refinery session for gastown_ui started successfully
+2026/01/13 23:55:02 Heartbeat complete (#45)
+2026/01/13 23:58:02 Heartbeat starting (recovery-focused)
+2026/01/13 23:58:07 Deacon started successfully
+2026/01/13 23:58:07 Boot already running, skipping spawn
+2026/01/13 23:58:07 Deacon heartbeat is stale (1h55m0s old), checking session...
+2026/01/13 23:58:07 Deacon stuck for 1h55m0s - restarting session
+2026/01/13 23:58:07 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:58:07 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/13 23:59:21 Refinery session for gastown_ui started successfully
+2026/01/13 23:59:22 Heartbeat complete (#46)
+2026/01/14 00:02:22 Heartbeat starting (recovery-focused)
+2026/01/14 00:02:27 Deacon started successfully
+2026/01/14 00:02:27 Boot already running, skipping spawn
+2026/01/14 00:02:27 Deacon heartbeat is stale (1h59m0s old), checking session...
+2026/01/14 00:02:27 Deacon stuck for 1h59m0s - restarting session
+2026/01/14 00:02:27 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:02:27 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:03:42 Refinery session for gastown_ui started successfully
+2026/01/14 00:03:43 Heartbeat complete (#47)
+2026/01/14 00:06:43 Heartbeat starting (recovery-focused)
+2026/01/14 00:06:48 Deacon started successfully
+2026/01/14 00:06:48 Boot already running, skipping spawn
+2026/01/14 00:06:48 Deacon heartbeat is stale (2h3m0s old), checking session...
+2026/01/14 00:06:48 Deacon stuck for 2h3m0s - restarting session
+2026/01/14 00:06:48 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:06:48 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:08:03 Refinery session for gastown_ui started successfully
+2026/01/14 00:08:04 Heartbeat complete (#48)
+2026/01/14 00:11:04 Heartbeat starting (recovery-focused)
+2026/01/14 00:11:09 Deacon started successfully
+2026/01/14 00:11:09 Boot already running, skipping spawn
+2026/01/14 00:11:09 Deacon heartbeat is stale (2h8m0s old), checking session...
+2026/01/14 00:11:09 Deacon stuck for 2h8m0s - restarting session
+2026/01/14 00:11:09 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:11:09 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:12:23 Refinery session for gastown_ui started successfully
+2026/01/14 00:12:24 Heartbeat complete (#49)
+2026/01/14 00:15:24 Heartbeat starting (recovery-focused)
+2026/01/14 00:15:29 Deacon started successfully
+2026/01/14 00:15:29 Boot already running, skipping spawn
+2026/01/14 00:15:29 Deacon heartbeat is stale (2h12m0s old), checking session...
+2026/01/14 00:15:29 Deacon stuck for 2h12m0s - restarting session
+2026/01/14 00:15:29 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:15:29 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:16:44 Refinery session for gastown_ui started successfully
+2026/01/14 00:16:45 Heartbeat complete (#50)
+2026/01/14 00:19:45 Heartbeat starting (recovery-focused)
+2026/01/14 00:19:50 Deacon started successfully
+2026/01/14 00:19:50 Boot already running, skipping spawn
+2026/01/14 00:19:50 Deacon heartbeat is stale (2h16m0s old), checking session...
+2026/01/14 00:19:50 Deacon stuck for 2h16m0s - restarting session
+2026/01/14 00:19:50 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:19:50 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:21:05 Refinery session for gastown_ui started successfully
+2026/01/14 00:21:06 Heartbeat complete (#51)
+2026/01/14 00:24:06 Heartbeat starting (recovery-focused)
+2026/01/14 00:24:11 Deacon started successfully
+2026/01/14 00:24:11 Boot already running, skipping spawn
+2026/01/14 00:24:11 Deacon heartbeat is stale (2h21m0s old), checking session...
+2026/01/14 00:24:11 Deacon stuck for 2h21m0s - restarting session
+2026/01/14 00:24:11 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:24:11 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:25:25 Refinery session for gastown_ui started successfully
+2026/01/14 00:25:27 Heartbeat complete (#52)
+2026/01/14 00:28:27 Heartbeat starting (recovery-focused)
+2026/01/14 00:28:31 Deacon started successfully
+2026/01/14 00:28:31 Boot already running, skipping spawn
+2026/01/14 00:28:31 Deacon heartbeat is stale (2h25m0s old), checking session...
+2026/01/14 00:28:31 Deacon stuck for 2h25m0s - restarting session
+2026/01/14 00:28:31 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:28:31 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:29:46 Refinery session for gastown_ui started successfully
+2026/01/14 00:29:47 Heartbeat complete (#53)
+2026/01/14 00:32:47 Heartbeat starting (recovery-focused)
+2026/01/14 00:32:52 Deacon started successfully
+2026/01/14 00:32:52 Boot already running, skipping spawn
+2026/01/14 00:32:52 Deacon heartbeat is stale (2h29m0s old), checking session...
+2026/01/14 00:32:52 Deacon stuck for 2h29m0s - restarting session
+2026/01/14 00:32:52 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:32:52 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:34:07 Refinery session for gastown_ui started successfully
+2026/01/14 00:34:08 Heartbeat complete (#54)
+2026/01/14 00:37:08 Heartbeat starting (recovery-focused)
+2026/01/14 00:37:13 Deacon started successfully
+2026/01/14 00:37:13 Boot already running, skipping spawn
+2026/01/14 00:37:13 Deacon heartbeat is stale (2h34m0s old), checking session...
+2026/01/14 00:37:13 Deacon stuck for 2h34m0s - restarting session
+2026/01/14 00:37:13 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:37:13 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:38:27 Refinery session for gastown_ui started successfully
+2026/01/14 00:38:28 Heartbeat complete (#55)
+2026/01/14 00:41:28 Heartbeat starting (recovery-focused)
+2026/01/14 00:41:33 Deacon started successfully
+2026/01/14 00:41:33 Boot already running, skipping spawn
+2026/01/14 00:41:33 Deacon heartbeat is stale (2h38m0s old), checking session...
+2026/01/14 00:41:33 Deacon stuck for 2h38m0s - restarting session
+2026/01/14 00:41:33 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:41:33 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:42:48 Refinery session for gastown_ui started successfully
+2026/01/14 00:42:49 Heartbeat complete (#56)
+2026/01/14 00:45:49 Heartbeat starting (recovery-focused)
+2026/01/14 00:45:54 Deacon started successfully
+2026/01/14 00:45:54 Boot already running, skipping spawn
+2026/01/14 00:45:54 Deacon heartbeat is stale (2h42m0s old), checking session...
+2026/01/14 00:45:54 Deacon stuck for 2h42m0s - restarting session
+2026/01/14 00:45:54 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:45:54 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:47:08 Refinery session for gastown_ui started successfully
+2026/01/14 00:47:10 Heartbeat complete (#57)
+2026/01/14 00:50:10 Heartbeat starting (recovery-focused)
+2026/01/14 00:50:15 Deacon started successfully
+2026/01/14 00:50:15 Boot already running, skipping spawn
+2026/01/14 00:50:15 Deacon heartbeat is stale (2h47m0s old), checking session...
+2026/01/14 00:50:15 Deacon stuck for 2h47m0s - restarting session
+2026/01/14 00:50:15 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:50:15 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:51:29 Refinery session for gastown_ui started successfully
+2026/01/14 00:51:30 Heartbeat complete (#58)
+2026/01/14 00:54:30 Heartbeat starting (recovery-focused)
+2026/01/14 00:54:32 convoy watcher: bd activity error: signal: killed, restarting in 5s
+2026/01/14 00:54:34 Deacon started successfully
+2026/01/14 00:54:34 Spawning Boot for triage...
+2026/01/14 00:54:35 Boot spawned successfully
+2026/01/14 00:54:35 Deacon heartbeat is stale (2h51m0s old), checking session...
+2026/01/14 00:54:35 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:54:37 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:54:40 Witness session for gastown_ui started successfully
+2026/01/14 00:54:40 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:54:42 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:54:47 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:54:52 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:54:58 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:55:03 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:55:08 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:55:13 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:55:18 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:55:23 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:55:28 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:55:33 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:55:38 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:55:43 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:55:48 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:55:53 Refinery session for gastown_ui started successfully
+2026/01/14 00:55:53 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:55:54 Heartbeat complete (#59)
+2026/01/14 00:55:59 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:56:04 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:56:09 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:56:14 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:56:19 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:56:24 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:56:29 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:56:34 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:56:39 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:56:44 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:56:49 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:56:54 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:57:00 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:57:05 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:57:10 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:57:15 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:57:20 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:57:25 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:57:30 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:57:35 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:57:40 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:57:45 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:57:50 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:57:56 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:58:01 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:58:06 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:58:11 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:58:16 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:58:21 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:58:26 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:58:31 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:58:36 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:58:41 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:58:46 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:58:51 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:58:54 Heartbeat starting (recovery-focused)
+2026/01/14 00:58:56 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:58:59 Deacon started successfully
+2026/01/14 00:58:59 Boot already running, skipping spawn
+2026/01/14 00:58:59 Deacon heartbeat is stale (2h55m0s old), checking session...
+2026/01/14 00:58:59 Deacon stuck for 2h55m0s - restarting session
+2026/01/14 00:58:59 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:58:59 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 00:59:02 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:59:07 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:59:12 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:59:17 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:59:22 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:59:27 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:59:32 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:59:37 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:59:42 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:59:47 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:59:52 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 00:59:57 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:00:03 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:00:08 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:00:13 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:00:14 Refinery session for gastown_ui started successfully
+2026/01/14 01:00:15 Heartbeat complete (#60)
+2026/01/14 01:00:18 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:00:23 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:00:28 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:00:33 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:00:38 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:00:43 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:00:48 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:00:53 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:00:58 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:01:03 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:01:09 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:01:14 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:01:19 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:01:24 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:01:29 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:01:34 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:01:39 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:01:44 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:01:49 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:01:54 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:01:59 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:02:04 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:02:10 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:02:15 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:02:20 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:02:25 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:02:30 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:02:35 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:02:40 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:02:45 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:02:50 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:02:55 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:03:00 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:03:05 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:03:11 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:03:15 Heartbeat starting (recovery-focused)
+2026/01/14 01:03:16 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:03:20 Deacon started successfully
+2026/01/14 01:03:20 Boot already running, skipping spawn
+2026/01/14 01:03:20 Deacon heartbeat is stale (3h0m0s old), checking session...
+2026/01/14 01:03:20 Deacon stuck for 3h0m0s - restarting session
+2026/01/14 01:03:20 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 01:03:20 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 01:03:21 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:03:26 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:03:31 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:03:36 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:03:41 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:03:46 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:03:51 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:03:56 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:04:01 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:04:06 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:04:12 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:04:17 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:04:22 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:04:27 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:04:32 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:04:34 Refinery session for gastown_ui started successfully
+2026/01/14 01:04:35 Heartbeat complete (#61)
+2026/01/14 01:04:37 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:04:42 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:04:47 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:04:52 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:04:57 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:05:02 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:05:07 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:05:13 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:05:18 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:05:23 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:05:28 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:05:33 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:05:38 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:05:43 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:05:48 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:05:53 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:05:58 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:06:04 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:06:09 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:06:14 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:06:19 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:06:24 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:06:29 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:06:34 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:06:39 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:06:44 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:06:49 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:06:54 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:06:59 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:07:05 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:07:10 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:07:15 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:07:20 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:07:25 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:07:30 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:07:35 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:07:35 Heartbeat starting (recovery-focused)
+2026/01/14 01:07:40 Deacon started successfully
+2026/01/14 01:07:40 Boot already running, skipping spawn
+2026/01/14 01:07:40 Deacon heartbeat is stale (3h4m0s old), checking session...
+2026/01/14 01:07:40 Deacon stuck for 3h4m0s - restarting session
+2026/01/14 01:07:40 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 01:07:40 Warning: no wisp config for gastown_ui - parked state may have been lost
+2026/01/14 01:07:40 convoy watcher: bd activity error: exit status 1, restarting in 5s
+2026/01/14 01:07:46 convoy watcher: bd activity error: exit status 1, restarting in 5s

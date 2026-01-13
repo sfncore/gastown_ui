@@ -12,7 +12,7 @@ describe('Dashboard', () => {
 	describe('Agents Section', () => {
 		it('renders agents section heading', () => {
 			render(Dashboard, { props: { agents: [], stats: defaultStats() } });
-			expect(screen.getByRole('heading', { name: /agents/i })).toBeInTheDocument();
+			expect(screen.getByRole('heading', { name: /agents/i, level: 2 })).toBeInTheDocument();
 		});
 
 		it('renders empty state when no agents', () => {
@@ -22,8 +22,8 @@ describe('Dashboard', () => {
 
 		it('renders agent cards when agents provided', () => {
 			const agents = [
-				createAgent({ name: 'Polecat Nux', status: 'running' }),
-				createAgent({ name: 'Mayor', status: 'idle' })
+				createAgent({ id: 'agent-1', name: 'Polecat Nux', status: 'running' }),
+				createAgent({ id: 'agent-2', name: 'Mayor', status: 'idle' })
 			];
 			render(Dashboard, { props: { agents, stats: defaultStats() } });
 			expect(screen.getByText('Polecat Nux')).toBeInTheDocument();
@@ -82,21 +82,21 @@ describe('Dashboard', () => {
 			render(Dashboard, {
 				props: { agents: [], stats: defaultStats(), systemStatus: 'running' }
 			});
-			expect(screen.getByText(/connected/i)).toBeInTheDocument();
+			expect(screen.getByText('Connected')).toBeInTheDocument();
 		});
 
 		it('displays error status', () => {
 			render(Dashboard, {
 				props: { agents: [], stats: defaultStats(), systemStatus: 'error' }
 			});
-			expect(screen.getByText(/disconnected/i)).toBeInTheDocument();
+			expect(screen.getByText('Disconnected')).toBeInTheDocument();
 		});
 
 		it('displays idle status', () => {
 			render(Dashboard, {
 				props: { agents: [], stats: defaultStats(), systemStatus: 'idle' }
 			});
-			expect(screen.getByText(/idle/i)).toBeInTheDocument();
+			expect(screen.getAllByText('idle').length).toBeGreaterThan(0);
 		});
 	});
 
@@ -170,7 +170,7 @@ describe('Dashboard', () => {
 		});
 
 		it('agent cards are keyboard accessible', () => {
-			const agents = [createAgent({ name: 'Nux', status: 'running' })];
+			const agents = [createAgent({ id: 'agent-1', name: 'Nux', status: 'running' })];
 			render(Dashboard, { props: { agents, stats: defaultStats() } });
 			const card = screen.getByText('Nux').closest('[role="button"], button, a');
 			if (card) {

@@ -1,0 +1,14 @@
+{
+  "type": "town-settings",
+  "version": 1,
+  "role_agents": {
+    "deacon": "opencode-gemini3-high"
+  },
+  "agents": {
+    "opencode-gemini3-high": {
+      "provider": "opencode",
+      "command": "opencode",
+      "args": ["-m", "google/gemini-3-pro-high"]
+    }
+  }
+}
