@@ -1,5 +1,12 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import { exec } from 'node:child_process';
+import { promisify } from 'node:util';
+
+const execAsync = promisify(exec);
+
+// GT_ROOT for accessing beads from the orchestrator level
+const GT_ROOT = '/Users/amrit/Documents/Projects/Rust/mouchak/gastown_exp';
 
 export type IssueStatus = 'open' | 'in_progress' | 'blocked' | 'completed';
 export type IssueType = 'task' | 'bug' | 'feature' | 'epic';
@@ -40,6 +47,24 @@ export interface IssueDetail {
 	related_issues: RelatedIssue[];
 	blocked_by: string[];
 	blocking: string[];
+}
+
+// Interface for bd show JSON output
+interface BdShowIssue {
+	id: string;
+	title: string;
+	description?: string;
+	status: string;
+	priority: number;
+	issue_type: string;
+	owner?: string;
+	created_at: string;
+	created_by?: string;
+	updated_at: string;
+	assignee?: string;
+	convoy_id?: string;
+	blocked_by?: string[];
+	blocking?: string[];
 }
 
 // Mock data for development
@@ -191,38 +216,86 @@ const mockIssues: Record<string, IssueDetail> = {
 	}
 };
 
+/**
+ * Transform bd show output to IssueDetail format
+ */
+function transformBdIssue(bdIssue: BdShowIssue): IssueDetail {
+	// Create activity from created_at and updated_at
+	const activity: ActivityEvent[] = [
+		{
+			id: 'act-created',
+			timestamp: bdIssue.created_at,
+			type: 'created',
+			actor: bdIssue.created_by || 'system',
+			details: { message: 'Issue created' }
+		}
+	];
+
+	// If updated_at differs from created_at, add an update event
+	if (bdIssue.updated_at !== bdIssue.created_at) {
+		activity.push({
+			id: 'act-updated',
+			timestamp: bdIssue.updated_at,
+			type: 'status_change',
+			actor: bdIssue.assignee || bdIssue.owner || 'system',
+			details: { to: bdIssue.status }
+		});
+	}
+
+	return {
+		id: bdIssue.id,
+		title: bdIssue.title,
+		description: bdIssue.description,
+		status: bdIssue.status as IssueStatus,
+		priority: bdIssue.priority as Priority,
+		issue_type: bdIssue.issue_type as IssueType,
+		created_at: bdIssue.created_at,
+		updated_at: bdIssue.updated_at,
+		assignee: bdIssue.assignee || bdIssue.owner,
+		convoy_id: bdIssue.convoy_id,
+		activity: activity.reverse(), // Newest first
+		related_issues: [], // TODO: Could be fetched from dependencies
+		blocked_by: bdIssue.blocked_by || [],
+		blocking: bdIssue.blocking || []
+	};
+}
+
 export const load: PageServerLoad = async ({ params }) => {
 	const { id } = params;
 
-	// In production, this would call bd show <id> --json
-	const issue = mockIssues[id];
+	try {
+		const { stdout } = await execAsync(`bd show ${id} --json`, {
+			cwd: GT_ROOT,
+			timeout: 5000
+		});
 
-	if (!issue) {
-		// Return a generic mock for unknown IDs
-		const genericIssue: IssueDetail = {
-			id,
-			title: `Issue ${id}`,
-			description: 'Issue details would be loaded from beads system.',
-			status: 'open',
-			priority: 2,
-			issue_type: 'task',
-			created_at: new Date().toISOString(),
-			updated_at: new Date().toISOString(),
-			activity: [
-				{
-					id: 'act-1',
-					timestamp: new Date().toISOString(),
-					type: 'created',
-					actor: 'system',
-					details: { message: 'Issue created' }
-				}
-			],
-			related_issues: [],
-			blocked_by: [],
-			blocking: []
-		};
-		return { issue: genericIssue };
+		const issues: BdShowIssue[] = JSON.parse(stdout);
+
+		if (!issues || issues.length === 0) {
+			throw error(404, `Issue "${id}" not found`);
+		}
+
+		const issue = transformBdIssue(issues[0]);
+		return { issue };
+	} catch (err) {
+		// Check if it's a 404 error
+		if (err instanceof Error && 'status' in err) {
+			throw err; // Re-throw HTTP errors
+		}
+
+		// Check for bd command errors
+		if (err instanceof Error && err.message.includes('no issue found')) {
+			throw error(404, `Issue "${id}" not found`);
+		}
+
+		// Fallback to mock data on error (for development)
+		console.error(`Failed to fetch issue ${id}:`, err);
+		const issue = mockIssues[id];
+
+		if (issue) {
+			return { issue };
+		}
+
+		throw error(500, 'Failed to load issue details');
 	}
-
-	return { issue };
 };
