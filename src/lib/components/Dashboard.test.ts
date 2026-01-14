@@ -107,7 +107,7 @@ describe('Dashboard', () => {
 		});
 
 		it('renders workflow items', () => {
-			const workflows = [
+			const workflows: Workflow[] = [
 				{ id: '1', name: 'Deploy Pipeline', status: 'running', progress: 65 },
 				{ id: '2', name: 'Test Suite', status: 'pending', progress: 0 }
 			];
@@ -124,7 +124,7 @@ describe('Dashboard', () => {
 		});
 
 		it('renders queue items with priority badges', () => {
-			const queueItems = [
+			const queueItems: QueueItem[] = [
 				{ id: '1', task: 'Process batch #1234', priority: 'high' },
 				{ id: '2', task: 'Sync database', priority: 'medium' }
 			];
@@ -141,7 +141,7 @@ describe('Dashboard', () => {
 		});
 
 		it('renders log entries', () => {
-			const logEntries = [
+			const logEntries: LogEntry[] = [
 				{ id: '1', message: 'Agent nux completed task', time: '2m ago', level: 'info' },
 				{ id: '2', message: 'Workflow deploy started', time: '5m ago', level: 'success' }
 			];
@@ -213,4 +213,24 @@ interface DashboardAgent {
 	meta: string;
 	role: string;
 	address: string;
+}
+
+interface Workflow {
+	id: string;
+	name: string;
+	status: 'running' | 'pending' | 'completed';
+	progress: number;
+}
+
+interface QueueItem {
+	id: string;
+	task: string;
+	priority: 'high' | 'medium' | 'low';
+}
+
+interface LogEntry {
+	id: string;
+	message: string;
+	time: string;
+	level: 'info' | 'success' | 'warning' | 'error';
 }

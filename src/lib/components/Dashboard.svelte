@@ -11,6 +11,20 @@
 		}
 	}
 
+	type AgentRole = 'coordinator' | 'health-check' | 'witness' | 'refinery' | 'crew' | undefined;
+
+	function mapAgentRole(role: string): AgentRole {
+		const roleMap: Record<string, AgentRole> = {
+			'polecat': 'crew',
+			'mayor': 'coordinator',
+			'deacon': 'health-check',
+			'witness': 'witness',
+			'refinery': 'refinery',
+			'crew': 'crew'
+		};
+		return roleMap[role] ?? undefined;
+	}
+
 	interface DashboardAgent {
 		id: string;
 		name: string;
@@ -142,7 +156,7 @@
 									status={agent.status}
 									progress={agent.progress}
 									meta={agent.meta}
-									role={agent.role === 'polecat' ? 'crew' : (agent.role as 'mayor' | 'deacon' | 'crew' | 'witness' | 'refinery')}
+									role={mapAgentRole(agent.role)}
 									compact
 								/>
 							{/each}
