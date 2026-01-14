@@ -145,3 +145,9 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 .beads/
+
+# =============================================================================
+# Test artifacts (NO TESTS policy)
+# =============================================================================
+playwright-report/
+test-results/
