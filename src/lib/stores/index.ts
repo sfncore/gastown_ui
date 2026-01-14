@@ -33,3 +33,15 @@ export {
 	type ResourceState,
 	type PollingConfig
 } from './polling.svelte';
+export {
+	operationsStore,
+	trackOperation,
+	trackBatchOperation,
+	type Operation,
+	type OperationStatus,
+	type OperationPriority,
+	type OperationType,
+	type OperationGroup,
+	type CreateOperationConfig,
+	type UpdateOperationOptions
+} from './operations.svelte';
