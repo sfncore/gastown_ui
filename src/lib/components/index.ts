@@ -4,6 +4,7 @@ export { default as LiveRegion } from './LiveRegion.svelte';
 export { default as SkipLink } from './SkipLink.svelte';
 
 // UI components
+export { default as ActivityFeed, type ActivityEvent } from './ActivityFeed.svelte';
 export { default as AgentCard } from './AgentCard.svelte';
 export { default as Badge, badgeVariants, type BadgeVariant, type BadgeSize, type BadgeProps } from './Badge.svelte';
 export { default as BottomNav } from './BottomNav.svelte';
