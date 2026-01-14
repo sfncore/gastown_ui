@@ -23,3 +23,11 @@ export {
 	type SyncEvent,
 	type ConflictStrategy
 } from './sync.svelte';
+export {
+	operationsStore,
+	type OperationStatus,
+	type QuickAction,
+	type SystemMetric,
+	type ActivityItem,
+	type SystemStatus
+} from './operations.svelte';
