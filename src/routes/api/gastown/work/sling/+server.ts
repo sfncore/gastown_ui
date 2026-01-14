@@ -1,40 +1,78 @@
+/**
+ * Sling Work API Endpoint
+ *
+ * Assigns work to agents/rigs.
+ */
+
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
+import { z } from 'zod';
 
 const execAsync = promisify(exec);
 
-/** POST: Sling work to a rig */
+const SlingRequestSchema = z.object({
+	beadId: z
+		.string()
+		.min(1)
+		.regex(/^[a-zA-Z0-9_-]+$/, 'Invalid bead ID format'),
+	agentId: z
+		.string()
+		.min(1)
+		.regex(/^[a-zA-Z0-9/_-]+$/, 'Invalid agent ID format'),
+	priority: z.number().int().min(1).max(4).optional(),
+	createBranch: z.boolean().optional()
+});
+
+/** POST: Sling work to an agent */
 export const POST: RequestHandler = async ({ request }) => {
+	let body: unknown;
 	try {
-		const body = await request.json();
-		const { issue, rig } = body;
+		body = await request.json();
+	} catch {
+		return json({ error: 'Invalid JSON body' }, { status: 400 });
+	}
 
-		if (!issue || typeof issue !== 'string') {
-			return json({ error: 'Issue ID is required' }, { status: 400 });
-		}
+	const parseResult = SlingRequestSchema.safeParse(body);
+	if (!parseResult.success) {
+		const errors = parseResult.error.flatten().fieldErrors;
+		return json({ error: 'Validation failed', details: errors }, { status: 400 });
+	}
 
-		if (!rig || typeof rig !== 'string') {
-			return json({ error: 'Rig name is required' }, { status: 400 });
-		}
+	const { beadId, agentId, priority, createBranch } = parseResult.data;
 
-		// Sanitize inputs to prevent command injection
-		const sanitizedIssue = issue.replace(/[^a-z0-9-]/gi, '');
-		const sanitizedRig = rig.replace(/[^a-z0-9-_]/gi, '');
+	const args = ['sling', beadId, agentId];
+	if (priority) args.push('--priority', String(priority));
+	if (createBranch) args.push('--create');
 
-		if (!sanitizedIssue || !sanitizedRig) {
-			return json({ error: 'Invalid issue ID or rig name' }, { status: 400 });
-		}
+	try {
+		const { stdout } = await execAsync(`gt ${args.join(' ')}`, {
+			timeout: 30_000
+		});
 
-		const cmd = `gt sling ${sanitizedIssue} ${sanitizedRig}`;
-		const { stdout } = await execAsync(cmd);
-
-		return json({ success: true, message: stdout.trim() }, { status: 200 });
-	} catch (error) {
-		console.error('Failed to sling work:', error);
 		return json(
-			{ error: error instanceof Error ? error.message : 'Failed to sling work' },
+			{
+				success: true,
+				data: {
+					beadId,
+					assignedTo: agentId,
+					message: stdout.trim()
+				},
+				meta: { timestamp: new Date().toISOString() }
+			},
+			{ status: 201 }
+		);
+	} catch (error) {
+		const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+		console.error('Failed to sling work:', error);
+
+		return json(
+			{
+				success: false,
+				error: 'Failed to sling work',
+				details: errorMessage
+			},
 			{ status: 500 }
 		);
 	}

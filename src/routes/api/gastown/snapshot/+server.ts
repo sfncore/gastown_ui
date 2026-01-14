@@ -40,11 +40,28 @@ interface ActivitySnapshot {
 	updated_at: string;
 }
 
+interface MailSummary {
+	unread: number;
+	total: number;
+}
+
+interface QueueSummary {
+	pending: number;
+	inProgress: number;
+	total: number;
+}
+
+type HealthStatus = 'healthy' | 'degraded' | 'unhealthy';
+
 export interface GasТownSnapshot {
 	rigs: RigSnapshot[];
 	polecats: PolecatSnapshot[];
 	convoys: ConvoySnapshot[];
 	recent_activity: ActivitySnapshot[];
+	mail: MailSummary;
+	queue: QueueSummary;
+	health: HealthStatus;
+	fetchedAt: string;
 	timestamp: string;
 }
 
@@ -55,33 +72,48 @@ export interface GasТownSnapshot {
  * - gt status (rigs, polecats)
  * - bd list (convoys, recent activity)
  */
+let cachedSnapshot: GasТownSnapshot | null = null;
+let cacheTimestamp = 0;
+const CACHE_TTL_MS = 5_000;
+
 export const GET: RequestHandler = async () => {
+	const now = Date.now();
+
+	if (cachedSnapshot && now - cacheTimestamp < CACHE_TTL_MS) {
+		return json(cachedSnapshot);
+	}
+
+	const fetchedAt = new Date().toISOString();
+
 	try {
-		// Fetch gt status for rigs and polecats
 		const statusPromise = execAsync('gt status --json', { timeout: 5000 }).catch(() => ({
 			stdout: '{"agents":[],"rigs":[]}'
 		}));
 
-		// Fetch active convoys
 		const convoysPromise = execAsync('bd list --type=convoy --status=open --json', {
 			timeout: 5000
 		}).catch(() => ({ stdout: '[]' }));
 
-		// Fetch recent activity (last 10 updated issues)
 		const activityPromise = execAsync(
 			'bd list --status=in_progress,completed --json | head -100',
 			{ timeout: 5000 }
 		).catch(() => ({ stdout: '[]' }));
 
-		const [statusResult, convoysResult, activityResult] = await Promise.all([
+		const mailPromise = execAsync('bd list --type=message --status=open --json', {
+			timeout: 5000
+		}).catch(() => ({ stdout: '[]' }));
+
+		const [statusResult, convoysResult, activityResult, mailResult] = await Promise.all([
 			statusPromise,
 			convoysPromise,
-			activityPromise
+			activityPromise,
+			mailPromise
 		]);
 
 		const gtStatus = JSON.parse(statusResult.stdout || '{"agents":[],"rigs":[]}');
 		const convoysData = JSON.parse(convoysResult.stdout || '[]');
 		const activityData = JSON.parse(activityResult.stdout || '[]');
+		const mailData = JSON.parse(mailResult.stdout || '[]');
 
 		// Transform rigs
 		const rigs: RigSnapshot[] = (gtStatus.rigs || []).map((rig: any) => {
@@ -140,13 +172,40 @@ export const GET: RequestHandler = async () => {
 				updated_at: item.updated_at
 			}));
 
+		const mail: MailSummary = {
+			unread: (mailData || []).filter((m: any) => m.status === 'open').length,
+			total: (mailData || []).length
+		};
+
+		const queue: QueueSummary = {
+			pending: gtStatus.queue?.pending || 0,
+			inProgress: gtStatus.queue?.in_progress || 0,
+			total: gtStatus.queue?.total || 0
+		};
+
+		let health: HealthStatus = 'healthy';
+		if (!gtStatus.rigs || gtStatus.rigs.length === 0) {
+			health = 'degraded';
+		}
+		const offlineAgents = polecats.filter((p) => p.status !== 'running').length;
+		if (offlineAgents > polecats.length / 2) {
+			health = 'degraded';
+		}
+
 		const snapshot: GasТownSnapshot = {
 			rigs,
 			polecats,
 			convoys,
 			recent_activity,
+			mail,
+			queue,
+			health,
+			fetchedAt,
 			timestamp: new Date().toISOString()
 		};
+
+		cachedSnapshot = snapshot;
+		cacheTimestamp = now;
 
 		return json(snapshot);
 	} catch (error) {
