@@ -33,6 +33,7 @@ export { default as AgentDetailLayout } from './AgentDetailLayout.svelte';
 export { default as Dashboard } from './Dashboard.svelte';
 export { default as DashboardLayout } from './DashboardLayout.svelte';
 export { default as LogsLayout } from './LogsLayout.svelte';
+export { default as OperationCenter } from './OperationCenter.svelte';
 export { default as PageHeader, pageHeaderVariants, type BreadcrumbItem, type LiveCount, type PageHeaderProps, type PageHeaderVariants } from './PageHeader.svelte';
 export { default as QueueLayout } from './QueueLayout.svelte';
 export { default as SplitView } from './SplitView.svelte';
