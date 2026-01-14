@@ -31,3 +31,13 @@ export {
 	type ActivityItem,
 	type SystemStatus
 } from './operations.svelte';
+export {
+	pollingManager,
+	usePolling,
+	getPolling,
+	removePolling,
+	createMultiTierPolling,
+	POLLING_TIERS,
+	type ResourceState,
+	type PollingConfig
+} from './polling.svelte';
