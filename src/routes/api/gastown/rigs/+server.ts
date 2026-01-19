@@ -1,10 +1,9 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { exec, spawn } from 'node:child_process';
-import { promisify } from 'node:util';
+import { spawn } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
-
-const execAsync = promisify(exec);
+import { getProcessSupervisor } from '$lib/server/cli';
 
 const AddRigSchema = z.object({
 	name: z
@@ -71,14 +70,25 @@ function runRigAdd(operationId: string, name: string, url: string): void {
 
 /** GET: List all rigs */
 export const GET: RequestHandler = async () => {
+	const requestId = randomUUID();
+	const supervisor = getProcessSupervisor();
+
 	try {
-		const { stdout } = await execAsync('gt rigs --json');
-		const rigs = JSON.parse(stdout);
-		return json(rigs);
+		const result = await supervisor.gt<unknown>(['rigs', '--json']);
+
+		if (!result.success) {
+			console.error('Failed to fetch rigs:', result.error);
+			return json(
+				{ error: result.error || 'Failed to fetch rigs', requestId },
+				{ status: 500 }
+			);
+		}
+
+		return json({ data: result.data, requestId });
 	} catch (error) {
 		console.error('Failed to fetch rigs:', error);
 		return json(
-			{ error: error instanceof Error ? error.message : 'Failed to fetch rigs' },
+			{ error: error instanceof Error ? error.message : 'Failed to fetch rigs', requestId },
 			{ status: 500 }
 		);
 	}

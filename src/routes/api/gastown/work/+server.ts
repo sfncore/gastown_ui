@@ -6,10 +6,8 @@
 
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
-
-const execAsync = promisify(exec);
+import { getProcessSupervisor } from '$lib/server/cli';
+import { randomUUID } from 'node:crypto';
 
 interface WorkItem {
 	id: string;
@@ -56,6 +54,9 @@ function transformBead(bead: BdBead): WorkItem {
 }
 
 export const GET: RequestHandler = async ({ url }) => {
+	const requestId = randomUUID();
+	const supervisor = getProcessSupervisor();
+
 	const type = url.searchParams.get('type');
 	const status = url.searchParams.get('status');
 	const priority = url.searchParams.get('priority');
@@ -83,28 +84,44 @@ export const GET: RequestHandler = async ({ url }) => {
 	}
 
 	try {
-		const { stdout } = await execAsync(`bd ${args.join(' ')}`, {
-			timeout: 15_000
-		});
+		const result = await supervisor.bd<BdBead[]>(args, { timeout: 15_000 });
 
-		const beads: BdBead[] = JSON.parse(stdout) || [];
+		if (!result.success) {
+			const errorMessage = result.error || 'Unknown error';
+
+			if (errorMessage.includes('no issues') || errorMessage.includes('no beads')) {
+				return json({
+					items: [],
+					total: 0,
+					timestamp: new Date().toISOString(),
+					requestId
+				});
+			}
+
+			console.error('Failed to fetch work items:', result.error);
+			return json(
+				{
+					items: [],
+					total: 0,
+					error: errorMessage,
+					timestamp: new Date().toISOString(),
+					requestId
+				},
+				{ status: 500 }
+			);
+		}
+
+		const beads: BdBead[] = result.data || [];
 		const items = beads.map(transformBead);
 
 		return json({
 			items,
 			total: items.length,
-			timestamp: new Date().toISOString()
+			timestamp: new Date().toISOString(),
+			requestId
 		});
 	} catch (error) {
 		const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
-		if (errorMessage.includes('no issues') || errorMessage.includes('no beads')) {
-			return json({
-				items: [],
-				total: 0,
-				timestamp: new Date().toISOString()
-			});
-		}
 
 		console.error('Failed to fetch work items:', error);
 		return json(
@@ -112,7 +129,8 @@ export const GET: RequestHandler = async ({ url }) => {
 				items: [],
 				total: 0,
 				error: errorMessage,
-				timestamp: new Date().toISOString()
+				timestamp: new Date().toISOString(),
+				requestId
 			},
 			{ status: 500 }
 		);

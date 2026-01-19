@@ -6,10 +6,7 @@
 
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
-
-const execAsync = promisify(exec);
+import { getProcessSupervisor } from '$lib/server/cli';
 
 interface RigAgent {
 	name: string;
@@ -60,11 +57,31 @@ export const GET: RequestHandler = async ({ params }) => {
 	}
 
 	try {
-		const { stdout } = await execAsync(`gt rig show ${name} --json`, {
+		const supervisor = getProcessSupervisor();
+		const result = await supervisor.gt<GtRigInfo>(['rig', 'show', name, '--json'], {
 			timeout: 10_000
 		});
 
-		const rigInfo: GtRigInfo = JSON.parse(stdout);
+		if (!result.success) {
+			const errorMessage = result.error || 'Unknown error';
+			if (
+				errorMessage.includes('not found') ||
+				errorMessage.includes('no rig') ||
+				errorMessage.includes('unknown rig')
+			) {
+				return json({ error: 'Rig not found' }, { status: 404 });
+			}
+			console.error(`Failed to fetch rig ${name}:`, errorMessage);
+			return json(
+				{
+					error: 'Failed to fetch rig',
+					details: errorMessage
+				},
+				{ status: 500 }
+			);
+		}
+
+		const rigInfo = result.data as GtRigInfo;
 
 		const rig: RigDetail = {
 			name: rigInfo.name,
@@ -86,21 +103,11 @@ export const GET: RequestHandler = async ({ params }) => {
 			fetchedAt: new Date().toISOString()
 		});
 	} catch (error) {
-		const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
-		if (
-			errorMessage.includes('not found') ||
-			errorMessage.includes('no rig') ||
-			errorMessage.includes('unknown rig')
-		) {
-			return json({ error: 'Rig not found' }, { status: 404 });
-		}
-
-		console.error(`Failed to fetch rig ${name}:`, error);
+		console.error(`Unexpected error fetching rig ${name}:`, error);
 		return json(
 			{
 				error: 'Failed to fetch rig',
-				details: errorMessage
+				details: error instanceof Error ? error.message : 'Unknown error'
 			},
 			{ status: 500 }
 		);

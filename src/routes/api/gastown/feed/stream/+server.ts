@@ -6,16 +6,20 @@
 
 import type { RequestHandler } from './$types';
 import { tailEventsFile, readLastNEvents } from '$lib/server/watchers/events-tailer';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
-
-const execAsync = promisify(exec);
+import { getProcessSupervisor } from '$lib/server/cli';
 
 async function getTownRoot(): Promise<string | null> {
+	const supervisor = getProcessSupervisor();
 	try {
-		const { stdout } = await execAsync('gt status --json', { timeout: 5_000 });
-		const status = JSON.parse(stdout);
-		return status.location || null;
+		const result = await supervisor.gt<{ location?: string }>(['status', '--json'], {
+			timeout: 5_000
+		});
+
+		if (!result.success || !result.data) {
+			return null;
+		}
+
+		return result.data.location || null;
 	} catch {
 		return null;
 	}

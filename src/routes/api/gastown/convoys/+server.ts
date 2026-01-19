@@ -1,23 +1,49 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
+import { getProcessSupervisor } from '$lib/server/cli';
+import { randomUUID } from 'node:crypto';
 
-const execAsync = promisify(exec);
+interface Convoy {
+	id: string;
+	title?: string;
+	status?: string;
+}
 
 export const GET: RequestHandler = async () => {
+	const requestId = randomUUID();
+	const supervisor = getProcessSupervisor();
+
 	try {
-		const { stdout } = await execAsync('bd list --type=convoy --status=open --json');
-		const convoys = JSON.parse(stdout);
-		return json(convoys);
+		const result = await supervisor.bd<Convoy[]>(['list', '--type=convoy', '--status=open', '--json']);
+
+		if (!result.success) {
+			if (result.error?.includes('no issues')) {
+				return json({ convoys: [], requestId });
+			}
+			console.error('Failed to fetch convoys:', result.error);
+			return json(
+				{
+					error: result.error || 'Failed to fetch convoys',
+					requestId
+				},
+				{ status: 500 }
+			);
+		}
+
+		return json({
+			convoys: result.data || [],
+			requestId
+		});
 	} catch (error) {
-		// bd list might return empty or fail if no convoys exist
 		if (error instanceof Error && error.message.includes('no issues')) {
-			return json([]);
+			return json({ convoys: [], requestId });
 		}
 		console.error('Failed to fetch convoys:', error);
 		return json(
-			{ error: error instanceof Error ? error.message : 'Failed to fetch convoys' },
+			{
+				error: error instanceof Error ? error.message : 'Failed to fetch convoys',
+				requestId
+			},
 			{ status: 500 }
 		);
 	}

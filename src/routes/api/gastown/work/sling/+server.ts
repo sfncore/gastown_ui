@@ -6,11 +6,9 @@
 
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
+import { getProcessSupervisor } from '$lib/server/cli';
+import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
-
-const execAsync = promisify(exec);
 
 const SlingRequestSchema = z.object({
 	beadId: z
@@ -27,17 +25,20 @@ const SlingRequestSchema = z.object({
 
 /** POST: Sling work to an agent */
 export const POST: RequestHandler = async ({ request }) => {
+	const requestId = randomUUID();
+	const supervisor = getProcessSupervisor();
+
 	let body: unknown;
 	try {
 		body = await request.json();
 	} catch {
-		return json({ error: 'Invalid JSON body' }, { status: 400 });
+		return json({ error: 'Invalid JSON body', requestId }, { status: 400 });
 	}
 
 	const parseResult = SlingRequestSchema.safeParse(body);
 	if (!parseResult.success) {
 		const errors = parseResult.error.flatten().fieldErrors;
-		return json({ error: 'Validation failed', details: errors }, { status: 400 });
+		return json({ error: 'Validation failed', details: errors, requestId }, { status: 400 });
 	}
 
 	const { beadId, agentId, priority, createBranch } = parseResult.data;
@@ -47,9 +48,20 @@ export const POST: RequestHandler = async ({ request }) => {
 	if (createBranch) args.push('--create');
 
 	try {
-		const { stdout } = await execAsync(`gt ${args.join(' ')}`, {
-			timeout: 30_000
-		});
+		const result = await supervisor.gt<string>(args, { timeout: 30_000 });
+
+		if (!result.success) {
+			console.error('Failed to sling work:', result.error);
+			return json(
+				{
+					success: false,
+					error: 'Failed to sling work',
+					details: result.error || 'Unknown error',
+					requestId
+				},
+				{ status: 500 }
+			);
+		}
 
 		return json(
 			{
@@ -57,9 +69,10 @@ export const POST: RequestHandler = async ({ request }) => {
 				data: {
 					beadId,
 					assignedTo: agentId,
-					message: stdout.trim()
+					message: typeof result.data === 'string' ? result.data.trim() : result.data
 				},
-				meta: { timestamp: new Date().toISOString() }
+				meta: { timestamp: new Date().toISOString() },
+				requestId
 			},
 			{ status: 201 }
 		);
@@ -71,7 +84,8 @@ export const POST: RequestHandler = async ({ request }) => {
 			{
 				success: false,
 				error: 'Failed to sling work',
-				details: errorMessage
+				details: errorMessage,
+				requestId
 			},
 			{ status: 500 }
 		);

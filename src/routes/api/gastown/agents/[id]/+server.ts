@@ -6,10 +6,8 @@
 
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
-
-const execAsync = promisify(exec);
+import { getProcessSupervisor } from '$lib/server/cli';
+import { randomUUID } from 'node:crypto';
 
 interface GtAgent {
 	name: string;
@@ -79,50 +77,56 @@ function findAgent(status: GtStatus, id: string): { agent: GtAgent; rig: string 
 
 export const GET: RequestHandler = async ({ params }) => {
 	const { id } = params;
+	const requestId = randomUUID();
 
 	if (!id || !/^[a-zA-Z0-9/_-]+$/.test(id)) {
-		return json({ error: 'Invalid agent ID format' }, { status: 400 });
+		return json({ error: 'Invalid agent ID format', requestId }, { status: 400 });
 	}
 
-	try {
-		const { stdout } = await execAsync('gt status --json', {
-			timeout: 15_000
-		});
+	const supervisor = getProcessSupervisor();
+	const result = await supervisor.gt<GtStatus>(['status', '--json'], { timeout: 15_000 });
 
-		const status: GtStatus = JSON.parse(stdout);
-		const result = findAgent(status, id);
-
-		if (!result) {
-			return json({ error: 'Agent not found' }, { status: 404 });
-		}
-
-		const { agent, rig } = result;
-
-		const detail: AgentDetail = {
-			id: agent.address || agent.name,
-			name: agent.name,
-			type: agent.role,
-			status: mapAgentStatus(agent),
-			rig,
-			hasWork: agent.has_work,
-			unreadMail: agent.unread_mail || 0,
-			session: agent.session,
-			address: agent.address,
-			currentTask: agent.first_subject || null,
-			lastSeen: new Date().toISOString()
-		};
-
-		return json({
-			agent: detail,
-			fetchedAt: new Date().toISOString()
-		});
-	} catch (error) {
-		console.error(`Failed to fetch agent ${id}:`, error);
+	if (!result.success) {
+		console.error(`Failed to fetch agent ${id}:`, result.error);
 		return json(
 			{
-				error: error instanceof Error ? error.message : 'Failed to fetch agent'
+				error: result.error || 'Failed to fetch agent',
+				requestId
 			},
 			{ status: 500 }
 		);
 	}
+
+	const status = result.data;
+	if (!status) {
+		return json({ error: 'No status data returned', requestId }, { status: 500 });
+	}
+
+	const found = findAgent(status, id);
+
+	if (!found) {
+		return json({ error: 'Agent not found', requestId }, { status: 404 });
+	}
+
+	const { agent, rig } = found;
+
+	const detail: AgentDetail = {
+		id: agent.address || agent.name,
+		name: agent.name,
+		type: agent.role,
+		status: mapAgentStatus(agent),
+		rig,
+		hasWork: agent.has_work,
+		unreadMail: agent.unread_mail || 0,
+		session: agent.session,
+		address: agent.address,
+		currentTask: agent.first_subject || null,
+		lastSeen: new Date().toISOString()
+	};
+
+	return json({
+		agent: detail,
+		fetchedAt: new Date().toISOString(),
+		requestId
+	});
 };

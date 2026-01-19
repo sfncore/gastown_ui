@@ -7,10 +7,8 @@
 
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
-
-const execAsync = promisify(exec);
+import { getProcessSupervisor } from '$lib/server/cli';
+import { randomUUID } from 'node:crypto';
 
 interface BdMailBead {
 	id: string;
@@ -84,14 +82,34 @@ function transformBead(bead: BdMailBead): MailMessage {
 }
 
 export const GET: RequestHandler = async () => {
-	try {
-		// Use bd list directly since gt mail inbox hangs in Node.js child_process
-		const { stdout } = await execAsync('bd list --type=message --status=open --json');
+	const requestId = randomUUID();
+	const supervisor = getProcessSupervisor();
 
-		const rawBeads: BdMailBead[] = JSON.parse(stdout) || [];
+	try {
+		const result = await supervisor.bd<BdMailBead[]>([
+			'list',
+			'--type=message',
+			'--status=open',
+			'--json'
+		]);
+
+		if (!result.success) {
+			console.error('Failed to fetch mail inbox:', result.error);
+			return json(
+				{
+					messages: [],
+					unreadCount: 0,
+					error: result.error || 'Failed to fetch mail inbox',
+					fetchedAt: new Date().toISOString(),
+					requestId
+				},
+				{ status: 500 }
+			);
+		}
+
+		const rawBeads: BdMailBead[] = result.data || [];
 		const messages = rawBeads.map(transformBead);
 
-		// Sort by timestamp descending (newest first)
 		messages.sort((a, b) => {
 			return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
 		});
@@ -102,7 +120,8 @@ export const GET: RequestHandler = async () => {
 			messages,
 			unreadCount,
 			error: null,
-			fetchedAt: new Date().toISOString()
+			fetchedAt: new Date().toISOString(),
+			requestId
 		});
 	} catch (error) {
 		console.error('Failed to fetch mail inbox:', error);
@@ -112,7 +131,8 @@ export const GET: RequestHandler = async () => {
 				messages: [],
 				unreadCount: 0,
 				error: error instanceof Error ? error.message : 'Failed to fetch mail inbox',
-				fetchedAt: new Date().toISOString()
+				fetchedAt: new Date().toISOString(),
+				requestId
 			},
 			{ status: 500 }
 		);

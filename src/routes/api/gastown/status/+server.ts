@@ -1,19 +1,43 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
+import { getProcessSupervisor } from '$lib/server/cli';
+import { randomUUID } from 'node:crypto';
 
-const execAsync = promisify(exec);
+interface GtStatus {
+	name: string;
+	agents?: unknown[];
+	rigs?: unknown[];
+}
 
 export const GET: RequestHandler = async () => {
+	const requestId = randomUUID();
+	const supervisor = getProcessSupervisor();
+
 	try {
-		const { stdout } = await execAsync('gt status --json');
-		const status = JSON.parse(stdout);
-		return json(status);
+		const result = await supervisor.gt<GtStatus>(['status', '--json']);
+
+		if (!result.success) {
+			console.error('Failed to fetch gt status:', result.error);
+			return json(
+				{
+					error: result.error || 'Failed to fetch status',
+					requestId
+				},
+				{ status: 500 }
+			);
+		}
+
+		return json({
+			...result.data,
+			requestId
+		});
 	} catch (error) {
 		console.error('Failed to fetch gt status:', error);
 		return json(
-			{ error: error instanceof Error ? error.message : 'Failed to fetch status' },
+			{
+				error: error instanceof Error ? error.message : 'Failed to fetch status',
+				requestId
+			},
 			{ status: 500 }
 		);
 	}

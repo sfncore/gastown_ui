@@ -6,10 +6,8 @@
 
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
-
-const execAsync = promisify(exec);
+import { getProcessSupervisor } from '$lib/server/cli';
+import { randomUUID } from 'node:crypto';
 
 interface GtAgent {
 	name: string;
@@ -94,28 +92,42 @@ function extractAgents(status: GtStatus): AgentResponse[] {
 	return agents;
 }
 
-let cachedResponse: { agents: AgentResponse[]; timestamp: string } | null = null;
+let cachedResponse: { agents: AgentResponse[]; timestamp: string; requestId: string } | null = null;
 let cacheTimestamp = 0;
 const CACHE_TTL_MS = 10_000;
 
 export const GET: RequestHandler = async () => {
+	const requestId = randomUUID();
 	const now = Date.now();
 
 	if (cachedResponse && now - cacheTimestamp < CACHE_TTL_MS) {
-		return json(cachedResponse);
+		return json({ ...cachedResponse, requestId });
 	}
 
-	try {
-		const { stdout } = await execAsync('gt status --json', {
-			timeout: 15_000
-		});
+	const supervisor = getProcessSupervisor();
 
-		const status: GtStatus = JSON.parse(stdout);
-		const agents = extractAgents(status);
+	try {
+		const result = await supervisor.gt<GtStatus>(['status', '--json'], { timeout: 15_000 });
+
+		if (!result.success) {
+			console.error('Failed to fetch agents:', result.error);
+			return json(
+				{
+					error: result.error || 'Failed to fetch agents',
+					agents: [],
+					timestamp: new Date().toISOString(),
+					requestId
+				},
+				{ status: 500 }
+			);
+		}
+
+		const agents = extractAgents(result.data!);
 
 		const response = {
 			agents,
-			timestamp: new Date().toISOString()
+			timestamp: new Date().toISOString(),
+			requestId
 		};
 
 		cachedResponse = response;
@@ -128,7 +140,8 @@ export const GET: RequestHandler = async () => {
 			{
 				error: error instanceof Error ? error.message : 'Failed to fetch agents',
 				agents: [],
-				timestamp: new Date().toISOString()
+				timestamp: new Date().toISOString(),
+				requestId
 			},
 			{ status: 500 }
 		);

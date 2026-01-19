@@ -1,9 +1,7 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
-
-const execAsync = promisify(exec);
+import { getProcessSupervisor } from '$lib/server/cli';
+import { randomUUID } from 'node:crypto';
 
 interface HealthCheck {
 	name: string;
@@ -22,6 +20,7 @@ interface HealthResponse {
 		warn: number;
 		fail: number;
 	};
+	requestId: string;
 }
 
 let cachedResponse: HealthResponse | null = null;
@@ -88,56 +87,56 @@ function computeOverallStatus(checks: HealthCheck[]): 'healthy' | 'degraded' | '
 }
 
 export const GET: RequestHandler = async () => {
+	const requestId = randomUUID();
 	const now = Date.now();
 
 	if (cachedResponse && now - cacheTimestamp < CACHE_TTL_MS) {
-		return json(cachedResponse);
+		return json({ ...cachedResponse, requestId });
 	}
 
-	try {
-		const { stdout, stderr } = await execAsync('gt doctor', {
-			timeout: 30_000,
-			maxBuffer: 1024 * 1024
-		});
+	const supervisor = getProcessSupervisor();
 
-		const output = stdout || stderr;
-		const checks = parseDoctorOutput(output);
-		const overallStatus = computeOverallStatus(checks);
+	const result = await supervisor.gt<string>(['doctor'], { timeout: 30_000 });
 
-		const response: HealthResponse = {
-			status: overallStatus,
-			checks,
-			timestamp: new Date().toISOString(),
-			summary: {
-				total: checks.length,
-				pass: checks.filter((c) => c.status === 'pass').length,
-				warn: checks.filter((c) => c.status === 'warn').length,
-				fail: checks.filter((c) => c.status === 'fail').length
-			}
-		};
-
-		cachedResponse = response;
-		cacheTimestamp = now;
-
-		const httpStatus = overallStatus === 'unhealthy' ? 503 : 200;
-		return json(response, { status: httpStatus });
-	} catch (error) {
-		const errorMessage = error instanceof Error ? error.message : 'Failed to run health check';
-
+	if (!result.success) {
 		const fallbackResponse: HealthResponse = {
 			status: 'unhealthy',
 			checks: [
 				{
 					name: 'gt-doctor',
 					status: 'fail',
-					message: errorMessage,
+					message: result.error || 'Failed to run health check',
 					category: 'SYSTEM'
 				}
 			],
 			timestamp: new Date().toISOString(),
-			summary: { total: 1, pass: 0, warn: 0, fail: 1 }
+			summary: { total: 1, pass: 0, warn: 0, fail: 1 },
+			requestId
 		};
 
 		return json(fallbackResponse, { status: 503 });
 	}
+
+	const output = typeof result.data === 'string' ? result.data : JSON.stringify(result.data);
+	const checks = parseDoctorOutput(output);
+	const overallStatus = computeOverallStatus(checks);
+
+	const response: HealthResponse = {
+		status: overallStatus,
+		checks,
+		timestamp: new Date().toISOString(),
+		summary: {
+			total: checks.length,
+			pass: checks.filter((c) => c.status === 'pass').length,
+			warn: checks.filter((c) => c.status === 'warn').length,
+			fail: checks.filter((c) => c.status === 'fail').length
+		},
+		requestId
+	};
+
+	cachedResponse = response;
+	cacheTimestamp = now;
+
+	const httpStatus = overallStatus === 'unhealthy' ? 503 : 200;
+	return json(response, { status: httpStatus });
 };

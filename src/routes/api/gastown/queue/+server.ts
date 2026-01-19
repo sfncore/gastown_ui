@@ -6,10 +6,8 @@
 
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
-
-const execAsync = promisify(exec);
+import { getProcessSupervisor } from '$lib/server/cli';
+import { randomUUID } from 'node:crypto';
 
 interface QueueItem {
 	id: string;
@@ -26,22 +24,25 @@ interface GtStatus {
 }
 
 async function getRigs(): Promise<string[]> {
+	const supervisor = getProcessSupervisor();
 	try {
-		const { stdout } = await execAsync('gt status --json', { timeout: 10_000 });
-		const status: GtStatus = JSON.parse(stdout);
-		return (status.rigs || []).map((r) => r.name);
+		const result = await supervisor.gt<GtStatus>(['status', '--json'], { timeout: 10_000 });
+		if (!result.success || !result.data) return [];
+		return (result.data.rigs || []).map((r) => r.name);
 	} catch {
 		return [];
 	}
 }
 
 async function getQueueForRig(rig: string): Promise<QueueItem[]> {
+	const supervisor = getProcessSupervisor();
 	try {
-		const { stdout } = await execAsync(`gt mq list ${rig} --json`, {
+		const result = await supervisor.gt<Record<string, unknown>[]>(['mq', 'list', rig, '--json'], {
 			timeout: 10_000
 		});
 
-		const items = JSON.parse(stdout);
+		if (!result.success || !result.data) return [];
+		const items = result.data;
 		if (!Array.isArray(items)) return [];
 
 		return items.map((item: Record<string, unknown>, index: number) => ({
@@ -58,16 +59,17 @@ async function getQueueForRig(rig: string): Promise<QueueItem[]> {
 	}
 }
 
-let cachedResponse: { items: QueueItem[]; queueLength: number; timestamp: string } | null = null;
+let cachedResponse: { items: QueueItem[]; queueLength: number; timestamp: string; requestId: string } | null = null;
 let cacheTimestamp = 0;
 const CACHE_TTL_MS = 5_000;
 
 export const GET: RequestHandler = async ({ url }) => {
+	const requestId = randomUUID();
 	const now = Date.now();
 	const rigFilter = url.searchParams.get('rig');
 
 	if (!rigFilter && cachedResponse && now - cacheTimestamp < CACHE_TTL_MS) {
-		return json(cachedResponse);
+		return json({ ...cachedResponse, requestId });
 	}
 
 	try {
@@ -84,7 +86,8 @@ export const GET: RequestHandler = async ({ url }) => {
 		const response = {
 			items: allItems,
 			queueLength: allItems.length,
-			timestamp: new Date().toISOString()
+			timestamp: new Date().toISOString(),
+			requestId
 		};
 
 		if (!rigFilter) {
@@ -100,7 +103,8 @@ export const GET: RequestHandler = async ({ url }) => {
 				items: [],
 				queueLength: 0,
 				error: error instanceof Error ? error.message : 'Failed to fetch queue',
-				timestamp: new Date().toISOString()
+				timestamp: new Date().toISOString(),
+				requestId
 			},
 			{ status: 500 }
 		);

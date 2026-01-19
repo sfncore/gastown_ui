@@ -6,10 +6,8 @@
 
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
-
-const execAsync = promisify(exec);
+import { randomUUID } from 'node:crypto';
+import { getProcessSupervisor } from '$lib/server/cli';
 
 interface DiagnosticCheck {
 	name: string;
@@ -92,20 +90,48 @@ let cacheTimestamp = 0;
 const CACHE_TTL_MS = 60_000;
 
 export const GET: RequestHandler = async ({ url }) => {
+	const requestId = randomUUID();
 	const now = Date.now();
 	const forceRefresh = url.searchParams.get('refresh') === 'true';
 
 	if (!forceRefresh && cachedResponse && now - cacheTimestamp < CACHE_TTL_MS) {
-		return json(cachedResponse);
+		return json({ ...cachedResponse, requestId });
 	}
 
+	const supervisor = getProcessSupervisor();
+
 	try {
-		const { stdout, stderr } = await execAsync('gt doctor', {
-			timeout: 30_000,
-			maxBuffer: 2 * 1024 * 1024
+		const result = await supervisor.gt<{ stdout?: string; stderr?: string }>(['doctor'], {
+			timeout: 30_000
 		});
 
-		const output = stdout || stderr;
+		if (!result.success) {
+			console.error('Failed to run diagnostics:', result.error);
+
+			const fallbackResponse: DiagnosticsResponse = {
+				checks: [
+					{
+						name: 'gt-doctor',
+						status: 'fail',
+						message: result.error || 'Failed to run diagnostics',
+						category: 'SYSTEM'
+					}
+				],
+				overallStatus: 'fail',
+				categories: ['SYSTEM'],
+				summary: { total: 1, pass: 0, warn: 0, fail: 1 },
+				timestamp: new Date().toISOString()
+			};
+
+			return json({ ...fallbackResponse, requestId }, { status: 503 });
+		}
+
+		const output =
+			typeof result.data === 'string'
+				? result.data
+				: (result.data as { stdout?: string; stderr?: string })?.stdout ||
+					(result.data as { stdout?: string; stderr?: string })?.stderr ||
+					'';
 		const checks = parseDoctorOutput(output);
 		const overallStatus = computeOverallStatus(checks);
 		const categories = [...new Set(checks.map((c) => c.category))];
@@ -126,7 +152,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		cachedResponse = response;
 		cacheTimestamp = now;
 
-		return json(response);
+		return json({ ...response, requestId });
 	} catch (error) {
 		console.error('Failed to run diagnostics:', error);
 
@@ -145,6 +171,6 @@ export const GET: RequestHandler = async ({ url }) => {
 			timestamp: new Date().toISOString()
 		};
 
-		return json(fallbackResponse, { status: 503 });
+		return json({ ...fallbackResponse, requestId }, { status: 503 });
 	}
 };
