@@ -90,3 +90,11 @@ export {
 	type MailType,
 	type MailFilter
 } from './mail.svelte';
+
+// Search index with Fuse.js
+export {
+	searchIndex,
+	useSearchIndex,
+	type SearchableItem,
+	type SearchableType
+} from './search-index.svelte';

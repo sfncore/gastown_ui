@@ -119,7 +119,8 @@ export const filterOptions: FilterOption[] = [
 	{ label: 'All', value: 'all' },
 	{ label: 'Agents', value: 'agent' },
 	{ label: 'Issues', value: 'issue' },
-	{ label: 'Convoys', value: 'convoy' }
+	{ label: 'Convoys', value: 'convoy' },
+	{ label: 'Mail', value: 'mail' }
 ];
 
 // Group labels for result categories
@@ -129,5 +130,6 @@ export const groupLabels: Record<string, string> = {
 	issue: 'Issues',
 	convoy: 'Convoys',
 	route: 'Routes',
-	command: 'Commands'
+	command: 'Commands',
+	mail: 'Mail'
 };

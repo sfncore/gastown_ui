@@ -3,10 +3,10 @@
  */
 import type { ComponentType } from 'svelte';
 
-export type FilterType = 'all' | 'agent' | 'issue' | 'convoy' | 'route';
+export type FilterType = 'all' | 'agent' | 'issue' | 'convoy' | 'route' | 'mail';
 
 export interface SearchResult {
-	type: 'agent' | 'issue' | 'convoy' | 'route' | 'command' | 'recent';
+	type: 'agent' | 'issue' | 'convoy' | 'route' | 'command' | 'recent' | 'mail';
 	id: string;
 	label: string;
 	sublabel?: string;

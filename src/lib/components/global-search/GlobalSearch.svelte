@@ -6,6 +6,9 @@
 	 * - Animation: ease-out-expo for open, ease-spring for item hover
 	 * - Typography: label-sm for hints, body-sm for sublabels
 	 * - Shadows: shadow-2xl for modal elevation
+	 *
+	 * Uses Fuse.js for fuzzy search via the search index store.
+	 * Data comes from SWR cache (agents, work, convoys, mail).
 	 */
 	import { cn } from '$lib/utils';
 	import { goto } from '$app/navigation';
@@ -20,21 +23,14 @@
 		Sparkles,
 		ArrowUp,
 		ArrowDown,
-		CornerDownLeft
+		CornerDownLeft,
+		Mail
 	} from 'lucide-svelte';
 
 	import type { FilterType, SearchResult } from './types';
-	import {
-		routes,
-		commands,
-		mockAgents,
-		mockIssues,
-		mockConvoys,
-		recentItems,
-		searchSuggestions,
-		filterOptions,
-		groupLabels
-	} from './data';
+	import { routes, commands, recentItems, searchSuggestions, filterOptions, groupLabels } from './data';
+	import { searchIndex } from '$lib/stores/search-index.svelte';
+	import type { SearchableType } from '$lib/stores/search-index.svelte';
 
 	interface Props {
 		class?: string;
@@ -81,39 +77,29 @@
 		isCommandMode ? query.slice(query.indexOf('>') + 1).trim() : query.trim()
 	);
 
-	// Filter results based on query
-	const filteredAgents = $derived(
-		searchQuery
-			? mockAgents.filter(
-					(a) =>
-						a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-						a.id.toLowerCase().includes(searchQuery.toLowerCase())
-				)
+	// Map filter type to searchable types
+	function getSearchTypes(filterType: FilterType): SearchableType[] | undefined {
+		if (filterType === 'all') return undefined;
+		if (filterType === 'agent') return ['agent'];
+		if (filterType === 'issue') return ['work'];
+		if (filterType === 'convoy') return ['convoy'];
+		if (filterType === 'mail') return ['mail'];
+		return undefined;
+	}
+
+	// Search results from Fuse.js index (fuzzy matching)
+	const searchResults = $derived(
+		searchQuery && !isCommandMode
+			? searchIndex.search(searchQuery, {
+					types: getSearchTypes(filters.type),
+					limit: 30
+				})
 			: []
 	);
 
-	const filteredIssues = $derived(
-		searchQuery
-			? mockIssues.filter(
-					(i) =>
-						i.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-						i.id.toLowerCase().includes(searchQuery.toLowerCase())
-				)
-			: []
-	);
-
-	const filteredConvoys = $derived(
-		searchQuery
-			? mockConvoys.filter(
-					(c) =>
-						c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-						c.id.toLowerCase().includes(searchQuery.toLowerCase())
-				)
-			: []
-	);
-
+	// Filter routes based on query
 	const filteredRoutes = $derived(
-		searchQuery
+		searchQuery && !isCommandMode
 			? routes.filter(
 					(r) =>
 						r.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -133,6 +119,14 @@
 				? commands
 				: []
 	);
+
+	// Icon mapping for search result types
+	const typeIcons = {
+		agent: Bot,
+		work: FileText,
+		convoy: Truck,
+		mail: Mail
+	};
 
 	// Helper: Save recent search
 	function addRecentSearch(term: string) {
@@ -183,58 +177,34 @@
 			return results;
 		}
 
-		// Agents
-		if (shouldIncludeInResults('agent')) {
-			filteredAgents.forEach((a) => {
-				results.push({
-					type: 'agent',
-					id: a.id,
-					label: a.name,
-					sublabel: a.task,
-					icon: Bot,
-					action: () => {
-						goto(`/agents/${a.id}`);
-						close();
-					}
-				});
+		// Add fuzzy search results from the search index
+		// Map types: 'work' -> 'issue' for display consistency
+		for (const item of searchResults) {
+			const displayType = item.type === 'work' ? 'issue' : item.type;
+			const icon = typeIcons[item.type] || FileText;
+
+			// Apply filter (work -> issue mapping)
+			if (filters.type !== 'all') {
+				if (filters.type === 'issue' && item.type !== 'work') continue;
+				if (filters.type === 'agent' && item.type !== 'agent') continue;
+				if (filters.type === 'convoy' && item.type !== 'convoy') continue;
+				if (filters.type === 'mail' && item.type !== 'mail') continue;
+			}
+
+			results.push({
+				type: displayType as SearchResult['type'],
+				id: item.id,
+				label: item.title,
+				sublabel: item.subtitle,
+				icon,
+				action: () => {
+					goto(item.path);
+					close();
+				}
 			});
 		}
 
-		// Issues
-		if (shouldIncludeInResults('issue')) {
-			filteredIssues.forEach((i) => {
-				results.push({
-					type: 'issue',
-					id: i.id,
-					label: i.title,
-					sublabel: `${i.id} · ${i.type} · P${i.priority}`,
-					icon: FileText,
-					action: () => {
-						goto('/work');
-						close();
-					}
-				});
-			});
-		}
-
-		// Convoys
-		if (shouldIncludeInResults('convoy')) {
-			filteredConvoys.forEach((c) => {
-				results.push({
-					type: 'convoy',
-					id: c.id,
-					label: c.name,
-					sublabel: `${c.status} · ${c.progress}%`,
-					icon: Truck,
-					action: () => {
-						goto(`/convoys/${c.id}`);
-						close();
-					}
-				});
-			});
-		}
-
-		// Routes
+		// Routes (still use simple filter for navigation routes)
 		if (shouldIncludeInResults('route')) {
 			filteredRoutes.forEach((r) => {
 				results.push({
@@ -290,6 +260,22 @@
 				open();
 			}
 			return;
+		}
+
+		// Global shortcut: '/' to open search (when not in input)
+		if (e.key === '/' && !isOpen) {
+			const target = e.target as HTMLElement;
+			const isInputElement =
+				target instanceof HTMLInputElement ||
+				target instanceof HTMLTextAreaElement ||
+				target instanceof HTMLSelectElement ||
+				target?.contentEditable === 'true';
+
+			if (!isInputElement) {
+				e.preventDefault();
+				open();
+				return;
+			}
 		}
 
 		// Only handle these keys when modal is open

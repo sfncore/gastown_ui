@@ -1,6 +1,35 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/svelte';
 import GlobalSearch from './GlobalSearch.svelte';
+import { swrCache, CACHE_KEYS } from '$lib/stores/swr';
+import { searchIndex } from '$lib/stores/search-index.svelte';
+import type { Agent } from '$lib/stores/agents.svelte';
+import type { WorkItem } from '$lib/stores/work.svelte';
+import type { Convoy } from '$lib/stores/convoys.svelte';
+
+// Mock data for tests
+const mockAgents: Agent[] = [
+	{ id: 'mayor', name: 'Mayor', status: 'working', currentWork: 'Coordinating work' },
+	{ id: 'witness-1', name: 'Witness (gastown_ui)', status: 'working', currentWork: 'Monitoring polecats' },
+	{ id: 'refinery-1', name: 'Refinery (gastown_ui)', status: 'idle', currentWork: 'Waiting for merges' },
+	{ id: 'polecat-morsov', name: 'Polecat Morsov', status: 'working', currentWork: 'Building features' },
+	{ id: 'polecat-rictus', name: 'Polecat Rictus', status: 'idle', currentWork: 'Awaiting work' }
+];
+
+const mockWork: WorkItem[] = [
+	{ id: 'gt-d3a', title: 'Authentication', type: 'epic', status: 'in_progress', priority: 1, labels: [], createdAt: '', updatedAt: '' },
+	{ id: 'gt-2hs', title: 'UI Components', type: 'epic', status: 'open', priority: 2, labels: [], createdAt: '', updatedAt: '' },
+	{ id: 'gt-be4', title: 'Auth Token Refresh', type: 'task', status: 'open', priority: 2, labels: [], createdAt: '', updatedAt: '' },
+	{ id: 'gt-931', title: 'CSRF Protection', type: 'task', status: 'open', priority: 2, labels: [], createdAt: '', updatedAt: '' },
+	{ id: 'gt-3v5', title: 'Command Palette', type: 'task', status: 'done', priority: 2, labels: [], createdAt: '', updatedAt: '' },
+	{ id: 'hq-7vsv', title: 'Global Search', type: 'task', status: 'in_progress', priority: 1, labels: [], createdAt: '', updatedAt: '' }
+];
+
+const mockConvoys: Convoy[] = [
+	{ id: 'convoy-001', name: 'Auth Sprint', status: 'active', progress: 45, workItems: [], tags: [], createdAt: '', updatedAt: '' },
+	{ id: 'convoy-002', name: 'UI Polish', status: 'active', progress: 70, workItems: [], tags: [], createdAt: '', updatedAt: '' },
+	{ id: 'convoy-003', name: 'Mobile PWA', status: 'stale', progress: 30, workItems: [], tags: [], createdAt: '', updatedAt: '' }
+];
 
 describe('GlobalSearch', () => {
 	beforeEach(() => {
@@ -25,6 +54,15 @@ describe('GlobalSearch', () => {
 			value: 'MacIntel',
 			configurable: true
 		});
+
+		// Populate SWR cache with test data for search index
+		swrCache.set(CACHE_KEYS.AGENTS, mockAgents);
+		swrCache.set(CACHE_KEYS.WORK, mockWork);
+		swrCache.set(CACHE_KEYS.CONVOYS, mockConvoys);
+		swrCache.set(CACHE_KEYS.MAIL, []);
+
+		// Force rebuild the search index immediately
+		searchIndex.forceRebuild();
 	});
 
 	afterEach(() => {
@@ -113,15 +151,14 @@ describe('GlobalSearch', () => {
 	});
 
 	describe('Search Functionality', () => {
-		it('shows empty state with suggestions when no query', async () => {
+		it('shows recent items when no query', async () => {
 			render(GlobalSearch);
 
 			const triggerButton = screen.getByRole('button', { name: /open search/i });
 			await fireEvent.click(triggerButton);
 
-			// Should show suggestions
-			expect(screen.getByText(/try searching for:/i)).toBeInTheDocument();
-			expect(screen.getByText('running agents')).toBeInTheDocument();
+			// Should show recent items section header
+			expect(screen.getByText('Recent')).toBeInTheDocument();
 		});
 
 		it('filters results based on search query', async () => {
@@ -226,31 +263,26 @@ describe('GlobalSearch', () => {
 			await fireEvent.click(triggerButton);
 
 			const searchInput = screen.getByRole('combobox');
-			await fireEvent.input(searchInput, { target: { value: 'agent' } });
+			// Search for "polecat" to get multiple agent results
+			await fireEvent.input(searchInput, { target: { value: 'polecat' } });
 
 			await waitFor(() => {
-				expect(screen.getByText('Mayor')).toBeInTheDocument();
+				expect(screen.getByText('Polecat Morsov')).toBeInTheDocument();
 			});
 
-			// Press ArrowDown to select first result
+			// First result should be selected initially (index 0)
+			const results = screen.getAllByRole('option');
+			expect(results[0]).toHaveAttribute('aria-selected', 'true');
+
+			// Press ArrowDown to select second result (index 1)
 			await fireEvent.keyDown(searchInput, { key: 'ArrowDown' });
+			expect(results[1]).toHaveAttribute('aria-selected', 'true');
+			expect(results[0]).toHaveAttribute('aria-selected', 'false');
 
-			// First result should be selected (aria-selected="true")
-			const firstResult = screen.getAllByRole('option')[0];
-			expect(firstResult).toHaveAttribute('aria-selected', 'true');
-
-			// Press ArrowDown again
-			await fireEvent.keyDown(searchInput, { key: 'ArrowDown' });
-
-			// Second result should be selected
-			const secondResult = screen.getAllByRole('option')[1];
-			expect(secondResult).toHaveAttribute('aria-selected', 'true');
-
-			// Press ArrowUp
+			// Press ArrowUp to go back to first result
 			await fireEvent.keyDown(searchInput, { key: 'ArrowUp' });
-
-			// Back to first result
-			expect(firstResult).toHaveAttribute('aria-selected', 'true');
+			expect(results[0]).toHaveAttribute('aria-selected', 'true');
+			expect(results[1]).toHaveAttribute('aria-selected', 'false');
 		});
 
 		it('prevents navigation beyond bounds', async () => {
