@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { getProcessSupervisor } from '$lib/server/cli';
 import type { PageServerLoad } from './$types';
 
 type Severity = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
@@ -133,14 +133,21 @@ function cleanTitle(title: string): string {
 
 export const load: PageServerLoad = async () => {
 	try {
-		// Run bd list to get escalations
-		const result = execSync('bd list --status=open --label escalation --json', {
-			encoding: 'utf-8',
-			timeout: 10000,
-			cwd: '/Users/amrit/Documents/Projects/Rust/mouchak/gastown_exp'
-		});
+		// Run bd list to get escalations using async ProcessSupervisor
+		const supervisor = getProcessSupervisor();
+		const result = await supervisor.bd<BeadsIssue[]>(
+			['list', '--status=open', '--label', 'escalation', '--json'],
+			{
+				timeout: 10000,
+				cwd: '/Users/amrit/Documents/Projects/Rust/mouchak/gastown_exp'
+			}
+		);
 
-		const issues: BeadsIssue[] = JSON.parse(result);
+		if (!result.success || !result.data) {
+			throw new Error(result.error || 'Failed to fetch escalations');
+		}
+
+		const issues: BeadsIssue[] = result.data;
 
 		// Transform to escalation format
 		const escalations: Escalation[] = issues.map((issue) => {

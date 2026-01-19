@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { getProcessSupervisor } from '$lib/server/cli';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -126,13 +126,18 @@ function cleanTitle(title: string): string {
 
 export const load: PageServerLoad = async ({ params }) => {
 	try {
-		const result = execSync(`bd show ${params.id} --json`, {
-			encoding: 'utf-8',
+		// Use async ProcessSupervisor instead of blocking execSync
+		const supervisor = getProcessSupervisor();
+		const result = await supervisor.bd<BeadsIssue>(['show', params.id, '--json'], {
 			timeout: 10000,
 			cwd: '/Users/amrit/Documents/Projects/Rust/mouchak/gastown_exp'
 		});
 
-		const issue: BeadsIssue = JSON.parse(result);
+		if (!result.success || !result.data) {
+			throw new Error(result.error || 'Failed to fetch escalation');
+		}
+
+		const issue: BeadsIssue = result.data;
 		const decision = parseDecision(issue.description);
 
 		const escalation: Escalation = {
