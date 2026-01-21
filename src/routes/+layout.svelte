@@ -8,6 +8,7 @@
 	import { onMount } from 'svelte';
 	import { swipe } from '$lib/actions/swipe';
 	import { goto } from '$app/navigation';
+	import { initCacheSync } from '$lib/stores/cache-sync';
 	import {
 		Home,
 		Briefcase,
@@ -137,7 +138,7 @@
 	onMount(() => {
 		// Apply stored theme immediately
 		applyStoredTheme();
-		
+
 		// Listen for system theme changes
 		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 		const handleThemeChange = () => {
@@ -147,7 +148,7 @@
 			}
 		};
 		mediaQuery.addEventListener('change', handleThemeChange);
-		
+
 		// Initialize keyboard shortcuts
 		const manager = initializeKeyboardShortcuts();
 		if (manager) {
@@ -158,14 +159,14 @@
 				action: () => goto('/mail'),
 				category: 'navigation'
 			});
-			
+
 			manager.register('goto-work', {
 				keys: ['cmd', 'l'],
 				description: 'Go to Work',
 				action: () => goto('/work'),
 				category: 'navigation'
 			});
-			
+
 			// Action shortcuts (global)
 			manager.register('toggle-search', {
 				keys: ['cmd', 'k'],
@@ -177,13 +178,17 @@
 				category: 'action'
 			});
 		}
-		
+
+		// Initialize cache sync for real-time SWR invalidation
+		const cleanupCacheSync = initCacheSync();
+
 		fetchBadgeCounts();
 		const interval = setInterval(fetchBadgeCounts, 30000); // Poll every 30s
-		
+
 		return () => {
 			clearInterval(interval);
 			mediaQuery.removeEventListener('change', handleThemeChange);
+			cleanupCacheSync();
 		};
 	});
 

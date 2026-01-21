@@ -2,11 +2,13 @@
  * SSE Activity Stream Endpoint
  *
  * Server-Sent Events for real-time activity updates.
+ * Includes cache invalidation events from beads-watcher.
  */
 
 import type { RequestHandler } from './$types';
 import { tailEventsFile, readLastNEvents } from '$lib/server/watchers/events-tailer';
 import { getProcessSupervisor } from '$lib/server/cli';
+import { initBeadsWatcher, cacheEventEmitter, type CacheInvalidationEvent } from '$lib/server/watch';
 
 async function getTownRoot(): Promise<string | null> {
 	const supervisor = getProcessSupervisor();
@@ -36,6 +38,14 @@ export const GET: RequestHandler = async ({ request }) => {
 	}
 
 	const eventsPath = `${townRoot}/.beads/.events.jsonl`;
+	const beadsPath = `${townRoot}/.beads`;
+
+	// Initialize beads watcher for cache invalidation events
+	try {
+		await initBeadsWatcher(beadsPath);
+	} catch {
+		// Watcher init failure is non-fatal, continue with event tailing
+	}
 
 	const stream = new ReadableStream({
 		async start(controller) {
@@ -58,9 +68,16 @@ export const GET: RequestHandler = async ({ request }) => {
 				/* no initial events */
 			}
 
+			// Subscribe to file-based events
 			const unsubscribe = tailEventsFile(eventsPath, (event) => {
 				sendEvent(event);
 			});
+
+			// Subscribe to cache invalidation events from beads-watcher
+			const handleCacheInvalidation = (event: CacheInvalidationEvent) => {
+				sendEvent(event);
+			};
+			cacheEventEmitter.onInvalidation(handleCacheInvalidation);
 
 			const heartbeat = setInterval(() => {
 				try {
@@ -72,6 +89,7 @@ export const GET: RequestHandler = async ({ request }) => {
 
 			request.signal.addEventListener('abort', () => {
 				unsubscribe();
+				cacheEventEmitter.offInvalidation(handleCacheInvalidation);
 				clearInterval(heartbeat);
 				try {
 					controller.close();
