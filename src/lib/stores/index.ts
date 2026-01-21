@@ -91,6 +91,34 @@ export {
 	type MailFilter
 } from './mail.svelte';
 
+export {
+	rigsStore,
+	useRigs,
+	type Rig,
+	type RigAgent,
+	type RigConfig,
+	type RigStatus,
+	type RigFilter
+} from './rigs.svelte';
+
+export {
+	queueStore,
+	useQueue,
+	type MergeQueueItem,
+	type MergeQueueStatus,
+	type CIStatus,
+	type MergeableStatus,
+	type QueueFilter
+} from './queue.svelte';
+
+export {
+	sseStore,
+	useSSE,
+	type SSEConnectionState,
+	type SSEEvent,
+	type SSEEventType
+} from './sse.svelte';
+
 // Search index with Fuse.js
 export {
 	searchIndex,

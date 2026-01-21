@@ -463,7 +463,11 @@ export const CACHE_KEYS = {
 	AGENT: (id: string) => `agent:${id}`,
 	MAIL: 'mail',
 	MAIL_ITEM: (id: string) => `mail:${id}`,
-	OPERATIONS: 'operations'
+	OPERATIONS: 'operations',
+	RIGS: 'rigs',
+	RIG: (name: string) => `rig:${name}`,
+	QUEUE: 'queue',
+	QUEUE_RIG: (name: string) => `queue:${name}`
 } as const;
 
 export const CACHE_TTLS = {
