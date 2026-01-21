@@ -161,7 +161,17 @@ export const GtTrackedIssueSchema = z
 	})
 	.passthrough();
 
-/** Convoy schema */
+/** Convoy list item schema (from gt convoy list --json) */
+export const GtConvoyListItemSchema = z
+	.object({
+		id: z.string(),
+		title: z.string(),
+		status: GtConvoyStatusSchema,
+		created_at: z.string()
+	})
+	.passthrough();
+
+/** Convoy schema (full detail) */
 export const GtConvoySchema = z
 	.object({
 		id: z.string(),
@@ -198,10 +208,12 @@ export const BdBeadSchema = z
 		created_at: z.string(),
 		created_by: z.string(),
 		updated_at: z.string(),
-		labels: z.array(z.string()),
-		ephemeral: z.boolean(),
+		labels: z.array(z.string()).optional(),
+		ephemeral: z.boolean().optional(),
 		parent_id: z.string().optional(),
-		children: z.array(z.string()).optional()
+		children: z.array(z.string()).optional(),
+		dependency_count: z.number().optional(),
+		dependent_count: z.number().optional()
 	})
 	.passthrough();
 

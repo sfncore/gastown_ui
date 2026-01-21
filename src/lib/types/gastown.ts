@@ -117,7 +117,15 @@ export type GtConvoyWorkStatus = 'complete' | 'active' | 'stale' | 'stuck' | 'wa
 /** Convoy status values */
 export type GtConvoyStatus = 'open' | 'closed';
 
-/** Convoy (work group) from `gt convoy list` */
+/** Convoy list item from `gt convoy list --json` */
+export interface GtConvoyListItem {
+	id: string;
+	title: string;
+	status: GtConvoyStatus;
+	created_at: string;
+}
+
+/** Convoy (work group) full detail */
 export interface GtConvoy {
 	id: string;
 	title: string;
@@ -160,10 +168,12 @@ export interface BdBead {
 	created_at: string;
 	created_by: string;
 	updated_at: string;
-	labels: string[];
-	ephemeral: boolean;
+	labels?: string[];
+	ephemeral?: boolean;
 	parent_id?: string;
 	children?: string[];
+	dependency_count?: number;
+	dependent_count?: number;
 }
 
 // =============================================================================

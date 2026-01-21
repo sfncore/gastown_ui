@@ -1,0 +1,50 @@
+[
+  {
+    "id": "gu-4he",
+    "title": "Phase 1 Performance \u0026 A11y Sprint",
+    "status": "open",
+    "created_at": "2026-01-12T23:11:41.029228+05:30"
+  },
+  {
+    "id": "gu-s1u",
+    "title": "Phase 1 Security Hardening Sprint",
+    "status": "open",
+    "created_at": "2026-01-12T23:11:40.919606+05:30"
+  },
+  {
+    "id": "gu-598",
+    "title": "Phase 1 UI Sprint",
+    "status": "open",
+    "created_at": "2026-01-12T23:11:40.69502+05:30"
+  },
+  {
+    "id": "gu-yk5",
+    "title": "Phase 1 API Routes Sprint",
+    "status": "open",
+    "created_at": "2026-01-12T23:11:40.571053+05:30"
+  },
+  {
+    "id": "gu-4si",
+    "title": "Phase 1 Data Layer Sprint",
+    "status": "open",
+    "created_at": "2026-01-12T23:11:40.451896+05:30"
+  },
+  {
+    "id": "gu-pod",
+    "title": "Phase 1 Foundation Sprint",
+    "status": "open",
+    "created_at": "2026-01-12T23:11:40.337099+05:30"
+  },
+  {
+    "id": "hq-cv-grris",
+    "title": "Work: Implement Copy CLI Feature",
+    "status": "open",
+    "created_at": "2026-01-14T17:59:38.733874+05:30"
+  },
+  {
+    "id": "gu-da0",
+    "title": "Phase 1 Testing \u0026 Docs Sprint",
+    "status": "open",
+    "created_at": "2026-01-12T23:11:40.806829+05:30"
+  }
+]

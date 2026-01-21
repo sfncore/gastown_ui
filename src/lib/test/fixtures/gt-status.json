@@ -1,0 +1,341 @@
+{
+  "name": "gastown_exp",
+  "location": "/Users/amrit/Documents/Projects/Rust/mouchak/gastown_exp",
+  "overseer": {
+    "name": "Avyukth",
+    "email": "subhrajit.makur@hotmail.com",
+    "username": "subhrajit.makur",
+    "source": "git-config",
+    "unread_mail": 0
+  },
+  "agents": [
+    {
+      "name": "mayor",
+      "address": "mayor/",
+      "session": "hq-mayor",
+      "role": "coordinator",
+      "running": true,
+      "has_work": false,
+      "state": "idle",
+      "unread_mail": 0
+    },
+    {
+      "name": "deacon",
+      "address": "deacon/",
+      "session": "hq-deacon",
+      "role": "health-check",
+      "running": false,
+      "has_work": false,
+      "state": "idle",
+      "unread_mail": 0
+    }
+  ],
+  "rigs": [
+    {
+      "name": "gastown_ui",
+      "polecats": [
+        "amp",
+        "furiosa",
+        "gastown_ui-64",
+        "gastown_ui-65",
+        "gastown_ui-66",
+        "gastown_ui-68",
+        "gastown_ui-69",
+        "gastown_ui-70",
+        "gastown_ui-71",
+        "gastown_ui-72",
+        "gastown_ui-73",
+        "gastown_ui-74",
+        "gastown_ui-75",
+        "gastown_ui-76",
+        "morsov",
+        "nux"
+      ],
+      "polecat_count": 16,
+      "crews": [
+        "jack"
+      ],
+      "crew_count": 1,
+      "has_witness": true,
+      "has_refinery": true,
+      "hooks": [
+        {
+          "agent": "gastown_ui/amp",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/furiosa",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/gastown_ui-64",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/gastown_ui-65",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/gastown_ui-66",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/gastown_ui-68",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/gastown_ui-69",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/gastown_ui-70",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/gastown_ui-71",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/gastown_ui-72",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/gastown_ui-73",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/gastown_ui-74",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/gastown_ui-75",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/gastown_ui-76",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/morsov",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/nux",
+          "role": "polecat",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/crew/jack",
+          "role": "crew",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/witness",
+          "role": "witness",
+          "has_work": false
+        },
+        {
+          "agent": "gastown_ui/refinery",
+          "role": "refinery",
+          "has_work": false
+        }
+      ],
+      "agents": [
+        {
+          "name": "witness",
+          "address": "gastown_ui/witness",
+          "session": "gt-gastown_ui-witness",
+          "role": "witness",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "refinery",
+          "address": "gastown_ui/refinery",
+          "session": "gt-gastown_ui-refinery",
+          "role": "refinery",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "amp",
+          "address": "gastown_ui/amp",
+          "session": "gt-gastown_ui-amp",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "furiosa",
+          "address": "gastown_ui/furiosa",
+          "session": "gt-gastown_ui-furiosa",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "gastown_ui-64",
+          "address": "gastown_ui/gastown_ui-64",
+          "session": "gt-gastown_ui-gastown_ui-64",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "gastown_ui-65",
+          "address": "gastown_ui/gastown_ui-65",
+          "session": "gt-gastown_ui-gastown_ui-65",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "gastown_ui-66",
+          "address": "gastown_ui/gastown_ui-66",
+          "session": "gt-gastown_ui-gastown_ui-66",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "gastown_ui-68",
+          "address": "gastown_ui/gastown_ui-68",
+          "session": "gt-gastown_ui-gastown_ui-68",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "gastown_ui-69",
+          "address": "gastown_ui/gastown_ui-69",
+          "session": "gt-gastown_ui-gastown_ui-69",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "gastown_ui-70",
+          "address": "gastown_ui/gastown_ui-70",
+          "session": "gt-gastown_ui-gastown_ui-70",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "gastown_ui-71",
+          "address": "gastown_ui/gastown_ui-71",
+          "session": "gt-gastown_ui-gastown_ui-71",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "gastown_ui-72",
+          "address": "gastown_ui/gastown_ui-72",
+          "session": "gt-gastown_ui-gastown_ui-72",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "gastown_ui-73",
+          "address": "gastown_ui/gastown_ui-73",
+          "session": "gt-gastown_ui-gastown_ui-73",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "gastown_ui-74",
+          "address": "gastown_ui/gastown_ui-74",
+          "session": "gt-gastown_ui-gastown_ui-74",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "gastown_ui-75",
+          "address": "gastown_ui/gastown_ui-75",
+          "session": "gt-gastown_ui-gastown_ui-75",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "gastown_ui-76",
+          "address": "gastown_ui/gastown_ui-76",
+          "session": "gt-gastown_ui-gastown_ui-76",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "morsov",
+          "address": "gastown_ui/morsov",
+          "session": "gt-gastown_ui-morsov",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "nux",
+          "address": "gastown_ui/nux",
+          "session": "gt-gastown_ui-nux",
+          "role": "polecat",
+          "running": true,
+          "has_work": false,
+          "unread_mail": 0
+        },
+        {
+          "name": "jack",
+          "address": "gastown_ui/crew/jack",
+          "session": "gt-gastown_ui-crew-jack",
+          "role": "crew",
+          "running": false,
+          "has_work": false,
+          "unread_mail": 0
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "rig_count": 1,
+    "polecat_count": 16,
+    "crew_count": 1,
+    "witness_count": 1,
+    "refinery_count": 1,
+    "active_hooks": 0
+  }
+}

@@ -28,6 +28,7 @@ export type {
 	// Convoy types
 	GtConvoyWorkStatus,
 	GtConvoyStatus,
+	GtConvoyListItem,
 	GtConvoy,
 	GtTrackedIssue,
 	// Bead types
@@ -105,6 +106,7 @@ export {
 	// Convoy schemas
 	GtConvoyWorkStatusSchema,
 	GtConvoyStatusSchema,
+	GtConvoyListItemSchema,
 	GtTrackedIssueSchema,
 	GtConvoySchema,
 	// Bead schemas
