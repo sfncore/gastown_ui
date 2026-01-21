@@ -19,7 +19,8 @@ import type {
 	GtRig,
 	GtFeedItem,
 	GtSnapshot,
-	SlingTarget
+	SlingTarget,
+	GtDashboardSnapshot
 } from '../gastown';
 import {
 	GtStatusSchema,
@@ -37,7 +38,8 @@ import {
 	SlingTargetSchema,
 	GtAgentSummarySchema,
 	GtRigInfoSchema,
-	GtOverseerSchema
+	GtOverseerSchema,
+	GtDashboardSnapshotSchema
 } from '../gastown.schema';
 
 // =============================================================================
@@ -299,6 +301,61 @@ const sampleSnapshot: GtSnapshot = {
 	}
 };
 
+const sampleDashboardSnapshot: GtDashboardSnapshot = {
+	rigs: [
+		{
+			name: 'gastown_ui',
+			status: 'active',
+			polecats: 2,
+			has_witness: true,
+			has_refinery: true,
+			active_work: 1
+		}
+	],
+	polecats: [
+		{
+			id: 'gastown_ui-polecats-gastown_ui-59',
+			name: 'Gastown_ui-59',
+			role: 'polecat',
+			rig: 'gastown_ui',
+			status: 'running',
+			has_work: true,
+			task: 'gu-ygmi'
+		}
+	],
+	convoys: [
+		{
+			id: 'conv-1',
+			title: 'Phase 1 API Routes',
+			status: 'open',
+			priority: 1,
+			issue_count: 5
+		}
+	],
+	recent_activity: [
+		{
+			id: 'act-1',
+			title: 'gu-ygmi: Implement /api/gastown/snapshot',
+			type: 'task',
+			status: 'in_progress',
+			updated_at: '2026-01-21T06:54:00Z'
+		}
+	],
+	mail: {
+		unread: 2,
+		total: 5
+	},
+	queue: {
+		pending: 3,
+		inProgress: 1,
+		total: 4
+	},
+	health: 'healthy',
+	fetchedAt: '2026-01-21T06:55:00Z',
+	timestamp: '2026-01-21T06:55:00Z',
+	requestId: 'test-request-id-123'
+};
+
 // =============================================================================
 // Schema Validation Tests
 // =============================================================================
@@ -402,6 +459,28 @@ describe('Gas Town Types - Schema Validation', () => {
 	describe('Snapshot Types', () => {
 		it('validates GtSnapshot schema', () => {
 			const result = GtSnapshotSchema.safeParse(sampleSnapshot);
+			expect(result.success).toBe(true);
+		});
+
+		it('validates GtDashboardSnapshot schema', () => {
+			const result = GtDashboardSnapshotSchema.safeParse(sampleDashboardSnapshot);
+			expect(result.success).toBe(true);
+		});
+
+		it('validates GtDashboardSnapshot with empty arrays', () => {
+			const emptySnapshot: GtDashboardSnapshot = {
+				rigs: [],
+				polecats: [],
+				convoys: [],
+				recent_activity: [],
+				mail: { unread: 0, total: 0 },
+				queue: { pending: 0, inProgress: 0, total: 0 },
+				health: 'degraded',
+				fetchedAt: '2026-01-21T06:55:00Z',
+				timestamp: '2026-01-21T06:55:00Z',
+				requestId: 'test-empty'
+			};
+			const result = GtDashboardSnapshotSchema.safeParse(emptySnapshot);
 			expect(result.success).toBe(true);
 		});
 	});

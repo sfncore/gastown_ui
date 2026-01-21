@@ -2,69 +2,19 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { getProcessSupervisor } from '$lib/server/cli';
 import { randomUUID } from 'node:crypto';
+import type {
+	GtDashboardSnapshot,
+	RigSnapshot,
+	PolecatSnapshot,
+	ConvoySnapshot,
+	ActivitySnapshot,
+	MailSummary,
+	DashboardQueueSummary,
+	DashboardHealthStatus
+} from '$lib/types';
+import { GtDashboardSnapshotSchema } from '$lib/types';
 
-interface RigSnapshot {
-	name: string;
-	status: 'active' | 'idle';
-	polecats: number;
-	has_witness: boolean;
-	has_refinery: boolean;
-	active_work: number;
-}
-
-interface PolecatSnapshot {
-	id: string;
-	name: string;
-	role: string;
-	rig: string;
-	status: 'running' | 'idle';
-	has_work: boolean;
-	task?: string;
-}
-
-interface ConvoySnapshot {
-	id: string;
-	title: string;
-	status: string;
-	priority: number;
-	issue_count?: number;
-}
-
-interface ActivitySnapshot {
-	id: string;
-	title: string;
-	type: string;
-	status: string;
-	updated_at: string;
-}
-
-interface MailSummary {
-	unread: number;
-	total: number;
-}
-
-interface QueueSummary {
-	pending: number;
-	inProgress: number;
-	total: number;
-}
-
-type HealthStatus = 'healthy' | 'degraded' | 'unhealthy';
-
-export interface GasТownSnapshot {
-	rigs: RigSnapshot[];
-	polecats: PolecatSnapshot[];
-	convoys: ConvoySnapshot[];
-	recent_activity: ActivitySnapshot[];
-	mail: MailSummary;
-	queue: QueueSummary;
-	health: HealthStatus;
-	fetchedAt: string;
-	timestamp: string;
-	requestId: string;
-}
-
-let cachedSnapshot: GasТownSnapshot | null = null;
+let cachedSnapshot: GtDashboardSnapshot | null = null;
 let cacheTimestamp = 0;
 const CACHE_TTL_MS = 5_000;
 
@@ -200,13 +150,13 @@ export const GET: RequestHandler = async () => {
 		total: mailData.length
 	};
 
-	const queue: QueueSummary = {
+	const queue: DashboardQueueSummary = {
 		pending: gtStatus.queue?.pending || 0,
 		inProgress: gtStatus.queue?.in_progress || 0,
 		total: gtStatus.queue?.total || 0
 	};
 
-	let health: HealthStatus = 'healthy';
+	let health: DashboardHealthStatus = 'healthy';
 	if (!gtStatus.rigs || gtStatus.rigs.length === 0) {
 		health = 'degraded';
 	}
@@ -215,7 +165,7 @@ export const GET: RequestHandler = async () => {
 		health = 'degraded';
 	}
 
-	const snapshot: GasТownSnapshot = {
+	const snapshot: GtDashboardSnapshot = {
 		rigs,
 		polecats,
 		convoys,
@@ -227,6 +177,12 @@ export const GET: RequestHandler = async () => {
 		timestamp: new Date().toISOString(),
 		requestId
 	};
+
+	// Validate response against schema
+	const validated = GtDashboardSnapshotSchema.safeParse(snapshot);
+	if (!validated.success) {
+		console.error('Snapshot validation failed:', validated.error.issues);
+	}
 
 	cachedSnapshot = snapshot;
 	cacheTimestamp = now;

@@ -479,7 +479,7 @@ export const GtFreshnessSchema = z
 	})
 	.passthrough();
 
-/** Composite snapshot schema */
+/** Composite snapshot schema (simple) */
 export const GtSnapshotSchema = z
 	.object({
 		status: GtStatusSchema,
@@ -487,6 +487,99 @@ export const GtSnapshotSchema = z
 		queueCount: z.number(),
 		recentActivity: z.array(GtFeedItemSchema),
 		freshness: GtFreshnessSchema
+	})
+	.passthrough();
+
+// =============================================================================
+// Dashboard Snapshot Schemas (Coherent Data Fetch)
+// =============================================================================
+
+/** Rig snapshot status enum */
+export const RigSnapshotStatusSchema = z.enum(['active', 'idle']);
+
+/** Rig snapshot for dashboard */
+export const RigSnapshotSchema = z
+	.object({
+		name: z.string(),
+		status: RigSnapshotStatusSchema,
+		polecats: z.number(),
+		has_witness: z.boolean(),
+		has_refinery: z.boolean(),
+		active_work: z.number()
+	})
+	.passthrough();
+
+/** Polecat snapshot status enum */
+export const PolecatSnapshotStatusSchema = z.enum(['running', 'idle']);
+
+/** Polecat snapshot for dashboard */
+export const PolecatSnapshotSchema = z
+	.object({
+		id: z.string(),
+		name: z.string(),
+		role: z.string(),
+		rig: z.string(),
+		status: PolecatSnapshotStatusSchema,
+		has_work: z.boolean(),
+		task: z.string().optional()
+	})
+	.passthrough();
+
+/** Convoy snapshot for dashboard */
+export const ConvoySnapshotSchema = z
+	.object({
+		id: z.string(),
+		title: z.string(),
+		status: z.string(),
+		priority: z.number(),
+		issue_count: z.number().optional()
+	})
+	.passthrough();
+
+/** Activity snapshot for dashboard */
+export const ActivitySnapshotSchema = z
+	.object({
+		id: z.string(),
+		title: z.string(),
+		type: z.string(),
+		status: z.string(),
+		updated_at: z.string()
+	})
+	.passthrough();
+
+/** Mail summary for dashboard */
+export const MailSummarySchema = z
+	.object({
+		unread: z.number(),
+		total: z.number()
+	})
+	.passthrough();
+
+/** Dashboard queue summary schema */
+export const DashboardQueueSummarySchema = z
+	.object({
+		pending: z.number(),
+		inProgress: z.number(),
+		total: z.number()
+	})
+	.passthrough();
+
+/** Dashboard health status enum */
+export const DashboardHealthStatusSchema = z.enum(['healthy', 'degraded', 'unhealthy']);
+
+/** Dashboard snapshot schema (coherent data fetch response) */
+export const GtDashboardSnapshotSchema = z
+	.object({
+		rigs: z.array(RigSnapshotSchema),
+		polecats: z.array(PolecatSnapshotSchema),
+		convoys: z.array(ConvoySnapshotSchema),
+		recent_activity: z.array(ActivitySnapshotSchema),
+		mail: MailSummarySchema,
+		queue: DashboardQueueSummarySchema,
+		health: DashboardHealthStatusSchema,
+		fetchedAt: z.string(),
+		timestamp: z.string(),
+		requestId: z.string()
 	})
 	.passthrough();
 
@@ -534,3 +627,4 @@ export type GtDoctorResultInferred = z.infer<typeof GtDoctorResultSchema>;
 export type GtRigInferred = z.infer<typeof GtRigSchema>;
 export type GtFeedItemInferred = z.infer<typeof GtFeedItemSchema>;
 export type GtSnapshotInferred = z.infer<typeof GtSnapshotSchema>;
+export type GtDashboardSnapshotInferred = z.infer<typeof GtDashboardSnapshotSchema>;

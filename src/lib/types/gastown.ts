@@ -407,6 +407,85 @@ export interface GtSnapshot {
 }
 
 // =============================================================================
+// Dashboard Snapshot Types (Coherent Data Fetch)
+// =============================================================================
+
+/** Rig snapshot status values */
+export type RigSnapshotStatus = 'active' | 'idle';
+
+/** Rig snapshot for dashboard */
+export interface RigSnapshot {
+	name: string;
+	status: RigSnapshotStatus;
+	polecats: number;
+	has_witness: boolean;
+	has_refinery: boolean;
+	active_work: number;
+}
+
+/** Polecat snapshot status values */
+export type PolecatSnapshotStatus = 'running' | 'idle';
+
+/** Polecat snapshot for dashboard */
+export interface PolecatSnapshot {
+	id: string;
+	name: string;
+	role: string;
+	rig: string;
+	status: PolecatSnapshotStatus;
+	has_work: boolean;
+	task?: string;
+}
+
+/** Convoy snapshot for dashboard */
+export interface ConvoySnapshot {
+	id: string;
+	title: string;
+	status: string;
+	priority: number;
+	issue_count?: number;
+}
+
+/** Activity snapshot for dashboard */
+export interface ActivitySnapshot {
+	id: string;
+	title: string;
+	type: string;
+	status: string;
+	updated_at: string;
+}
+
+/** Mail summary for dashboard */
+export interface MailSummary {
+	unread: number;
+	total: number;
+}
+
+/** Dashboard queue summary */
+export interface DashboardQueueSummary {
+	pending: number;
+	inProgress: number;
+	total: number;
+}
+
+/** Dashboard health status values */
+export type DashboardHealthStatus = 'healthy' | 'degraded' | 'unhealthy';
+
+/** Dashboard snapshot (coherent data fetch response) */
+export interface GtDashboardSnapshot {
+	rigs: RigSnapshot[];
+	polecats: PolecatSnapshot[];
+	convoys: ConvoySnapshot[];
+	recent_activity: ActivitySnapshot[];
+	mail: MailSummary;
+	queue: DashboardQueueSummary;
+	health: DashboardHealthStatus;
+	fetchedAt: string;
+	timestamp: string;
+	requestId: string;
+}
+
+// =============================================================================
 // API Error Types
 // =============================================================================
 

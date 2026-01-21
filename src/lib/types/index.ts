@@ -72,6 +72,17 @@ export type {
 	// Snapshot types
 	GtFreshness,
 	GtSnapshot,
+	// Dashboard snapshot types
+	RigSnapshotStatus,
+	RigSnapshot,
+	PolecatSnapshotStatus,
+	PolecatSnapshot,
+	ConvoySnapshot,
+	ActivitySnapshot,
+	MailSummary,
+	DashboardQueueSummary,
+	DashboardHealthStatus,
+	GtDashboardSnapshot,
 	// Error types
 	ErrorCategory,
 	ApiErrorResponse
@@ -138,6 +149,17 @@ export {
 	// Snapshot schemas
 	GtFreshnessSchema,
 	GtSnapshotSchema,
+	// Dashboard snapshot schemas
+	RigSnapshotStatusSchema,
+	RigSnapshotSchema,
+	PolecatSnapshotStatusSchema,
+	PolecatSnapshotSchema,
+	ConvoySnapshotSchema,
+	ActivitySnapshotSchema,
+	MailSummarySchema,
+	DashboardQueueSummarySchema,
+	DashboardHealthStatusSchema,
+	GtDashboardSnapshotSchema,
 	// Error schemas
 	ErrorCategorySchema,
 	ApiErrorResponseSchema,
@@ -153,5 +175,6 @@ export {
 	type GtDoctorResultInferred,
 	type GtRigInferred,
 	type GtFeedItemInferred,
-	type GtSnapshotInferred
+	type GtSnapshotInferred,
+	type GtDashboardSnapshotInferred
 } from './gastown.schema';
