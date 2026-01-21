@@ -975,3 +975,46 @@ pre {
 		padding-top: env(safe-area-inset-top, 0);
 	}
 }
+
+/* === Vim-Style Keyboard Navigation === */
+@layer components {
+	/* Vim selected item highlight */
+	.vim-selected,
+	[data-vim-selected="true"] {
+		@apply ring-2 ring-primary ring-offset-2 ring-offset-background;
+		outline: none;
+	}
+
+	/* Vim checked/selected for multi-select */
+	[data-vim-checked="true"] {
+		@apply bg-primary/10;
+	}
+
+	/* Vim sequence indicator (shows pending key like "g") */
+	.vim-sequence-indicator {
+		@apply fixed bottom-4 right-4 z-50 px-3 py-2 rounded-lg bg-card border border-border shadow-lg;
+		@apply font-mono text-sm text-foreground;
+		animation: vim-sequence-appear 0.15s ease-out;
+	}
+
+	@keyframes vim-sequence-appear {
+		from {
+			opacity: 0;
+			transform: translateY(8px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	/* List items that can be navigated with j/k */
+	[data-list-item] {
+		@apply transition-all duration-75;
+		cursor: pointer;
+	}
+
+	[data-list-item]:focus-visible {
+		@apply ring-2 ring-primary ring-offset-2 ring-offset-background outline-none;
+	}
+}

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import '../app.css';
-	import { SkipLink, Announcer, BottomNav, Sidebar, NavigationLoader, GlobalSearch, DegradedModeBanner, KnownBugDetector, OperationCenter } from '$lib/components';
+	import { SkipLink, Announcer, BottomNav, Sidebar, NavigationLoader, GlobalSearch, DegradedModeBanner, KnownBugDetector, VimSequenceIndicator, OperationCenter } from '$lib/components';
 	import { initializeKeyboardShortcuts, keyboardManager } from '$lib/utils/keyboard';
+	import { initializeVimShortcuts } from '$lib/utils/keyboard-vim';
 	import { preloadRoute } from '$lib/preload';
 	import { page } from '$app/stores';
 	import { afterNavigate } from '$app/navigation';
@@ -179,6 +180,9 @@
 			});
 		}
 
+		// Initialize vim-style keyboard shortcuts (g+key navigation, j/k list nav, etc.)
+		initializeVimShortcuts();
+
 		// Initialize cache sync for real-time SWR invalidation
 		const cleanupCacheSync = initCacheSync();
 
@@ -282,6 +286,14 @@
 				{@render children()}
 			</main>
 		</div>
+
+		<!-- Vim sequence indicator for desktop -->
+		<VimSequenceIndicator />
+
+		<!-- Keyboard shortcuts help dialog for desktop (lazy loaded) -->
+		{#await import('$lib/components/KeyboardHelpDialog.svelte') then m}
+			<m.default />
+		{/await}
 	</div>
 
 	<!-- Mobile/Tablet layout with bottom nav (hidden on desktop) -->
@@ -367,6 +379,9 @@
 		{#await import('$lib/components/KeyboardHelpDialog.svelte') then m}
 			<m.default />
 		{/await}
+
+		<!-- Vim sequence indicator (shows pending key like "g") -->
+		<VimSequenceIndicator />
 		</div>
 
 	<!-- Operation Center FAB - visible on all pages except login -->

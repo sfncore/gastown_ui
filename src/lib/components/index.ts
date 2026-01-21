@@ -78,6 +78,7 @@ export { CommandPalette } from './command-palette';
 
 // Keyboard shortcuts components
 export { default as KeyboardHelpDialog } from './KeyboardHelpDialog.svelte';
+export { default as VimSequenceIndicator } from './VimSequenceIndicator.svelte';
 
 // Error handling components
 export { default as ErrorBoundary } from './ErrorBoundary.svelte';

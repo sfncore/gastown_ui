@@ -58,10 +58,21 @@ export function runKeyboardTests() {
 	logger.info('Test: Escape closes search');
 	logger.info('Test: Type > for command mode');
 
-	// Section 3: Navigation Shortcuts
-	logger.step('Section 3: Navigation Shortcuts');
+	// Section 3: Navigation Shortcuts (Modifier-based)
+	logger.step('Section 3: Navigation Shortcuts (Modifier-based)');
 	logger.info('Test: Cmd/Ctrl+J navigates to Mail');
 	logger.info('Test: Cmd/Ctrl+L navigates to Work');
+
+	// Section 3b: Vim-Style Navigation Shortcuts
+	logger.step('Section 3b: Vim-Style Navigation (g + key)');
+	logger.info('Test: g then d navigates to Dashboard');
+	logger.info('Test: g then a navigates to Agents');
+	logger.info('Test: g then r navigates to Rigs');
+	logger.info('Test: g then w navigates to Work');
+	logger.info('Test: g then m navigates to Mail');
+	logger.info('Test: g then q navigates to Queue');
+	logger.info('Test: g then c navigates to Convoys');
+	logger.info('Verify: Sequence indicator shows "g" while waiting');
 
 	// Section 4: Command Palette
 	logger.step('Section 4: Command Palette');
@@ -78,15 +89,32 @@ export function runKeyboardTests() {
 	logger.info('Test: Arrow Up selects previous item');
 	logger.info('Test: Enter opens/executes selected item');
 
-	// Section 6: Modal/Dialog Keyboard Support
-	logger.step('Section 6: Modal/Dialog Keyboard Support');
+	// Section 5b: Vim-Style List Navigation
+	logger.step('Section 5b: Vim-Style List Navigation');
+	logger.info('Test: j selects next item (when list focused)');
+	logger.info('Test: k selects previous item (when list focused)');
+	logger.info('Test: Enter opens selected item');
+	logger.info('Test: Escape deselects/clears list selection');
+	logger.info('Test: x toggles selection on current item');
+	logger.info('Verify: Selected item has visual highlight ring');
+
+	// Section 6: Vim-Style Action Shortcuts
+	logger.step('Section 6: Vim-Style Action Shortcuts');
+	logger.info('Test: r triggers refresh');
+	logger.info('Test: c triggers create new');
+	logger.info('Test: s triggers sling (on work items)');
+	logger.info('Test: / focuses search');
+	logger.info('Test: ? shows keyboard help dialog');
+
+	// Section 7: Modal/Dialog Keyboard Support
+	logger.step('Section 7: Modal/Dialog Keyboard Support');
 	logger.info('Test: Tab cycles through focusable elements');
 	logger.info('Test: Shift+Tab cycles backwards');
 	logger.info('Test: Escape closes modals/dialogs');
 	logger.info('Test: Focus is trapped within open modal');
 
-	// Section 7: Accessibility
-	logger.step('Section 7: Accessibility');
+	// Section 8: Accessibility
+	logger.step('Section 8: Accessibility');
 	logger.info('Test: All interactive elements have visible focus indicators');
 	logger.info('Test: Tab order is logical');
 	logger.info('Test: No keyboard traps exist');
@@ -160,7 +188,7 @@ export async function automatedKeyboardTests(page: import('playwright').Page) {
 		await page.keyboard.press('Escape');
 	}
 
-	// 3. Test navigation shortcuts
+	// 3. Test navigation shortcuts (modifier-based)
 	logger.step('3. Testing navigation shortcuts');
 
 	// Test Cmd/Ctrl+J for Mail
@@ -174,6 +202,37 @@ export async function automatedKeyboardTests(page: import('playwright').Page) {
 	await page.waitForTimeout(500);
 	const onWorkPage = page.url().includes('/work');
 	logTest(`${modifier}+L navigates to Work`, onWorkPage);
+
+	// 3b. Test vim-style navigation shortcuts (g + key)
+	logger.step('3b. Testing vim-style navigation (g + key)');
+
+	// Test g+d for Dashboard
+	await page.keyboard.press('g');
+	await page.waitForTimeout(100);
+	// Check if sequence indicator appears
+	const sequenceIndicatorVisible = await page.locator('.vim-sequence-indicator').isVisible();
+	logTest('g shows sequence indicator', sequenceIndicatorVisible);
+
+	await page.keyboard.press('d');
+	await page.waitForTimeout(500);
+	const onDashboard = page.url() === '/' || page.url().endsWith('/');
+	logTest('g then d navigates to Dashboard', onDashboard);
+
+	// Test g+a for Agents
+	await page.keyboard.press('g');
+	await page.waitForTimeout(100);
+	await page.keyboard.press('a');
+	await page.waitForTimeout(500);
+	const onAgentsPage = page.url().includes('/agents');
+	logTest('g then a navigates to Agents', onAgentsPage);
+
+	// Test g+w for Work
+	await page.keyboard.press('g');
+	await page.waitForTimeout(100);
+	await page.keyboard.press('w');
+	await page.waitForTimeout(500);
+	const onWorkPageVim = page.url().includes('/work');
+	logTest('g then w navigates to Work', onWorkPageVim);
 
 	// 4. Test keyboard navigation in search results
 	logger.step('4. Testing list navigation');
@@ -277,18 +336,46 @@ SECTION 3: COMMAND PALETTE (Cmd/Ctrl+K)
 [ ] Enter -> Execute selected command
 [ ] Escape -> Close palette
 
-SECTION 4: NAVIGATION SHORTCUTS
--------------------------------
+SECTION 4: NAVIGATION SHORTCUTS (Modifier-based)
+------------------------------------------------
 [ ] Cmd/Ctrl+J -> Navigate to Mail
 [ ] Cmd/Ctrl+L -> Navigate to Work
 
-SECTION 5: LIST NAVIGATION
---------------------------
+SECTION 4b: VIM-STYLE NAVIGATION (g + key)
+------------------------------------------
+[ ] g then d -> Navigate to Dashboard
+[ ] g then a -> Navigate to Agents
+[ ] g then r -> Navigate to Rigs
+[ ] g then w -> Navigate to Work
+[ ] g then m -> Navigate to Mail
+[ ] g then q -> Navigate to Queue
+[ ] g then c -> Navigate to Convoys
+[ ] Verify: Sequence indicator shows "g + key" while waiting
+
+SECTION 5: LIST NAVIGATION (Arrow keys)
+---------------------------------------
 [ ] Arrow Down -> Select next item
 [ ] Arrow Up -> Select previous item
 [ ] Enter -> Open/execute selected item
 
-SECTION 6: ACCESSIBILITY
+SECTION 5b: VIM-STYLE LIST NAVIGATION
+-------------------------------------
+[ ] j -> Select next item (when list is focused)
+[ ] k -> Select previous item (when list is focused)
+[ ] Enter -> Open selected item
+[ ] Escape -> Deselect/clear list selection
+[ ] x -> Toggle selection on current item
+[ ] Verify: Selected item has visual highlight ring
+
+SECTION 6: VIM-STYLE ACTION SHORTCUTS
+-------------------------------------
+[ ] r -> Refresh current view
+[ ] c -> Create new item
+[ ] s -> Sling (assign work)
+[ ] / -> Focus search
+[ ] ? -> Show keyboard help dialog
+
+SECTION 7: ACCESSIBILITY
 ------------------------
 [ ] All shortcuts have visible focus indicators
 [ ] Tab order is logical throughout app
