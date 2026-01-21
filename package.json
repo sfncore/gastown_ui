@@ -12,6 +12,8 @@
     "test:unit": "vitest run",
     "test:integration": "vitest run --config vitest.config.integration.ts",
     "test:integration:watch": "vitest --config vitest.config.integration.ts",
+    "test:smoke": "bun scripts/smoke-test.ts",
+    "test:smoke:report": "bun scripts/smoke-test-report.ts --run",
     "analyze": "ANALYZE=true vite build"
   },
   "devDependencies": {
