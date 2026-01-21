@@ -34,6 +34,7 @@
 		)}
 		role="region"
 		aria-label="Notifications"
+		data-testid="toast-container"
 	>
 		{#each toastStore.toasts as toast (toast.id)}
 			<div class="pointer-events-auto">

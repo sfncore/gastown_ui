@@ -7,7 +7,7 @@
  * - Queue management with max visible limit
  */
 
-export type ToastType = 'default' | 'info' | 'success' | 'warning' | 'error';
+export type ToastType = 'default' | 'info' | 'success' | 'warning' | 'error' | 'progress';
 
 export interface Toast {
 	id: string;
@@ -18,17 +18,31 @@ export interface Toast {
 	timestamp: number;
 	/** Set to true when toast is animating out */
 	dismissing?: boolean;
+	/** Extracted bead ID from message (pattern: [a-z]+-[a-z0-9]+) */
+	beadId?: string;
 }
 
 export interface ToastOptions {
 	type?: ToastType;
 	duration?: number;
 	dismissible?: boolean;
+	/** Optional bead ID to associate with the toast */
+	beadId?: string;
 }
 
 const DEFAULT_DURATION = 4000;
 const MAX_TOASTS = 3;
 const EXIT_ANIMATION_DURATION = 200;
+/** Pattern to extract bead IDs from messages */
+const BEAD_ID_PATTERN = /([a-z]+-[a-z0-9]+)/;
+
+/**
+ * Extract bead ID from a message string
+ */
+function extractBeadId(message: string): string | undefined {
+	const match = message.match(BEAD_ID_PATTERN);
+	return match?.[1];
+}
 
 class ToastStore {
 	#toasts = $state<Toast[]>([]);
@@ -46,13 +60,17 @@ class ToastStore {
 	 * Show a toast notification
 	 */
 	show(message: string, options: ToastOptions = {}) {
+		// Extract bead ID from message if not explicitly provided
+		const beadId = options.beadId ?? extractBeadId(message);
+
 		const toast: Toast = {
 			id: crypto.randomUUID(),
 			message,
 			type: options.type ?? 'default',
 			duration: options.duration ?? DEFAULT_DURATION,
 			dismissible: options.dismissible ?? true,
-			timestamp: Date.now()
+			timestamp: Date.now(),
+			beadId
 		};
 
 		// Remove oldest if at max
@@ -91,6 +109,59 @@ class ToastStore {
 
 	error(message: string, options: Omit<ToastOptions, 'type'> = {}) {
 		return this.show(message, { ...options, type: 'error' });
+	}
+
+	/**
+	 * Show a progress toast with indeterminate indicator
+	 * Progress toasts don't auto-dismiss and are not dismissible by default
+	 * @returns A function to dismiss the progress toast
+	 */
+	progress(message: string, options: Omit<ToastOptions, 'type'> = {}) {
+		const id = this.show(message, {
+			...options,
+			type: 'progress',
+			duration: 0, // Don't auto-dismiss
+			dismissible: options.dismissible ?? false
+		});
+		return () => this.dismiss(id);
+	}
+
+	/**
+	 * Two-phase feedback pattern for async operations
+	 * Phase 1: Shows progress toast immediately
+	 * Phase 2: Call the returned function with result to show success/error
+	 *
+	 * @example
+	 * const complete = toast.async("Adding rig...");
+	 * try {
+	 *   const result = await addRig();
+	 *   complete.success("Added: zoo-game", { beadId: "gu-123" });
+	 * } catch (e) {
+	 *   complete.error("Failed to add rig");
+	 * }
+	 */
+	async(progressMessage: string, options: Omit<ToastOptions, 'type'> = {}) {
+		const dismissProgress = this.progress(progressMessage, options);
+
+		return {
+			success: (message: string, resultOptions: Omit<ToastOptions, 'type'> = {}) => {
+				dismissProgress();
+				return this.success(message, resultOptions);
+			},
+			error: (message: string, resultOptions: Omit<ToastOptions, 'type'> = {}) => {
+				dismissProgress();
+				return this.error(message, resultOptions);
+			},
+			warning: (message: string, resultOptions: Omit<ToastOptions, 'type'> = {}) => {
+				dismissProgress();
+				return this.warning(message, resultOptions);
+			},
+			info: (message: string, resultOptions: Omit<ToastOptions, 'type'> = {}) => {
+				dismissProgress();
+				return this.info(message, resultOptions);
+			},
+			dismiss: dismissProgress
+		};
 	}
 
 	/**

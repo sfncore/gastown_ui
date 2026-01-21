@@ -2,7 +2,7 @@
 	import { tv, type VariantProps } from 'tailwind-variants';
 	import { cn } from '$lib/utils';
 	import type { ToastType } from '$lib/stores';
-	import { MessageCircle, Info, CheckCircle, AlertTriangle, XCircle, X } from 'lucide-svelte';
+	import { MessageCircle, Info, CheckCircle, AlertTriangle, XCircle, X, Loader2 } from 'lucide-svelte';
 	import type { ComponentType } from 'svelte';
 
 	/**
@@ -48,6 +48,10 @@
 				error: {
 					container: 'bg-destructive text-destructive-foreground border-destructive/20',
 					icon: 'text-destructive-foreground'
+				},
+				progress: {
+					container: 'bg-background text-foreground border-primary/30',
+					icon: 'text-primary animate-spin'
 				}
 			}
 		},
@@ -91,7 +95,8 @@
 		info: Info,
 		success: CheckCircle,
 		warning: AlertTriangle,
-		error: XCircle
+		error: XCircle,
+		progress: Loader2
 	};
 
 	const IconComponent = $derived(icons[type ?? 'default']);
@@ -105,10 +110,11 @@
 	)}
 	role="alert"
 	aria-live={type === 'error' ? 'assertive' : 'polite'}
+	data-testid="toast"
 >
 	<IconComponent class={styles.icon()} aria-hidden="true" />
 
-	<span class={styles.content()}>{message}</span>
+	<span class={styles.content()} data-testid="toast-message">{message}</span>
 
 	{#if dismissible}
 		<button
@@ -116,6 +122,7 @@
 			class={styles.dismiss()}
 			onclick={handleDismiss}
 			aria-label="Dismiss notification"
+			data-testid="toast-action"
 		>
 			<X class="w-4 h-4" />
 		</button>
