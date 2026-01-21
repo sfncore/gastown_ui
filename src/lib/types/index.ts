@@ -47,6 +47,8 @@ export type {
 	GtMailMessage,
 	// Queue types
 	GtMergeQueueStatus,
+	GtMergeQueueCloseReason,
+	GtMergeQueueFailureType,
 	GtCIStatus,
 	GtMergeableStatus,
 	GtMergeQueueItem,
@@ -131,6 +133,8 @@ export {
 	GtMailMessageSchema,
 	// Queue schemas
 	GtMergeQueueStatusSchema,
+	GtMergeQueueCloseReasonSchema,
+	GtMergeQueueFailureTypeSchema,
 	GtCIStatusSchema,
 	GtMergeableStatusSchema,
 	GtMergeQueueItemSchema,

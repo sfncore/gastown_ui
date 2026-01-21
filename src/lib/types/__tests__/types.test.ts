@@ -166,7 +166,7 @@ const sampleMergeQueueItem: GtMergeQueueItem = {
 	repo: 'gastown_ui',
 	polecat: 'amp',
 	rig: 'gastown_ui',
-	status: 'pending',
+	status: 'open', // MR status: open → in_progress → closed
 	priority: 1,
 	submitted_at: '2026-01-19T22:51:00Z',
 	ci_status: 'pending',

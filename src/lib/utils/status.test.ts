@@ -107,9 +107,10 @@ describe('deriveDisplayStatus', () => {
 		});
 
 		it('returns open when MR is not in_progress', () => {
+			// MRStatus is now 'open' | 'in_progress' | 'closed'
+			// 'merged' is a close_reason, not a status
 			const bead: BeadStatusContext = { status: 'open' };
 			expect(deriveDisplayStatus(bead, 'open')).toBe('open');
-			expect(deriveDisplayStatus(bead, 'merged')).toBe('open');
 			expect(deriveDisplayStatus(bead, 'closed')).toBe('open');
 		});
 	});

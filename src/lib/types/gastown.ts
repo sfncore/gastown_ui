@@ -270,8 +270,34 @@ export interface GtMailMessage {
 // Queue Types
 // =============================================================================
 
-/** Merge queue item status values */
-export type GtMergeQueueStatus = 'pending' | 'processing' | 'merged' | 'failed';
+/**
+ * MR (Merge Request) status - matches gastown internal/refinery/types.go
+ *
+ * Lifecycle: open → in_progress → closed
+ * - open: Queued, waiting to be processed
+ * - in_progress: Currently being merged/tested
+ * - closed: Done (check close_reason for outcome)
+ */
+export type GtMergeQueueStatus = 'open' | 'in_progress' | 'closed';
+
+/**
+ * MR close reason - WHY the MR was closed (only relevant when status='closed')
+ * Matches gastown CloseReason constants from internal/refinery/types.go
+ */
+export type GtMergeQueueCloseReason = 'merged' | 'rejected' | 'conflict' | 'superseded';
+
+/**
+ * MR failure type for error handling
+ * Matches refinery failure categories
+ */
+export type GtMergeQueueFailureType =
+	| 'conflict'
+	| 'tests_fail'
+	| 'build_fail'
+	| 'flaky_test'
+	| 'push_fail'
+	| 'fetch_fail'
+	| 'checkout_fail';
 
 /** CI status values */
 export type GtCIStatus = 'pass' | 'fail' | 'pending';
@@ -291,6 +317,10 @@ export interface GtMergeQueueItem {
 	submitted_at: string;
 	ci_status?: GtCIStatus;
 	mergeable?: GtMergeableStatus;
+	/** Close reason - only present when status='closed' */
+	close_reason?: GtMergeQueueCloseReason;
+	/** Failure type - only present on failed merges */
+	failure_type?: GtMergeQueueFailureType;
 }
 
 // =============================================================================

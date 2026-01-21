@@ -11,7 +11,29 @@ import type { ApiResponse } from '$lib/api/types';
 
 const browser = typeof window !== 'undefined';
 
-export type MergeQueueStatus = 'pending' | 'processing' | 'merged' | 'failed';
+/**
+ * MR status - matches gastown internal/refinery/types.go
+ * Lifecycle: open → in_progress → closed
+ */
+export type MergeQueueStatus = 'open' | 'in_progress' | 'closed';
+
+/**
+ * Close reason - WHY the MR was closed (only when status='closed')
+ */
+export type MergeQueueCloseReason = 'merged' | 'rejected' | 'conflict' | 'superseded';
+
+/**
+ * Failure type for error handling
+ */
+export type MergeQueueFailureType =
+	| 'conflict'
+	| 'tests_fail'
+	| 'build_fail'
+	| 'flaky_test'
+	| 'push_fail'
+	| 'fetch_fail'
+	| 'checkout_fail';
+
 export type CIStatus = 'pass' | 'fail' | 'pending';
 export type MergeableStatus = 'ready' | 'conflict' | 'pending';
 
@@ -26,6 +48,10 @@ export interface MergeQueueItem {
 	submitted_at: string;
 	ci_status?: CIStatus;
 	mergeable?: MergeableStatus;
+	/** Close reason - only present when status='closed' */
+	close_reason?: MergeQueueCloseReason;
+	/** Failure type - only present on failed merges */
+	failure_type?: MergeQueueFailureType;
 	title?: string;
 	author?: string;
 	error?: string;
@@ -113,25 +139,32 @@ class QueueStore {
 		return this.#applyFilter(this.#state.items, this.#state.filter);
 	}
 
-	get pendingItems(): MergeQueueItem[] {
-		return this.#state.items.filter((item) => item.status === 'pending');
+	/** Items waiting to be processed (status='open') */
+	get openItems(): MergeQueueItem[] {
+		return this.#state.items.filter((item) => item.status === 'open');
 	}
 
-	get processingItems(): MergeQueueItem[] {
-		return this.#state.items.filter((item) => item.status === 'processing');
+	/** Items currently being processed (status='in_progress') */
+	get inProgressItems(): MergeQueueItem[] {
+		return this.#state.items.filter((item) => item.status === 'in_progress');
 	}
 
+	/** Successfully merged items (status='closed', close_reason='merged') */
 	get mergedItems(): MergeQueueItem[] {
-		return this.#state.items.filter((item) => item.status === 'merged');
+		return this.#state.items.filter(
+			(item) => item.status === 'closed' && item.close_reason === 'merged'
+		);
 	}
 
+	/** Failed items (status='closed' with failure_type) */
 	get failedItems(): MergeQueueItem[] {
-		return this.#state.items.filter((item) => item.status === 'failed');
+		return this.#state.items.filter((item) => item.status === 'closed' && item.failure_type);
 	}
 
+	/** Items ready to merge (open, CI pass, no conflicts) */
 	get readyToMerge(): MergeQueueItem[] {
 		return this.#state.items.filter(
-			(item) => item.status === 'pending' && item.ci_status === 'pass' && item.mergeable === 'ready'
+			(item) => item.status === 'open' && item.ci_status === 'pass' && item.mergeable === 'ready'
 		);
 	}
 
@@ -139,12 +172,12 @@ class QueueStore {
 		return this.#state.items.filter((item) => item.mergeable === 'conflict');
 	}
 
-	get pendingCount(): number {
-		return this.pendingItems.length;
+	get openCount(): number {
+		return this.openItems.length;
 	}
 
-	get processingCount(): number {
-		return this.processingItems.length;
+	get inProgressCount(): number {
+		return this.inProgressItems.length;
 	}
 
 	get totalCount(): number {
@@ -153,10 +186,9 @@ class QueueStore {
 
 	get byStatus(): Record<MergeQueueStatus, MergeQueueItem[]> {
 		return {
-			pending: this.pendingItems,
-			processing: this.processingItems,
-			merged: this.mergedItems,
-			failed: this.failedItems
+			open: this.openItems,
+			in_progress: this.inProgressItems,
+			closed: this.#state.items.filter((item) => item.status === 'closed')
 		};
 	}
 
@@ -341,11 +373,11 @@ export function useQueue() {
 		get byRig() {
 			return queueStore.byRig;
 		},
-		get pendingCount() {
-			return queueStore.pendingCount;
+		get openCount() {
+			return queueStore.openCount;
 		},
-		get processingCount() {
-			return queueStore.processingCount;
+		get inProgressCount() {
+			return queueStore.inProgressCount;
 		},
 		get readyToMerge() {
 			return queueStore.readyToMerge;

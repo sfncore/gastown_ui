@@ -78,9 +78,31 @@ export interface BeadStatusContext {
 }
 
 /**
- * MR (Merge Request) status for determining in_progress state
+ * MR (Merge Request) status - matches gastown internal/refinery/types.go
+ *
+ * Lifecycle: open → in_progress → closed
+ * NOTE: 'merged' is a CloseReason, not a status
  */
-export type MRStatus = 'open' | 'in_progress' | 'merged' | 'closed';
+export type MRStatus = 'open' | 'in_progress' | 'closed';
+
+/**
+ * MR close reason - WHY the MR was closed (only relevant when status='closed')
+ * Matches gastown CloseReason constants
+ */
+export type MRCloseReason = 'merged' | 'rejected' | 'conflict' | 'superseded';
+
+/**
+ * MR failure types for error handling in UI
+ * Matches refinery failure categories
+ */
+export type MRFailureType =
+	| 'conflict'
+	| 'tests_fail'
+	| 'build_fail'
+	| 'flaky_test'
+	| 'push_fail'
+	| 'fetch_fail'
+	| 'checkout_fail';
 
 /**
  * Derive display status from storage status + context

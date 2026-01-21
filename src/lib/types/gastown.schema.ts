@@ -299,8 +299,30 @@ export const GtMailMessageSchema = z
 // Queue Schemas
 // =============================================================================
 
-/** Merge queue status enum */
-export const GtMergeQueueStatusSchema = z.enum(['pending', 'processing', 'merged', 'failed']);
+/**
+ * MR status schema - matches gastown internal/refinery/types.go
+ * Lifecycle: open → in_progress → closed
+ */
+export const GtMergeQueueStatusSchema = z.enum(['open', 'in_progress', 'closed']);
+
+/**
+ * MR close reason schema - WHY the MR was closed
+ * Only relevant when status='closed'
+ */
+export const GtMergeQueueCloseReasonSchema = z.enum(['merged', 'rejected', 'conflict', 'superseded']);
+
+/**
+ * MR failure type schema for error handling
+ */
+export const GtMergeQueueFailureTypeSchema = z.enum([
+	'conflict',
+	'tests_fail',
+	'build_fail',
+	'flaky_test',
+	'push_fail',
+	'fetch_fail',
+	'checkout_fail'
+]);
 
 /** CI status enum */
 export const GtCIStatusSchema = z.enum(['pass', 'fail', 'pending']);
@@ -320,7 +342,9 @@ export const GtMergeQueueItemSchema = z
 		priority: z.number(),
 		submitted_at: z.string(),
 		ci_status: GtCIStatusSchema.optional(),
-		mergeable: GtMergeableStatusSchema.optional()
+		mergeable: GtMergeableStatusSchema.optional(),
+		close_reason: GtMergeQueueCloseReasonSchema.optional(),
+		failure_type: GtMergeQueueFailureTypeSchema.optional()
 	})
 	.passthrough();
 
