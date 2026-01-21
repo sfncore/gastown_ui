@@ -1,5 +1,7 @@
 # Gastown UI
 
+[![Contract Tests](https://github.com/Avyukth/gastown_ui/actions/workflows/contract-tests.yml/badge.svg)](https://github.com/Avyukth/gastown_ui/actions/workflows/contract-tests.yml)
+
 Frontend for the Gas Town orchestration dashboard. This repo powers the
 operator console for agents, convoys, merge activity, and system health.
 

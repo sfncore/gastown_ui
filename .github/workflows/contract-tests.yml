@@ -1,0 +1,64 @@
+# Contract Tests Workflow
+# Validates Zod schemas against actual CLI JSON output
+name: Contract Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  contract-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Install gastown CLI
+        run: |
+          # Install gt and bd from releases
+          # Falls back gracefully if installer unavailable
+          if curl -fsSL https://gastown.io/install.sh -o /tmp/install.sh 2>/dev/null; then
+            chmod +x /tmp/install.sh
+            /tmp/install.sh
+          else
+            echo "::warning::Gastown CLI installer not available - contract tests will run in mock mode"
+          fi
+
+      - name: Setup test town
+        run: |
+          mkdir -p test-town/.beads
+          cat > test-town/.beads/config.yaml << 'EOF'
+          version: 1
+          name: test-town
+          EOF
+
+      - name: Run contract tests
+        run: |
+          # Run contract tests if they exist
+          if compgen -G "src/lib/types/*.contract.test.ts" > /dev/null 2>&1; then
+            TEST_CLI=true bun test src/lib/types/*.contract.test.ts
+          else
+            echo "::notice::No contract test files found (src/lib/types/*.contract.test.ts)"
+            echo "Contract tests will be added in a future update (see gu-ow2)"
+          fi
+        env:
+          GASTOWN_TOWN_ROOT: ./test-town
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: contract-test-results
+          path: |
+            test-results/
+            coverage/
+          retention-days: 7
