@@ -12,3 +12,4 @@ export * from './process-supervisor';
 export * from './concurrency-limiter';
 export * from './circuit-breaker';
 export * from './capabilities';
+export * from './validation';
