@@ -84,6 +84,8 @@ class OperationsStore {
 	#groups = new Map<string, OperationGroup>();
 	#history: Operation[] = [];
 	#maxHistory = 50;
+	#cleanupInterval: ReturnType<typeof setInterval> | null = null;
+	#autoRemoveTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
 	// Reactive state
 	#activeCount = $state(0);
@@ -99,8 +101,25 @@ class OperationsStore {
 	#init() {
 		// Periodic cleanup of old completed operations
 		if (browser) {
-			setInterval(() => this.#cleanupOld(), 60000); // Every minute
+			this.#cleanupInterval = setInterval(() => this.#cleanupOld(), 60000); // Every minute
 		}
+	}
+
+	/**
+	 * Schedule auto-removal of an operation with timeout tracking
+	 */
+	#scheduleAutoRemove(id: string, delay: number) {
+		// Clear any existing timeout for this id
+		const existing = this.#autoRemoveTimeouts.get(id);
+		if (existing) {
+			clearTimeout(existing);
+		}
+
+		const timeout = setTimeout(() => {
+			this.remove(id);
+			this.#autoRemoveTimeouts.delete(id);
+		}, delay);
+		this.#autoRemoveTimeouts.set(id, timeout);
 	}
 
 	// Public getters
@@ -244,8 +263,8 @@ class OperationsStore {
 		this.#addToHistory(operation);
 		this.#updateMetrics();
 
-		// Auto-remove after delay
-		setTimeout(() => this.remove(id), 5000);
+		// Auto-remove after delay (tracked to prevent memory leaks)
+		this.#scheduleAutoRemove(id, 5000);
 
 		return true;
 	}
@@ -277,8 +296,8 @@ class OperationsStore {
 			duration: 5000
 		});
 
-		// Auto-remove failed operations after longer delay
-		setTimeout(() => this.remove(id), 10000);
+		// Auto-remove failed operations after longer delay (tracked to prevent memory leaks)
+		this.#scheduleAutoRemove(id, 10000);
 
 		return true;
 	}
@@ -313,8 +332,8 @@ class OperationsStore {
 			duration: 3000
 		});
 
-		// Auto-remove
-		setTimeout(() => this.remove(id), 3000);
+		// Auto-remove (tracked to prevent memory leaks)
+		this.#scheduleAutoRemove(id, 3000);
 
 		return true;
 	}
@@ -327,10 +346,38 @@ class OperationsStore {
 			return false;
 		}
 
+		// Clear any scheduled auto-remove timeout
+		const timeout = this.#autoRemoveTimeouts.get(id);
+		if (timeout) {
+			clearTimeout(timeout);
+			this.#autoRemoveTimeouts.delete(id);
+		}
+
 		this.#operations.delete(id);
 		this.#updateMetrics();
 
 		return true;
+	}
+
+	/**
+	 * Destroy the store and clean up all timers
+	 */
+	destroy(): void {
+		// Clear cleanup interval
+		if (this.#cleanupInterval) {
+			clearInterval(this.#cleanupInterval);
+			this.#cleanupInterval = null;
+		}
+
+		// Clear all auto-remove timeouts
+		for (const timeout of this.#autoRemoveTimeouts.values()) {
+			clearTimeout(timeout);
+		}
+		this.#autoRemoveTimeouts.clear();
+
+		// Clear all operations
+		this.#operations.clear();
+		this.#groups.clear();
 	}
 
 	/**

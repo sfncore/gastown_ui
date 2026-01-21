@@ -1,9 +1,49 @@
-import { exec } from 'node:child_process';
+import { exec, spawn } from 'node:child_process';
 import { promisify } from 'node:util';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
 
 const execAsync = promisify(exec);
+
+/**
+ * Execute CLI command safely using spawn (no shell injection risk)
+ * Returns a promise that resolves with stdout or rejects with error
+ */
+function spawnAsync(
+	command: string,
+	args: string[],
+	options: { timeout?: number } = {}
+): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const proc = spawn(command, args, {
+			timeout: options.timeout,
+			stdio: ['ignore', 'pipe', 'pipe']
+		});
+
+		let stdout = '';
+		let stderr = '';
+
+		proc.stdout?.on('data', (data) => {
+			stdout += data.toString();
+		});
+
+		proc.stderr?.on('data', (data) => {
+			stderr += data.toString();
+		});
+
+		proc.on('close', (code) => {
+			if (code === 0) {
+				resolve(stdout);
+			} else {
+				reject(new Error(stderr || `Command failed with code ${code}`));
+			}
+		});
+
+		proc.on('error', (err) => {
+			reject(err);
+		});
+	});
+}
 
 interface GtHook {
 	agent: string;
@@ -99,11 +139,12 @@ export const actions: Actions = {
 		}
 
 		try {
-			let cmd = `gt rig add "${name}" "${gitUrl}"`;
+			// Use spawn with argument array to avoid shell injection
+			const args = ['rig', 'add', name, gitUrl];
 			if (prefix && typeof prefix === 'string' && prefix.trim()) {
-				cmd += ` --prefix "${prefix.trim()}"`;
+				args.push('--prefix', prefix.trim());
 			}
-			await execAsync(cmd);
+			await spawnAsync('gt', args, { timeout: 30000 });
 			return { success: true, message: `Rig "${name}" added successfully` };
 		} catch (err) {
 			const message = err instanceof Error ? err.message : 'Failed to add rig';
@@ -120,7 +161,8 @@ export const actions: Actions = {
 		}
 
 		try {
-			await execAsync(`gt rig remove "${name}"`);
+			// Use spawn with argument array to avoid shell injection
+			await spawnAsync('gt', ['rig', 'remove', name], { timeout: 10000 });
 			return { success: true, message: `Rig "${name}" removed from registry` };
 		} catch (err) {
 			const message = err instanceof Error ? err.message : 'Failed to remove rig';

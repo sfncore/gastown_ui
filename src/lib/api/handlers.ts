@@ -102,6 +102,7 @@ class RealtimeHandlers {
 	// Unsubscribe functions
 	#unsubscribers: (() => void)[] = [];
 	#initialized = false;
+	#cleanupInterval: ReturnType<typeof setInterval> | null = null;
 
 	constructor() {
 		if (browser) {
@@ -123,7 +124,7 @@ class RealtimeHandlers {
 
 		// Clear stale optimistic updates periodically
 		if (browser) {
-			setInterval(() => this.#clearStaleOptimisticUpdates(), 1000);
+			this.#cleanupInterval = setInterval(() => this.#clearStaleOptimisticUpdates(), 1000);
 		}
 	}
 
@@ -288,6 +289,12 @@ class RealtimeHandlers {
 
 	// Cleanup
 	destroy() {
+		// Clear the cleanup interval
+		if (this.#cleanupInterval) {
+			clearInterval(this.#cleanupInterval);
+			this.#cleanupInterval = null;
+		}
+
 		for (const unsubscribe of this.#unsubscribers) {
 			unsubscribe();
 		}

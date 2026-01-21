@@ -5,12 +5,52 @@
  * Handles sending mail via gt mail send command.
  */
 
-import { exec } from 'node:child_process';
+import { exec, spawn } from 'node:child_process';
 import { promisify } from 'node:util';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 const execAsync = promisify(exec);
+
+/**
+ * Execute CLI command safely using spawn (no shell injection risk)
+ * Returns a promise that resolves with stdout or rejects with error
+ */
+function spawnAsync(
+	command: string,
+	args: string[],
+	options: { timeout?: number } = {}
+): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const proc = spawn(command, args, {
+			timeout: options.timeout,
+			stdio: ['ignore', 'pipe', 'pipe']
+		});
+
+		let stdout = '';
+		let stderr = '';
+
+		proc.stdout?.on('data', (data) => {
+			stdout += data.toString();
+		});
+
+		proc.stderr?.on('data', (data) => {
+			stderr += data.toString();
+		});
+
+		proc.on('close', (code) => {
+			if (code === 0) {
+				resolve(stdout);
+			} else {
+				reject(new Error(stderr || `Command failed with code ${code}`));
+			}
+		});
+
+		proc.on('error', (err) => {
+			reject(err);
+		});
+	});
+}
 
 interface GtStatusAgent {
 	name: string;
@@ -134,15 +174,12 @@ export const actions: Actions = {
 			return fail(400, { to, subject, body, error: 'Message body is required' });
 		}
 
-		// Escape shell arguments safely
-		const escapedTo = to.replace(/'/g, "'\\''");
-		const escapedSubject = subject.replace(/'/g, "'\\''");
-		const escapedBody = body.replace(/'/g, "'\\''");
-
-		const command = `gt mail send '${escapedTo}' -s '${escapedSubject}' -m '${escapedBody}'`;
-
 		try {
-			await execAsync(command, { timeout: 10000 });
+			// Use spawn with argument array to avoid shell injection
+			// No escaping needed - arguments passed directly to process
+			await spawnAsync('gt', ['mail', 'send', to, '-s', subject, '-m', body], {
+				timeout: 10000
+			});
 			// Redirect to inbox on success
 			redirect(303, '/mail?sent=1');
 		} catch (err) {

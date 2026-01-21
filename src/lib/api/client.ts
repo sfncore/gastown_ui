@@ -292,8 +292,11 @@ export class ApiClient {
 		const timeoutId = setTimeout(() => controller.abort(), timeout);
 
 		// Combine with external signal if provided
+		// Track the handler so we can remove it later to prevent memory leaks
+		let externalAbortHandler: (() => void) | null = null;
 		if (externalSignal) {
-			externalSignal.addEventListener('abort', () => controller.abort());
+			externalAbortHandler = () => controller.abort();
+			externalSignal.addEventListener('abort', externalAbortHandler);
 		}
 
 		try {
@@ -320,7 +323,11 @@ export class ApiClient {
 				if (response.status === 429) {
 					const retryAfter = response.headers.get('Retry-After');
 					if (retryAfter) {
-						const retryAfterMs = parseInt(retryAfter, 10) * 1000 || 60000;
+						// Handle both numeric seconds and potential HTTP-date format
+						const parsed = parseInt(retryAfter, 10);
+						const retryAfterMs = !isNaN(parsed) && parsed > 0 && parsed < 86400
+							? parsed * 1000
+							: 60000; // Default to 60s if invalid or unreasonable
 						errorDetails.retryAfter = retryAfterMs;
 					}
 				}
@@ -345,7 +352,7 @@ export class ApiClient {
 			clearTimeout(timeoutId);
 
 			// Already an ApiError
-			if ((error as ApiError).code) {
+			if (isApiError(error)) {
 				throw error;
 			}
 
@@ -359,6 +366,11 @@ export class ApiClient {
 				'NETWORK_ERROR',
 				error instanceof Error ? error.message : 'Network request failed'
 			);
+		} finally {
+			// Clean up the external signal listener to prevent memory leaks
+			if (externalSignal && externalAbortHandler) {
+				externalSignal.removeEventListener('abort', externalAbortHandler);
+			}
 		}
 	}
 

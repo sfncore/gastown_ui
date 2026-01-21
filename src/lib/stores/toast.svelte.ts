@@ -47,6 +47,7 @@ function extractBeadId(message: string): string | undefined {
 class ToastStore {
 	#toasts = $state<Toast[]>([]);
 	#timeouts = new Map<string, ReturnType<typeof setTimeout>>();
+	#exitAnimationTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
 	get toasts() {
 		return this.#toasts;
@@ -175,26 +176,40 @@ class ToastStore {
 			this.#timeouts.delete(id);
 		}
 
+		// Clear any existing exit animation timeout
+		const existingExitTimeout = this.#exitAnimationTimeouts.get(id);
+		if (existingExitTimeout) {
+			clearTimeout(existingExitTimeout);
+		}
+
 		// Mark as dismissing to trigger exit animation
 		this.#toasts = this.#toasts.map((t) =>
 			t.id === id ? { ...t, dismissing: true } : t
 		);
 
-		// Remove after animation completes
-		setTimeout(() => {
+		// Remove after animation completes (tracked to prevent memory leaks)
+		const exitTimeout = setTimeout(() => {
 			this.#toasts = this.#toasts.filter((t) => t.id !== id);
+			this.#exitAnimationTimeouts.delete(id);
 		}, EXIT_ANIMATION_DURATION);
+		this.#exitAnimationTimeouts.set(id, exitTimeout);
 	}
 
 	/**
 	 * Dismiss all toasts
 	 */
 	dismissAll() {
-		// Clear all timeouts
+		// Clear all auto-dismiss timeouts
 		for (const timeout of this.#timeouts.values()) {
 			clearTimeout(timeout);
 		}
 		this.#timeouts.clear();
+
+		// Clear all exit animation timeouts
+		for (const timeout of this.#exitAnimationTimeouts.values()) {
+			clearTimeout(timeout);
+		}
+		this.#exitAnimationTimeouts.clear();
 
 		this.#toasts = [];
 	}
