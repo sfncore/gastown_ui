@@ -18,11 +18,22 @@ export class KeyboardShortcutManager {
 	private isInputFocused = false;
 	private helpOpen = false;
 
+	// Store bound handlers as properties to ensure the same reference
+	// is used in both addEventListener and removeEventListener.
+	// Using .bind(this) in both calls creates different function references,
+	// causing removeEventListener to silently fail (memory leak).
+	private boundHandleKeyDown: (e: KeyboardEvent) => void;
+	private boundUpdateInputFocus: (e: FocusEvent) => void;
+
 	constructor() {
+		// Bind handlers once and store references
+		this.boundHandleKeyDown = this.handleKeyDown.bind(this);
+		this.boundUpdateInputFocus = this.updateInputFocus.bind(this);
+
 		if (typeof window !== 'undefined') {
-			document.addEventListener('keydown', this.handleKeyDown.bind(this));
-			document.addEventListener('focus', this.updateInputFocus.bind(this), true);
-			document.addEventListener('blur', this.updateInputFocus.bind(this), true);
+			document.addEventListener('keydown', this.boundHandleKeyDown);
+			document.addEventListener('focus', this.boundUpdateInputFocus, true);
+			document.addEventListener('blur', this.boundUpdateInputFocus, true);
 		}
 	}
 
@@ -165,12 +176,13 @@ export class KeyboardShortcutManager {
 
 	/**
 	 * Destroy the manager and remove listeners
+	 * Uses the same stored handler references that were added in constructor
 	 */
 	destroy() {
 		if (typeof window !== 'undefined') {
-			document.removeEventListener('keydown', this.handleKeyDown.bind(this));
-			document.removeEventListener('focus', this.updateInputFocus.bind(this), true);
-			document.removeEventListener('blur', this.updateInputFocus.bind(this), true);
+			document.removeEventListener('keydown', this.boundHandleKeyDown);
+			document.removeEventListener('focus', this.boundUpdateInputFocus, true);
+			document.removeEventListener('blur', this.boundUpdateInputFocus, true);
 		}
 	}
 }
