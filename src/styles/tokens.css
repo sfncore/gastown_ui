@@ -1,0 +1,156 @@
+/**
+ * Gas Town Design Tokens
+ *
+ * CSS custom properties for the Gas Town design system.
+ * Organized by category: colors, typography, spacing, animation, shadows, gradients.
+ */
+
+@layer base {
+	:root {
+		/* === Gas Town Design System === */
+		/* Primary: #EF6F2E | Accent: #6A7282 | Background: #F8F8F8 | Text: #020202 */
+
+		/* Core colors */
+		--background: 0 0% 97%;
+		--foreground: 0 0% 1%;
+		--card: 0 0% 100%;
+		--card-foreground: 0 0% 1%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 0 0% 1%;
+		--primary: 11 100% 50%;            /* #F97316 CTA orange */
+		--primary-foreground: 0 0% 7%;     /* Near-black for AA contrast on orange */
+		--secondary: 220 10% 92%;
+		--secondary-foreground: 0 0% 1%;
+		--muted: 220 10% 92%;
+		--muted-foreground: 220 10% 40%;
+		--accent: 220 10% 46%;
+		--accent-foreground: 0 0% 100%;
+		--destructive: 0 90% 56%;          /* #EF4444 error red */
+		--destructive-foreground: 0 0% 100%;  /* White has 4.35:1 contrast on this red */
+		--border: 220 10% 85%;
+		--input: 220 10% 88%;
+		--ring: 18 86% 56%;
+		--radius: 0.5rem;
+
+		/* === Typography === */
+		--font-sans: 'Inter', sans-serif;
+		--font-display: 'Space Grotesk', sans-serif;
+		--font-mono: 'JetBrains Mono', monospace;
+
+		/* === Spacing Scale (based on 4px grid) === */
+		--space-1: 0.25rem;  /* 4px */
+		--space-2: 0.5rem;   /* 8px */
+		--space-3: 0.75rem;  /* 12px */
+		--space-4: 1rem;     /* 16px */
+		--space-5: 1.25rem;  /* 20px */
+		--space-6: 1.5rem;   /* 24px */
+		--space-7: 1.75rem;  /* 28px */
+		--space-8: 2rem;     /* 32px */
+		--space-9: 2.25rem;  /* 36px */
+		--space-10: 2.5rem;  /* 40px */
+		--space-11: 2.75rem; /* 44px */
+		--space-12: 3rem;    /* 48px */
+
+		/* === Animation Tokens === */
+		--duration-instant: 50ms;
+		--duration-fast: 150ms;
+		--duration-normal: 200ms;
+		--duration-slow: 300ms;
+		--duration-slower: 500ms;
+		--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+		--ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+		--ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+		--delay-stagger: 50ms;
+
+		/* === Semantic Feedback Colors (HSL) === */
+		/* Success: #22C55E, Warning: #F59E0B, Error: #EF4444, Info: #3B82F6 */
+		--success: 142 71% 45%;            /* #22C55E green */
+		--success-foreground: 0 0% 100%;
+		--warning: 38 92% 50%;             /* #F59E0B amber */
+		--warning-foreground: 0 0% 1%;
+		--info: 217 91% 60%;               /* #3B82F6 blue */
+		--info-foreground: 0 0% 100%;
+
+		/* === Status Colors (HSL) === */
+		--status-online: 142 71% 45%;      /* #22C55E green (success) */
+		--status-offline: 0 90% 56%;       /* #EF4444 red (error) */
+		--status-pending: 38 92% 50%;      /* #F59E0B amber (warning) */
+		--status-idle: 217 91% 60%;        /* #3B82F6 blue (info) */
+
+		/* === Shadow Tokens (5-Level System) === */
+		--shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.03);
+		--shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+		--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+		--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+		--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.04);
+		--shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+		--shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+		--shadow-glow: 0 0 20px -5px hsl(var(--primary) / 0.4);
+		--shadow-focus: 0 0 0 3px hsl(var(--ring) / 0.25);
+
+		/* === Surface Gradients (for depth) === */
+		--gradient-surface: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(var(--card) / 0.95) 100%);
+		--gradient-surface-subtle: linear-gradient(180deg, transparent 0%, hsl(var(--muted) / 0.05) 100%);
+		--gradient-border: linear-gradient(135deg, hsl(var(--border) / 0.8) 0%, hsl(var(--border) / 0.4) 100%);
+		--gradient-shine: linear-gradient(135deg, hsl(0 0% 100% / 0.1) 0%, transparent 50%);
+		--gradient-overlay: linear-gradient(180deg, transparent 0%, hsl(var(--background) / 0.8) 100%);
+
+		/* === Touch Target (WCAG 2.5.5 AAA: 44px, enhanced: 48px) === */
+		--touch-target-min: 48px;
+		--touch-gap-min: 8px;
+	}
+
+	.dark {
+		/* === Gas Town Dark Industrial Theme === */
+		/* Based on: gas-black #050a09, gas-dark #0B1210, gas-surface #131F1C */
+		--background: 163 24% 6%;          /* gas-dark: #0B1210 */
+		--foreground: 0 0% 91%;            /* gas-text: #E8E8E8 */
+		--card: 165 24% 10%;               /* gas-surface: #131F1C */
+		--card-foreground: 0 0% 91%;       /* gas-text: #E8E8E8 */
+		--popover: 165 24% 10%;            /* gas-surface: #131F1C */
+		--popover-foreground: 0 0% 91%;    /* gas-text: #E8E8E8 */
+		--primary: 11 100% 50%;            /* #F97316 CTA orange */
+		--primary-foreground: 168 33% 3%;  /* gas-black: #050a09 */
+		--secondary: 169 24% 13%;          /* gas-surfaceHighlight: #1A2A27 */
+		--secondary-foreground: 0 0% 91%;  /* gas-text: #E8E8E8 */
+		--muted: 169 24% 13%;              /* gas-surfaceHighlight: #1A2A27 */
+		--muted-foreground: 220 10% 46%;   /* gas-muted: #6A7282 */
+		--accent: 217 91% 60%;             /* gas-accent: #3B82F6 */
+		--accent-foreground: 0 0% 91%;     /* gas-text: #E8E8E8 */
+		--destructive: 0 90% 56%;          /* #EF4444 error red */
+		--destructive-foreground: 0 0% 91%;
+		--border: 165 16% 20%;             /* gas-border: #2A3A36 */
+		--input: 169 24% 13%;              /* gas-surfaceHighlight: #1A2A27 */
+		--ring: 11 100% 50%;               /* #F97316 CTA orange */
+
+		/* === Gas Town Industrial Tokens === */
+		--gas-surface: 0 0% 8%;
+		--gas-border: 0 0% 20%;
+		--gas-primary: 11 100% 50%;        /* #F97316 */
+		--gas-error: 0 90% 56%;            /* #EF4444 */
+
+		--success: 142 71% 45%;            /* #22C55E green */
+		--success-foreground: 0 0% 100%;
+		--warning: 38 92% 50%;             /* #F59E0B amber */
+		--warning-foreground: 0 0% 1%;
+		--info: 217 91% 60%;               /* #3B82F6 blue */
+		--info-foreground: 0 0% 100%;
+
+		/* === Dark Mode Shadow Tokens (5-Level System, Deeper for Industrial Feel) === */
+		--shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+		--shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.5), 0 1px 2px -1px rgb(0 0 0 / 0.5);
+		--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.6), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+		--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+		--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.6), 0 8px 10px -6px rgb(0 0 0 / 0.5);
+		--shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.7);
+		--shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.4);
+		--shadow-glow: 0 0 30px -5px hsl(var(--primary) / 0.5);
+
+		/* === Dark Mode Surface Gradients === */
+		--gradient-surface: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(var(--card) / 0.9) 100%);
+		--gradient-surface-subtle: linear-gradient(180deg, transparent 0%, hsl(0 0% 100% / 0.02) 100%);
+		--gradient-border: linear-gradient(135deg, hsl(var(--border) / 0.6) 0%, hsl(var(--border) / 0.2) 100%);
+		--gradient-shine: linear-gradient(135deg, hsl(0 0% 100% / 0.05) 0%, transparent 50%);
+		--gradient-overlay: linear-gradient(180deg, transparent 0%, hsl(var(--background) / 0.9) 100%);
+	}
+}

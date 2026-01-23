@@ -1,0 +1,96 @@
+/**
+ * Base Styles
+ *
+ * Foundation styles: reset, border defaults, body, typography.
+ * Applied to HTML elements directly via @layer base.
+ */
+
+@layer base {
+	* {
+		@apply border-border;
+	}
+
+	body {
+		@apply bg-background text-foreground;
+		font-family: var(--font-sans);
+		font-feature-settings: 'rlig' 1, 'calt' 1;
+	}
+
+	/* Headers use Space Grotesk display font */
+	h1, h2, h3, h4, h5, h6, .font-display {
+		font-family: var(--font-display);
+		font-weight: 600;
+	}
+
+	code, pre, .font-mono {
+		font-family: var(--font-mono);
+	}
+}
+
+/* === Scrollbar Styling === */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background: hsl(var(--border));
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Firefox scrollbar */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: hsl(var(--border)) transparent;
+}
+
+/* === Responsive Layout Bug Fixes (UI-023) === */
+/* Prevent horizontal overflow on mobile/tablet */
+
+/* Cards: constrain width and prevent overflow */
+.panel-glass {
+	max-width: 100%;
+	overflow: hidden;
+}
+
+/* Generic card/container overflow fix */
+[class*="card"],
+[class*="panel"],
+[class*="container"] {
+	max-width: 100%;
+	overflow: hidden;
+}
+
+/* Ensure tables and code blocks scroll within their container, not the page */
+table {
+	max-width: 100%;
+	overflow-x: auto;
+}
+
+code {
+	max-width: 100%;
+	overflow-x: auto;
+	display: block;
+}
+
+pre {
+	max-width: 100%;
+	overflow-x: auto;
+}
+
+/* Prevent flex children from overflowing */
+.flex {
+	min-width: 0;
+}
+
+.grid {
+	min-width: 0;
+}

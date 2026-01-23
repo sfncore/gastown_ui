@@ -1,0 +1,252 @@
+/**
+ * Component Styles
+ *
+ * Reusable component classes: glass panels, typography scale,
+ * stagger containers, glow/shimmer effects, links, vim navigation.
+ */
+
+/* === Glass Morphism Utilities === */
+@layer components {
+	/* Standard glass panel - subtle blur with semi-transparent background */
+	.panel-glass {
+		@apply bg-background/80 backdrop-blur-xl border border-border rounded-lg;
+	}
+
+	/* Strong glass panel - more pronounced blur effect */
+	.panel-glass-strong {
+		@apply bg-background/90 backdrop-blur-2xl border border-border rounded-lg;
+	}
+
+	/* Glass card variant - for elevated surfaces */
+	.card-glass {
+		@apply bg-card/80 backdrop-blur-xl border border-border rounded-lg shadow-md;
+	}
+
+	/* Glass popover variant - for floating elements */
+	.popover-glass {
+		@apply bg-popover/85 backdrop-blur-xl border border-border rounded-lg shadow-lg;
+	}
+
+	/* Fallback for browsers without backdrop-filter support (checks both standard and webkit) */
+	@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+		.panel-glass {
+			@apply bg-background/95 border border-border rounded-lg;
+		}
+
+		.panel-glass-strong {
+			@apply bg-background border border-border rounded-lg;
+		}
+
+		.card-glass {
+			@apply bg-card/95 border border-border rounded-lg shadow-md;
+		}
+
+		.popover-glass {
+			@apply bg-popover/95 border border-border rounded-lg shadow-lg;
+		}
+	}
+}
+
+/* === Typography Scale - Standardized text styles for visual hierarchy === */
+@layer components {
+	.h1 { @apply text-2xl font-semibold leading-tight; }          /* Page titles */
+	.h2 { @apply text-xl font-semibold leading-relaxed; }         /* Section titles */
+	.h3 { @apply text-base font-medium leading-relaxed; }         /* Subsection titles */
+	.body-text { @apply text-sm font-normal leading-relaxed; }    /* Standard reading text */
+	.body-small { @apply text-xs font-normal leading-relaxed; }   /* Captions, secondary */
+	.code-text { @apply text-code font-mono; }                    /* Code blocks */
+	.label-section { @apply text-2xs font-normal uppercase tracking-widest text-muted-foreground; }
+	.label-lg { @apply text-sm font-medium leading-normal; }      /* Form labels */
+	.label-md { @apply text-xs font-medium leading-normal; }
+	.label-sm { @apply text-2xs font-medium leading-tight uppercase tracking-wide; }
+	.code-inline { @apply px-1.5 py-0.5 bg-muted rounded text-code font-mono; }
+	.heading-1 { @apply text-2xl font-semibold leading-tight; }   /* Semantic alternatives */
+	.heading-2 { @apply text-xl font-semibold leading-relaxed; }
+	.heading-3 { @apply text-base font-medium leading-relaxed; }
+}
+
+/* === Stagger Animation Container === */
+/* Apply .stagger to parent, children get automatic staggered delays */
+@layer components {
+	.stagger > * {
+		animation-fill-mode: both;
+	}
+
+	.stagger > *:nth-child(1) { animation-delay: calc(0 * var(--delay-stagger, 50ms)); }
+	.stagger > *:nth-child(2) { animation-delay: calc(1 * var(--delay-stagger, 50ms)); }
+	.stagger > *:nth-child(3) { animation-delay: calc(2 * var(--delay-stagger, 50ms)); }
+	.stagger > *:nth-child(4) { animation-delay: calc(3 * var(--delay-stagger, 50ms)); }
+	.stagger > *:nth-child(5) { animation-delay: calc(4 * var(--delay-stagger, 50ms)); }
+	.stagger > *:nth-child(6) { animation-delay: calc(5 * var(--delay-stagger, 50ms)); }
+	.stagger > *:nth-child(7) { animation-delay: calc(6 * var(--delay-stagger, 50ms)); }
+	.stagger > *:nth-child(8) { animation-delay: calc(7 * var(--delay-stagger, 50ms)); }
+
+	/* For items beyond 8, use CSS var set by JS utility */
+	.stagger > *:nth-child(n+9) {
+		animation-delay: var(--stagger-delay, calc(8 * var(--delay-stagger, 50ms)));
+	}
+}
+
+/* === Performant Glow Pulse Effect === */
+/* Uses opacity (composited) instead of animating box-shadow (triggers repaint) */
+@layer components {
+	.glow-pulse-effect {
+		position: relative;
+		/* Set color for the glow to inherit from */
+		color: hsl(var(--status-online));
+	}
+
+	.glow-pulse-effect::before {
+		content: '';
+		position: absolute;
+		inset: -4px;
+		border-radius: inherit;
+		background: currentColor;
+		filter: blur(8px);
+		animation: glow-pulse 2s ease-in-out infinite;
+		will-change: opacity;
+		z-index: -1;
+	}
+
+	/* Primary color glow variant */
+	.glow-pulse-effect-primary {
+		color: hsl(var(--primary));
+	}
+}
+
+/* === Performant Shimmer Effect === */
+/* Uses transform (composited) instead of backgroundPosition (triggers repaint) */
+/* Updated: 1.5s duration, subtler gradient (0.06 opacity) per Loading States spec */
+@layer components {
+	.shimmer-effect {
+		position: relative;
+		overflow: hidden;
+		background: hsl(var(--muted));
+	}
+
+	.shimmer-effect::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			hsl(var(--muted-foreground) / 0.06) 50%,
+			transparent 100%
+		);
+		transform: translateX(-100%);
+		animation: shimmer 1.5s infinite linear;
+		will-change: transform;
+	}
+
+	/* Skeleton loading container with staggered children */
+	.skeleton-group {
+		/* Children get staggered delays automatically */
+	}
+
+	.skeleton-group > * {
+		animation-fill-mode: both;
+	}
+
+	.skeleton-group > *:nth-child(1) { animation-delay: calc(0 * 50ms); }
+	.skeleton-group > *:nth-child(2) { animation-delay: calc(1 * 50ms); }
+	.skeleton-group > *:nth-child(3) { animation-delay: calc(2 * 50ms); }
+	.skeleton-group > *:nth-child(4) { animation-delay: calc(3 * 50ms); }
+	.skeleton-group > *:nth-child(5) { animation-delay: calc(4 * 50ms); }
+	.skeleton-group > *:nth-child(6) { animation-delay: calc(5 * 50ms); }
+	.skeleton-group > *:nth-child(7) { animation-delay: calc(6 * 50ms); }
+	.skeleton-group > *:nth-child(8) { animation-delay: calc(7 * 50ms); }
+}
+
+/* === Link Hover Underline Animation === */
+/* Animated underline effect for links - slides in from left on hover */
+@layer components {
+	.link-underline {
+		@apply relative inline-block text-foreground no-underline;
+		background: linear-gradient(
+			to right,
+			hsl(var(--primary)) 0%,
+			hsl(var(--primary)) 100%
+		);
+		background-size: 0% 2px;
+		background-repeat: no-repeat;
+		background-position: left bottom;
+		transition: background-size var(--duration-normal) var(--ease-out);
+	}
+
+	.link-underline:hover,
+	.link-underline:focus-visible {
+		background-size: 100% 2px;
+	}
+
+	/* Variant: slides in from center */
+	.link-underline-center {
+		@apply relative inline-block text-foreground no-underline;
+		background: linear-gradient(
+			to right,
+			hsl(var(--primary)) 0%,
+			hsl(var(--primary)) 100%
+		);
+		background-size: 0% 2px;
+		background-repeat: no-repeat;
+		background-position: center bottom;
+		transition: background-size var(--duration-normal) var(--ease-out);
+	}
+
+	.link-underline-center:hover,
+	.link-underline-center:focus-visible {
+		background-size: 100% 2px;
+	}
+
+	/* Variant: subtle muted color */
+	.link-underline-muted {
+		@apply relative inline-block text-muted-foreground no-underline;
+		background: linear-gradient(
+			to right,
+			hsl(var(--muted-foreground)) 0%,
+			hsl(var(--muted-foreground)) 100%
+		);
+		background-size: 0% 1px;
+		background-repeat: no-repeat;
+		background-position: left bottom;
+		transition: background-size var(--duration-normal) var(--ease-out), color var(--duration-fast);
+	}
+
+	.link-underline-muted:hover,
+	.link-underline-muted:focus-visible {
+		@apply text-foreground;
+		background-size: 100% 1px;
+	}
+}
+
+/* === Vim-Style Keyboard Navigation === */
+@layer components {
+	/* Vim selected item highlight */
+	.vim-selected,
+	[data-vim-selected="true"] {
+		@apply ring-2 ring-primary ring-offset-2 ring-offset-background;
+		outline: none;
+	}
+
+	/* Vim checked/selected for multi-select */
+	[data-vim-checked="true"] {
+		@apply bg-primary/10;
+	}
+
+	/* Vim sequence indicator (shows pending key like "g") */
+	.vim-sequence-indicator {
+		@apply fixed bottom-4 right-4 z-50 px-3 py-2 rounded-lg bg-card border border-border shadow-lg;
+		@apply font-mono text-sm text-foreground;
+		animation: vim-sequence-appear 0.15s ease-out;
+	}
+
+	/* List items that can be navigated with j/k */
+	[data-list-item] {
+		@apply transition-all duration-75;
+		cursor: pointer;
+	}
+
+	[data-list-item]:focus-visible {
+		@apply ring-2 ring-primary ring-offset-2 ring-offset-background outline-none;
+	}
+}

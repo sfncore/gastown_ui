@@ -3,7 +3,31 @@
  *
  * Import this file in your app entry point to load all base styles.
  * Styles are organized using CSS @layer for proper cascade ordering.
+ *
+ * Module Structure:
+ * - tokens.css      - Design tokens (CSS variables)
+ * - base.css        - Reset, typography, scrollbars
+ * - components.css  - Component classes (glass panels, typography scale, etc.)
+ * - animations.css  - Keyframes and animation utilities
+ * - utilities.css   - Helper classes (gradients, status, touch, accessibility)
+ * - focus.css       - Focus visible styles for accessibility
+ * - skip-link.css   - Skip link for keyboard navigation
  */
+
+/* Design tokens (CSS custom properties) */
+@import './tokens.css';
+
+/* Base styles (reset, body, typography) */
+@import './base.css';
+
+/* Component styles (panels, typography scale, effects) */
+@import './components.css';
+
+/* Animation keyframes and reduced motion */
+@import './animations.css';
+
+/* Utility classes */
+@import './utilities.css';
 
 /* Focus visible styles for accessibility */
 @import './focus.css';
