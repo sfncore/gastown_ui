@@ -345,7 +345,7 @@ describe('Network Partition Detection', () => {
 				payload: { data: 'test' }
 			});
 
-			expect(requestId).toBeDefined();
+			expect(requestId).toBe('uuid-1');
 			expect(networkStore.state.queuedRequests.length).toBe(1);
 		});
 
@@ -364,7 +364,7 @@ describe('Network Partition Detection', () => {
 			expect(queued.type).toBe('POST');
 			expect(queued.endpoint).toBe('/api/test');
 			expect(queued.payload).toEqual({ data: 'test' });
-			expect(queued.timestamp).toBeDefined();
+			expect(queued.timestamp).toBe(1000);
 		});
 
 		it('throws NetworkError when queueing empty endpoint', () => {
@@ -395,7 +395,7 @@ describe('Network Partition Detection', () => {
 				payload: { retry: true }
 			});
 
-			expect(requestId).toBeDefined();
+			expect(requestId).toBe('uuid-1');
 			expect(networkStore.state.queuedRequests.length).toBe(1);
 		});
 
@@ -591,23 +591,24 @@ describe('Network Partition Detection', () => {
 			onlineStatus = false;
 			networkStore._triggerOffline();
 
-			expect(networkStore.state.lastOfflineAt).toBeDefined();
-			expect(typeof networkStore.state.lastOfflineAt).toBe('number');
+			expect(networkStore.state.lastOfflineAt).toBe(currentTime);
 		});
 
 		it('tracks last online timestamp', () => {
-			expect(networkStore.state.lastOnlineAt).toBeDefined();
+			// Initial state: online at currentTime (1000)
+			expect(networkStore.state.lastOnlineAt).toBe(1000);
 
 			onlineStatus = false;
 			networkStore._triggerOffline();
 			const beforeOnline = networkStore.state.lastOnlineAt;
+			expect(beforeOnline).toBe(1000);
 
 			currentTime += 1000;
 
 			onlineStatus = true;
 			networkStore._triggerOnline();
 
-			expect(networkStore.state.lastOnlineAt).toBeGreaterThan(beforeOnline!);
+			expect(networkStore.state.lastOnlineAt).toBe(2000);
 		});
 
 		it('calculates offline duration correctly', () => {
