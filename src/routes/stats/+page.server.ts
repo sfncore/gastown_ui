@@ -254,13 +254,14 @@ async function fetchRealStats(
 	const idleAgents = allAgents.filter((a) => a.running && !a.has_work);
 	const deadAgents = allAgents.filter((a) => !a.running);
 
-	// Count issues by status
-	const openIssues = beads.filter((b) => b.status === 'open' || b.status === 'in_progress');
+	// Count issues by storage status (open | closed only per gastown contract)
+	const openIssues = beads.filter((b) => b.status === 'open');
 	const closedIssues = beads.filter((b) => b.status === 'closed');
 
-	// Count convoys by status
-	const activeConvoys = convoys.filter((c) => c.status === 'open' || c.status === 'in_progress');
-	const completedConvoys = convoys.filter((c) => c.status === 'closed' || c.status === 'completed');
+	// Count convoys by storage status (open | closed only per gastown contract)
+	// Work status (active, stale, stuck, etc.) is DERIVED from tracked issues, not stored
+	const activeConvoys = convoys.filter((c) => c.status === 'open');
+	const completedConvoys = convoys.filter((c) => c.status === 'closed');
 
 	// Build agent leaderboard from actual agent data
 	const agentLeaderboard: AgentStats[] = allAgents

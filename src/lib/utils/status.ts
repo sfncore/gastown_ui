@@ -7,10 +7,15 @@
 // Convoy Status
 // =============================================================================
 
-export type ConvoyStatus = 'active' | 'stale' | 'stuck' | 'complete';
+/**
+ * Convoy work status - DERIVED from tracked issues, not stored.
+ * Storage status is only 'open' | 'closed' per gastown contract.
+ * Work status is computed by deriveConvoyWorkStatus() in format/convoy.ts
+ */
+export type ConvoyStatus = 'active' | 'stale' | 'stuck' | 'waiting' | 'complete';
 
 export interface ConvoyStatusConfig {
-	color: 'success' | 'warning' | 'error';
+	color: 'success' | 'warning' | 'error' | 'neutral';
 	indicatorStatus: 'running' | 'idle' | 'error' | 'complete';
 	label: string;
 	borderClass: string;
@@ -24,6 +29,13 @@ export const convoyStatusConfig: Record<ConvoyStatus, ConvoyStatusConfig> = {
 		label: 'Active',
 		borderClass: 'border-success/30',
 		bgClass: 'bg-success/10 text-success'
+	},
+	waiting: {
+		color: 'neutral',
+		indicatorStatus: 'idle',
+		label: 'Waiting',
+		borderClass: 'border-muted/30',
+		bgClass: 'bg-muted/10 text-muted-foreground'
 	},
 	stale: {
 		color: 'warning',
