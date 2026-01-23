@@ -116,11 +116,15 @@ export function calculateBackoff(attemptCount: number, config: SSEReconnectionCo
  * the configured threshold (default: 5 minutes). A full refresh means
  * the client should fetch all data instead of relying on the last-event-ID.
  *
+ * @param state - Current reconnection state
+ * @param config - Reconnection configuration
+ * @param now - Optional current timestamp for testing (defaults to Date.now())
  * @throws {SSEReconnectionError} If fullRefreshThresholdMs is not positive
  */
 export function shouldFullRefresh(
 	state: SSEReconnectionState,
-	config: SSEReconnectionConfig
+	config: SSEReconnectionConfig,
+	now?: number
 ): boolean {
 	if (config.fullRefreshThresholdMs <= 0) {
 		throw new SSEReconnectionError('Full refresh threshold must be positive');
@@ -130,7 +134,8 @@ export function shouldFullRefresh(
 		return false;
 	}
 
-	const elapsed = Date.now() - state.disconnectedAt;
+	const currentTime = now ?? Date.now();
+	const elapsed = currentTime - state.disconnectedAt;
 
 	return elapsed >= config.fullRefreshThresholdMs;
 }
@@ -158,23 +163,30 @@ export function createReconnectionState(lastEventId?: string): SSEReconnectionSt
  * - 'event': Update last event ID if provided
  *
  * Returns a new state object (immutable update).
+ *
+ * @param state - Current reconnection state
+ * @param event - State update event
+ * @param now - Optional current timestamp for testing (defaults to Date.now())
  */
 export function updateReconnectionState(
 	state: SSEReconnectionState,
-	event: SSEStateUpdateEvent
+	event: SSEStateUpdateEvent,
+	now?: number
 ): SSEReconnectionState {
+	const currentTime = now ?? Date.now();
+
 	switch (event.type) {
 		case 'attempt':
 			return {
 				...state,
 				attemptCount: state.attemptCount + 1,
-				lastAttemptAt: Date.now()
+				lastAttemptAt: currentTime
 			};
 
 		case 'disconnect':
 			return {
 				...state,
-				disconnectedAt: state.disconnectedAt ?? Date.now()
+				disconnectedAt: state.disconnectedAt ?? currentTime
 			};
 
 		case 'event':

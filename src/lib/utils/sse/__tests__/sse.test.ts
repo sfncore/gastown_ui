@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
 	calculateBackoff,
 	shouldFullRefresh,
@@ -214,14 +214,6 @@ describe('calculateBackoff', () => {
 });
 
 describe('shouldFullRefresh', () => {
-	beforeEach(() => {
-		vi.useFakeTimers();
-	});
-
-	afterEach(() => {
-		vi.useRealTimers();
-	});
-
 	it('returns false when disconnectedAt is null', () => {
 		const state: SSEReconnectionState = {
 			lastEventId: null,
@@ -241,7 +233,7 @@ describe('shouldFullRefresh', () => {
 	});
 
 	it('returns false when disconnected less than threshold (under 5 minutes)', () => {
-		vi.setSystemTime(new Date(1700000300000)); // now
+		const now = 1700000300000;
 
 		const state: SSEReconnectionState = {
 			lastEventId: 'event-123',
@@ -255,13 +247,13 @@ describe('shouldFullRefresh', () => {
 			fullRefreshThresholdMs: 300000 // 5 minutes
 		};
 
-		const result = shouldFullRefresh(state, config);
+		const result = shouldFullRefresh(state, config, now);
 
 		expect(result).toBe(false);
 	});
 
 	it('returns true when disconnected exactly at threshold (5 minutes)', () => {
-		vi.setSystemTime(new Date(1700000300000)); // now
+		const now = 1700000300000;
 
 		const state: SSEReconnectionState = {
 			lastEventId: 'event-123',
@@ -275,13 +267,13 @@ describe('shouldFullRefresh', () => {
 			fullRefreshThresholdMs: 300000 // 5 minutes
 		};
 
-		const result = shouldFullRefresh(state, config);
+		const result = shouldFullRefresh(state, config, now);
 
 		expect(result).toBe(true);
 	});
 
 	it('returns true when disconnected more than threshold (over 5 minutes)', () => {
-		vi.setSystemTime(new Date(1700000400000)); // now
+		const now = 1700000400000;
 
 		const state: SSEReconnectionState = {
 			lastEventId: 'event-123',
@@ -295,7 +287,7 @@ describe('shouldFullRefresh', () => {
 			fullRefreshThresholdMs: 300000 // 5 minutes
 		};
 
-		const result = shouldFullRefresh(state, config);
+		const result = shouldFullRefresh(state, config, now);
 
 		expect(result).toBe(true);
 	});
@@ -375,16 +367,8 @@ describe('createReconnectionState', () => {
 });
 
 describe('updateReconnectionState', () => {
-	beforeEach(() => {
-		vi.useFakeTimers();
-	});
-
-	afterEach(() => {
-		vi.useRealTimers();
-	});
-
 	it('increments attemptCount on reconnect attempt', () => {
-		vi.setSystemTime(new Date(1700000000000));
+		const now = 1700000000000;
 
 		const state: SSEReconnectionState = {
 			lastEventId: 'event-123',
@@ -393,7 +377,7 @@ describe('updateReconnectionState', () => {
 			lastAttemptAt: null
 		};
 
-		const newState = updateReconnectionState(state, { type: 'attempt' });
+		const newState = updateReconnectionState(state, { type: 'attempt' }, now);
 
 		expect(newState.attemptCount).toBe(3);
 		expect(newState.lastAttemptAt).toBe(1700000000000);
@@ -402,7 +386,7 @@ describe('updateReconnectionState', () => {
 	});
 
 	it('sets disconnectedAt on disconnect when null', () => {
-		vi.setSystemTime(new Date(1700000000000));
+		const now = 1700000000000;
 
 		const state: SSEReconnectionState = {
 			lastEventId: 'event-123',
@@ -411,7 +395,7 @@ describe('updateReconnectionState', () => {
 			lastAttemptAt: null
 		};
 
-		const newState = updateReconnectionState(state, { type: 'disconnect' });
+		const newState = updateReconnectionState(state, { type: 'disconnect' }, now);
 
 		expect(newState.disconnectedAt).toBe(1700000000000);
 		expect(newState.lastEventId).toBe('event-123');
@@ -419,7 +403,7 @@ describe('updateReconnectionState', () => {
 	});
 
 	it('preserves existing disconnectedAt on subsequent disconnect', () => {
-		vi.setSystemTime(new Date(1700000100000));
+		const now = 1700000100000;
 
 		const state: SSEReconnectionState = {
 			lastEventId: 'event-123',
@@ -428,7 +412,7 @@ describe('updateReconnectionState', () => {
 			lastAttemptAt: null
 		};
 
-		const newState = updateReconnectionState(state, { type: 'disconnect' });
+		const newState = updateReconnectionState(state, { type: 'disconnect' }, now);
 
 		expect(newState.disconnectedAt).toBe(1700000000000); // preserved
 	});
@@ -463,7 +447,7 @@ describe('updateReconnectionState', () => {
 	});
 
 	it('does not mutate original state', () => {
-		vi.setSystemTime(new Date(1700000000000));
+		const now = 1700000000000;
 
 		const state: SSEReconnectionState = {
 			lastEventId: 'event-123',
@@ -472,7 +456,7 @@ describe('updateReconnectionState', () => {
 			lastAttemptAt: null
 		};
 
-		const newState = updateReconnectionState(state, { type: 'attempt' });
+		const newState = updateReconnectionState(state, { type: 'attempt' }, now);
 
 		expect(state.attemptCount).toBe(2);
 		expect(newState.attemptCount).toBe(3);
