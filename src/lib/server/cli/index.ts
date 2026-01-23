@@ -15,6 +15,7 @@ export * from './concurrency-limiter';
 export * from './circuit-breaker';
 export * from './capabilities';
 export * from './validation';
+export * from './progressive-timeout';
 
 // Effect.ts CLI Layer - explicit exports to avoid conflicts
 export {
