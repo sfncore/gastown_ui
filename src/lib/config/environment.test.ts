@@ -51,7 +51,9 @@ import {
 	getConfigStrict,
 	resetConfig,
 	checkBinaries,
-	formatConfigForLogging
+	formatConfigForLogging,
+	getCurrentRig,
+	getRigConfig
 } from './environment';
 
 describe('Environment Configuration', () => {
@@ -431,6 +433,27 @@ describe('Environment Configuration', () => {
 			const config = loadConfig();
 
 			expect(config.rigName).toBe('default');
+		});
+
+		it('getCurrentRig returns current rig name', () => {
+			process.env.GASTOWN_TOWN_ROOT = '/valid/town/root';
+			process.env.GASTOWN_BD_CWD = '/valid/bd/cwd';
+			process.env.GASTOWN_RIG = 'test-rig';
+
+			const rigName = getCurrentRig();
+
+			expect(rigName).toBe('test-rig');
+		});
+
+		it('getRigConfig returns rig configuration object', () => {
+			process.env.GASTOWN_TOWN_ROOT = '/valid/town/root';
+			process.env.GASTOWN_BD_CWD = '/valid/bd/cwd';
+			process.env.GASTOWN_RIG = 'my-rig';
+
+			const rigConfig = getRigConfig();
+
+			expect(rigConfig.name).toBe('my-rig');
+			expect(rigConfig.prefix).toBe('bd');
 		});
 	});
 });

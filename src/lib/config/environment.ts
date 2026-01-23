@@ -303,6 +303,7 @@ export function formatConfigForLogging(config: GastownConfig): Record<string, un
 	return {
 		gtBin: config.gtBin,
 		bdBin: config.bdBin,
+		rigName: config.rigName,
 		townRootSet: !!config.townRoot,
 		gastownHomeSet: !!config.gastownHome,
 		bdCwdSet: !!config.bdCwd,
@@ -318,5 +319,30 @@ export function formatConfigForLogging(config: GastownConfig): Record<string, un
 		cacheTTL: config.cacheTTL,
 		enableWrites: config.enableWrites,
 		demoMode: config.demoMode
+	};
+}
+
+/**
+ * Get the current rig name from configuration
+ * Convenience function for use throughout the codebase
+ */
+export function getCurrentRig(): string {
+	return getConfig().rigName;
+}
+
+/**
+ * Get rig configuration for CLI commands
+ * Returns rig name and optional prefix settings
+ */
+export interface RigConfig {
+	name: string;
+	prefix: string;
+}
+
+export function getRigConfig(): RigConfig {
+	const config = getConfig();
+	return {
+		name: config.rigName,
+		prefix: 'bd' // Default prefix, can be made configurable later
 	};
 }
