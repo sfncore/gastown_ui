@@ -20,3 +20,14 @@ export {
 	type StatusChangeCallback,
 	type QueueProcessor
 } from './network.svelte';
+
+export {
+	// Visibility store for background mode optimization
+	visibilityStore,
+	createVisibilityStore,
+	NORMAL_POLLING_INTERVAL,
+	BACKGROUND_POLLING_INTERVAL,
+	type VisibilityStoreDeps,
+	type VisibilityStoreInstance,
+	type VisibilityChangeCallback
+} from './visibility.svelte';
