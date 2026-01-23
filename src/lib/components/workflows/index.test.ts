@@ -2,44 +2,46 @@ import { describe, it, expect } from 'vitest';
 
 describe('workflows component module exports', () => {
 	describe('WorkflowFilters', () => {
-		it('exports WorkflowFilters component', async () => {
+		it('exports WorkflowFilters component with correct path reference', async () => {
 			const module = await import('./index');
-			expect(module.WorkflowFilters).toBeDefined();
-			// Svelte components are exported as strings (path) in test environment
-			// The important thing is the export exists and is truthy
-			expect(module.WorkflowFilters).toBeTruthy();
+			// In test environment, Svelte components are exported as string paths
+			// Verify the export is a string containing the component path
+			expect(typeof module.WorkflowFilters).toBe('string');
+			expect(module.WorkflowFilters).toMatch(/WorkflowFilters\.svelte/);
 		});
 	});
 
 	describe('WorkflowList', () => {
-		it('exports WorkflowList component', async () => {
+		it('exports WorkflowList component with correct path reference', async () => {
 			const module = await import('./index');
-			expect(module.WorkflowList).toBeDefined();
-			expect(module.WorkflowList).toBeTruthy();
+			expect(typeof module.WorkflowList).toBe('string');
+			expect(module.WorkflowList).toMatch(/WorkflowList\.svelte/);
 		});
 	});
 
 	describe('WorkflowDetail', () => {
-		it('exports WorkflowDetail component', async () => {
+		it('exports WorkflowDetail component with correct path reference', async () => {
 			const module = await import('./index');
-			expect(module.WorkflowDetail).toBeDefined();
-			expect(module.WorkflowDetail).toBeTruthy();
+			expect(typeof module.WorkflowDetail).toBe('string');
+			expect(module.WorkflowDetail).toMatch(/WorkflowDetail\.svelte/);
 		});
 	});
 
 	describe('type exports', () => {
-		it('exports types module successfully', async () => {
-			// Type-only imports don't exist at runtime, but we verify the module loads
-			// and the types are properly re-exported by importing them
+		it('exports types module with no runtime values (type-only exports)', async () => {
+			// Type-only exports don't exist at runtime, verify module loads cleanly
 			const module = await import('./types');
-			expect(module).toBeDefined();
+			expect(Object.keys(module)).toEqual([]);
 		});
 
-		it('re-exports types from index', async () => {
-			// Verify types are re-exported from index
+		it('re-exports components from index with correct structure', async () => {
+			// Verify index module exports the expected component keys
 			const indexModule = await import('./index');
-			// Types aren't runtime values, but the module should import cleanly
-			expect(indexModule).toBeDefined();
+			const exportKeys = Object.keys(indexModule);
+			expect(exportKeys).toContain('WorkflowFilters');
+			expect(exportKeys).toContain('WorkflowList');
+			expect(exportKeys).toContain('WorkflowDetail');
+			expect(exportKeys.length).toBeGreaterThanOrEqual(3);
 		});
 	});
 });
