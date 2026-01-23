@@ -258,7 +258,8 @@ describe('CommandPalette', () => {
 			await fireEvent.keyDown(window, { key: 'k', metaKey: true });
 			const combobox = screen.getByRole('combobox');
 			const activeDescendant = combobox.getAttribute('aria-activedescendant');
-			expect(activeDescendant).toBeTruthy();
+			// Active descendant follows pattern cmd-result-{index}, starts at 0
+			expect(activeDescendant).toMatch(/^cmd-result-\d+$/);
 		});
 	});
 
