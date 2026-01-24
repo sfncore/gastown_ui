@@ -1,10 +1,7 @@
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
 import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { type AgentRole, toAgentRole } from '$lib/types/gastown';
-
-const execAsync = promisify(exec);
+import { execGt } from '$lib/server/gt';
 
 type AgentStatus = 'running' | 'idle' | 'error' | 'complete';
 
@@ -119,7 +116,7 @@ function transformAgent(agent: GtAgent, hook?: GtHook): Agent {
 
 export const load: PageServerLoad = async ({ params }) => {
 	try {
-		const { stdout } = await execAsync('gt status --json');
+		const { stdout } = await execGt('gt status --json');
 		const data: GtStatus = JSON.parse(stdout);
 
 		// Find agent by ID

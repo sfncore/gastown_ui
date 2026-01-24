@@ -1,8 +1,5 @@
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
 import type { PageServerLoad } from './$types';
-
-const execAsync = promisify(exec);
+import { execGt } from '$lib/server/gt';
 
 type HealthStatus = 'healthy' | 'degraded' | 'offline';
 
@@ -115,7 +112,7 @@ function getOverallStatus(daemons: DaemonHealth[], rigs: RigHealth[]): HealthSta
 
 export const load: PageServerLoad = async () => {
 	try {
-		const { stdout } = await execAsync('gt status --json');
+		const { stdout } = await execGt('gt status --json');
 		const data: GtStatus = JSON.parse(stdout);
 
 		// Process daemons (top-level agents: mayor, deacon)

@@ -1,9 +1,7 @@
-import { exec, spawn } from 'node:child_process';
-import { promisify } from 'node:util';
+import { spawn } from 'node:child_process';
 import type { PageServerLoad, Actions } from './$types';
 import { fail } from '@sveltejs/kit';
-
-const execAsync = promisify(exec);
+import { execGt, getTownCwd } from '$lib/server/gt';
 
 /**
  * Execute CLI command safely using spawn (no shell injection risk)
@@ -16,6 +14,7 @@ function spawnAsync(
 ): Promise<string> {
 	return new Promise((resolve, reject) => {
 		const proc = spawn(command, args, {
+			cwd: getTownCwd(),
 			timeout: options.timeout,
 			stdio: ['ignore', 'pipe', 'pipe']
 		});
@@ -111,7 +110,7 @@ function transformRig(rig: GtRig): Rig {
 
 export const load: PageServerLoad = async () => {
 	try {
-		const { stdout } = await execAsync('gt status --json');
+		const { stdout } = await execGt('gt status --json');
 		const data: GtStatus = JSON.parse(stdout);
 
 		const rigs: Rig[] = data.rigs.map(transformRig);

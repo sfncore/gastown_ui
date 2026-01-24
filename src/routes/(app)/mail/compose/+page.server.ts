@@ -5,12 +5,10 @@
  * Handles sending mail via gt mail send command.
  */
 
-import { exec, spawn } from 'node:child_process';
-import { promisify } from 'node:util';
+import { spawn } from 'node:child_process';
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-
-const execAsync = promisify(exec);
+import { execGt, getTownCwd } from '$lib/server/gt';
 
 /**
  * Execute CLI command safely using spawn (no shell injection risk)
@@ -23,6 +21,7 @@ function spawnAsync(
 ): Promise<string> {
 	return new Promise((resolve, reject) => {
 		const proc = spawn(command, args, {
+			cwd: getTownCwd(),
 			timeout: options.timeout,
 			stdio: ['ignore', 'pipe', 'pipe']
 		});
@@ -131,7 +130,7 @@ export const load: PageServerLoad = async ({ url }) => {
 	const prefillSubject = url.searchParams.get('subject') ?? '';
 
 	try {
-		const { stdout } = await execAsync('gt status --json', {
+		const { stdout } = await execGt('gt status --json', {
 			timeout: 5000
 		});
 

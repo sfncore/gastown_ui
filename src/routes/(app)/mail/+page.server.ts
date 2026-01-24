@@ -5,11 +5,8 @@
  * Parses subject lines to extract message types.
  */
 
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
 import type { PageServerLoad } from './$types';
-
-const execAsync = promisify(exec);
+import { execGt } from '$lib/server/gt';
 
 interface GtMailMessage {
 	id: string;
@@ -74,7 +71,7 @@ function transformMessage(msg: GtMailMessage): MailMessage {
 
 export const load: PageServerLoad = async () => {
 	try {
-		const { stdout } = await execAsync('gt mail inbox --json', {
+		const { stdout } = await execGt('gt mail inbox --json', {
 			timeout: 5000
 		});
 

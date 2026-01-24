@@ -1,10 +1,7 @@
-import { exec } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
-import { promisify } from 'node:util';
 import type { PageServerLoad } from './$types';
-
-const execAsync = promisify(exec);
+import { execGt } from '$lib/server/gt';
 
 type Freshness = 'fresh' | 'stale' | 'very-stale' | 'unknown';
 
@@ -111,7 +108,7 @@ export const load: PageServerLoad = async () => {
 	try {
 		// Run gt status to check if daemon is responsive
 		const daemonStart = Date.now();
-		const { stdout } = await execAsync('gt status --json', { timeout: 10000 });
+		const { stdout } = await execGt('gt status --json', { timeout: 10000 });
 		const daemonResponseTime = Date.now() - daemonStart;
 		const data: GtStatus = JSON.parse(stdout);
 

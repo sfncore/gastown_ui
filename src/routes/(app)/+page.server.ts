@@ -1,8 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { exec } from 'node:child_process';
-import { promisify } from 'node:util';
-
-const execAsync = promisify(exec);
+import { execGt } from '$lib/server/gt';
 
 interface GtAgent {
 	name: string;
@@ -145,7 +142,7 @@ function transformToAgent(agent: GtAgent): DashboardAgent {
 
 export const load: PageServerLoad = async () => {
 	try {
-		const { stdout } = await execAsync('gt status --json');
+		const { stdout } = await execGt('gt status --json');
 		const status: GtStatus = JSON.parse(stdout);
 
 		// Collect all agents: top-level agents + rig agents
