@@ -6,6 +6,17 @@
 
 	type Freshness = 'fresh' | 'stale' | 'very-stale' | 'unknown';
 
+	// Derive tiers array safely to avoid Svelte 5 reactivity issues
+	const tierItems = $derived.by(() => {
+		if (!data.watchdog?.tiers) return [];
+		const { daemon, boot, deacon } = data.watchdog.tiers;
+		return [
+			{ tier: daemon, num: 1 },
+			{ tier: boot, num: 2 },
+			{ tier: deacon, num: 3 }
+		];
+	});
+
 	function getFreshnessColor(freshness: Freshness): string {
 		switch (freshness) {
 			case 'fresh':
@@ -126,11 +137,7 @@
 						<div class="absolute left-8 top-[4.5rem] h-[calc(100%-9rem)] w-0.5 bg-border hidden md:block"></div>
 
 						<div class="space-y-4 stagger">
-							{#each [
-								{ tier: data.watchdog.tiers.daemon, num: 1 },
-								{ tier: data.watchdog.tiers.boot, num: 2 },
-								{ tier: data.watchdog.tiers.deacon, num: 3 }
-							] as { tier, num }, i}
+							{#each tierItems as { tier, num }, i}
 								{#if i > 0}
 									<!-- Arrow down -->
 									<div class="flex justify-center py-1">
