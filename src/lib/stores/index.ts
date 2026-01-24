@@ -52,6 +52,8 @@ export {
 	removePolling,
 	createMultiTierPolling,
 	POLLING_TIERS,
+	POLLING_JITTER,
+	addJitter,
 	type ResourceState,
 	type PollingConfig
 } from './polling.svelte';
@@ -148,6 +150,8 @@ export {
 	useQueue,
 	type MergeQueueItem,
 	type MergeQueueStatus,
+	type MergeQueueCloseReason,
+	type MergeQueueFailureType,
 	type CIStatus,
 	type MergeableStatus,
 	type QueueFilter
