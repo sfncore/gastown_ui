@@ -19,7 +19,7 @@ import type {
 	RateLimiterState
 } from './types';
 import { DEFAULT_CLIENT_CONFIG } from './types';
-import { CSRF_COOKIES, CSRF_HEADER } from '$lib/auth/csrf.constants';
+import { CSRF_COOKIES, CSRF_HEADER } from '$lib/client/auth';
 
 /** HTTP methods that require CSRF token */
 const CSRF_REQUIRED_METHODS: HttpMethod[] = ['POST', 'PUT', 'PATCH', 'DELETE'];
