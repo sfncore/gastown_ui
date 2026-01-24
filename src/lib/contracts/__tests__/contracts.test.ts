@@ -459,44 +459,64 @@ describe('convoy contract', () => {
 import * as contracts from '../index';
 
 describe('contracts barrel export', () => {
-	it('exports bead contract', () => {
-		expect(contracts.BEAD_STORAGE_STATUSES).toBeDefined();
-		expect(contracts.BEAD_DISPLAY_STATUSES).toBeDefined();
-		expect(contracts.isValidBeadStorageStatus).toBeDefined();
-		expect(contracts.isValidBeadDisplayStatus).toBeDefined();
+	it('exports bead contract with correct values', () => {
+		expect(contracts.BEAD_STORAGE_STATUSES).toEqual(['open', 'closed']);
+		expect(contracts.BEAD_DISPLAY_STATUSES).toEqual([
+			'open',
+			'in_progress',
+			'blocked',
+			'hooked',
+			'closed'
+		]);
+		expect(typeof contracts.isValidBeadStorageStatus).toBe('function');
+		expect(typeof contracts.isValidBeadDisplayStatus).toBe('function');
 	});
 
-	it('exports mail contract', () => {
-		expect(contracts.MAIL_PRIORITIES).toBeDefined();
-		expect(contracts.MAIL_TYPES).toBeDefined();
-		expect(contracts.MAIL_DELIVERY_MODES).toBeDefined();
-		expect(contracts.isValidMailPriority).toBeDefined();
-		expect(contracts.isValidMailType).toBeDefined();
-		expect(contracts.isValidMailDelivery).toBeDefined();
-		expect(contracts.isValidMailAddress).toBeDefined();
+	it('exports mail contract with correct values', () => {
+		expect(contracts.MAIL_PRIORITIES).toEqual(['urgent', 'high', 'normal', 'low']);
+		expect(contracts.MAIL_TYPES).toEqual(['task', 'scavenge', 'notification', 'reply']);
+		expect(contracts.MAIL_DELIVERY_MODES).toEqual(['queue', 'interrupt']);
+		expect(typeof contracts.isValidMailPriority).toBe('function');
+		expect(typeof contracts.isValidMailType).toBe('function');
+		expect(typeof contracts.isValidMailDelivery).toBe('function');
+		expect(typeof contracts.isValidMailAddress).toBe('function');
 	});
 
-	it('exports polecat contract', () => {
-		expect(contracts.POLECAT_STATES).toBeDefined();
-		expect(contracts.POLECAT_DISPLAY_STATUSES).toBeDefined();
-		expect(contracts.isValidPolecatState).toBeDefined();
-		expect(contracts.isValidPolecatDisplayStatus).toBeDefined();
-		expect(contracts.polecatStateToDisplayStatus).toBeDefined();
+	it('exports polecat contract with correct values', () => {
+		expect(contracts.POLECAT_STATES).toEqual(['working', 'done', 'stuck']);
+		expect(contracts.POLECAT_DISPLAY_STATUSES).toEqual(['running', 'completing', 'stuck', 'exited']);
+		expect(typeof contracts.isValidPolecatState).toBe('function');
+		expect(typeof contracts.isValidPolecatDisplayStatus).toBe('function');
+		expect(typeof contracts.polecatStateToDisplayStatus).toBe('function');
 	});
 
-	it('exports refinery contract', () => {
-		expect(contracts.MR_STATUSES).toBeDefined();
-		expect(contracts.MR_CLOSE_REASONS).toBeDefined();
-		expect(contracts.MR_FAILURE_TYPES).toBeDefined();
-		expect(contracts.isValidMRStatus).toBeDefined();
-		expect(contracts.isValidMRCloseReason).toBeDefined();
-		expect(contracts.isValidMRFailureType).toBeDefined();
+	it('exports refinery contract with correct values', () => {
+		expect(contracts.MR_STATUSES).toEqual(['open', 'in_progress', 'closed']);
+		expect(contracts.MR_CLOSE_REASONS).toEqual(['merged', 'rejected', 'conflict', 'superseded']);
+		expect(contracts.MR_FAILURE_TYPES).toEqual([
+			'conflict',
+			'tests_fail',
+			'build_fail',
+			'flaky_test',
+			'push_fail',
+			'fetch_fail',
+			'checkout_fail'
+		]);
+		expect(typeof contracts.isValidMRStatus).toBe('function');
+		expect(typeof contracts.isValidMRCloseReason).toBe('function');
+		expect(typeof contracts.isValidMRFailureType).toBe('function');
 	});
 
-	it('exports convoy contract', () => {
-		expect(contracts.CONVOY_STORAGE_STATUSES).toBeDefined();
-		expect(contracts.CONVOY_WORK_STATUSES).toBeDefined();
-		expect(contracts.isValidConvoyStorageStatus).toBeDefined();
-		expect(contracts.isValidConvoyWorkStatus).toBeDefined();
+	it('exports convoy contract with correct values', () => {
+		expect(contracts.CONVOY_STORAGE_STATUSES).toEqual(['open', 'closed']);
+		expect(contracts.CONVOY_WORK_STATUSES).toEqual([
+			'active',
+			'stale',
+			'stuck',
+			'waiting',
+			'complete'
+		]);
+		expect(typeof contracts.isValidConvoyStorageStatus).toBe('function');
+		expect(typeof contracts.isValidConvoyWorkStatus).toBe('function');
 	});
 });
