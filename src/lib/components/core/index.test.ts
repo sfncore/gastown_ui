@@ -342,10 +342,18 @@ describe('Core Components Module Exports', () => {
 
 			// Interactive components
 			expect(exportKeys).toContain('SwipeableItem');
+			expect(exportKeys).toContain('SwipeableTabs');
 			expect(exportKeys).toContain('PullToRefresh');
 			expect(exportKeys).toContain('FloatingActionButton');
 			expect(exportKeys).toContain('TouchTarget');
 			expect(exportKeys).toContain('VirtualList');
+
+			// Form components
+			expect(exportKeys).toContain('IssueTypeSelector');
+			expect(exportKeys).toContain('issueTypeSelectorVariants');
+			expect(exportKeys).toContain('CopyCliButton');
+			expect(exportKeys).toContain('copyCliButtonVariants');
+			expect(exportKeys).toContain('ThemeToggle');
 
 			// Error handling
 			expect(exportKeys).toContain('ErrorBoundary');
