@@ -55,10 +55,13 @@ describe('AuthError', () => {
 		expect(err.code).toBe('INVALID_TOKEN');
 	});
 
-	it('is instanceof Error', () => {
+	it('is instanceof Error and AuthError', () => {
 		const err = new AuthError('test', 'EXPIRED_TOKEN');
-		expect(err).toBeInstanceOf(Error);
-		expect(err).toBeInstanceOf(AuthError);
+		// Check prototype chain properly
+		expect(Object.getPrototypeOf(err).constructor.name).toBe('AuthError');
+		expect(err.name).toBe('AuthError');
+		expect(err instanceof Error).toBe(true);
+		expect(err instanceof AuthError).toBe(true);
 	});
 });
 
@@ -74,9 +77,11 @@ describe('verifyAuth', () => {
 		const result = await verifyAuth(cookies);
 
 		expect(result.valid).toBe(true);
-		expect(result.user).toBeDefined();
-		expect(result.user?.id).toBe(TEST_USER.id);
-		expect(result.user?.email).toBe(TEST_USER.email);
+		expect(result.user).toMatchObject({
+			id: TEST_USER.id,
+			email: TEST_USER.email,
+			name: TEST_USER.name
+		});
 	});
 
 	it('returns invalid result when no token present', async () => {

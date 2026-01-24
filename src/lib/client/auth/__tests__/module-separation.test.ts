@@ -49,13 +49,16 @@ describe('Auth Module Separation', () => {
 				'$lib/client/auth/constants'
 			);
 
-			expect(CSRF_COOKIES).toBeDefined();
-			expect(CSRF_HEADER).toBeDefined();
-			expect(AUTH_COOKIES).toBeDefined();
-
-			expect(CSRF_COOKIES.CSRF_TOKEN).toBe('csrf_token');
+			expect(CSRF_COOKIES).toEqual({
+				CSRF_TOKEN: 'csrf_token',
+				CSRF_TOKEN_CLIENT: 'csrf_token_client'
+			});
 			expect(CSRF_HEADER).toBe('X-CSRF-Token');
-			expect(AUTH_COOKIES.ACCESS_TOKEN).toBe('auth_access');
+			expect(AUTH_COOKIES).toEqual({
+				ACCESS_TOKEN: 'auth_access',
+				REFRESH_TOKEN: 'auth_refresh',
+				AUTH_STATE: 'auth_state'
+			});
 		});
 
 		it('should export shared types', () => {
@@ -156,7 +159,8 @@ describe('Auth Module Separation', () => {
 
 			expect(typeof serverAuth.verifyAuth).toBe('function');
 			expect(typeof serverAuth.requireAuth).toBe('function');
-			expect(serverAuth.AuthError).toBeDefined();
+			expect(serverAuth.AuthError.name).toBe('AuthError');
+			expect(typeof serverAuth.AuthError).toBe('function');
 		});
 
 		it('should export cookie utilities', async () => {
@@ -193,9 +197,16 @@ describe('Auth Module Separation', () => {
 		it('should export shared constants', async () => {
 			const serverAuth = await import('$lib/server/auth');
 
-			expect(serverAuth.AUTH_COOKIES).toBeDefined();
-			expect(serverAuth.CSRF_COOKIES).toBeDefined();
-			expect(serverAuth.CSRF_HEADER).toBeDefined();
+			expect(serverAuth.AUTH_COOKIES).toEqual({
+				ACCESS_TOKEN: 'auth_access',
+				REFRESH_TOKEN: 'auth_refresh',
+				AUTH_STATE: 'auth_state'
+			});
+			expect(serverAuth.CSRF_COOKIES).toEqual({
+				CSRF_TOKEN: 'csrf_token',
+				CSRF_TOKEN_CLIENT: 'csrf_token_client'
+			});
+			expect(serverAuth.CSRF_HEADER).toBe('X-CSRF-Token');
 		});
 	});
 
