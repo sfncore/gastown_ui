@@ -41,7 +41,8 @@ describe('Operations Store', () => {
 			expect(operation).toBeDefined();
 			expect(operation?.name).toBe('Test Operation');
 			expect(operation?.type).toBe('api');
-			expect(operation?.status).toBe('pending');
+			// Operations without parentId auto-start immediately
+			expect(operation?.status).toBe('running');
 			expect(operation?.progress).toBe(0);
 		});
 

@@ -94,7 +94,6 @@ describe('Capabilities Probe', () => {
 			const caps = await probeCapabilities();
 
 			logger.info('bd capabilities', caps);
-			expect(caps.bdVersion).toBeTruthy();
 			expect(caps.bdVersion).toBe('0.8.1');
 			logger.success(`Detected bd version: ${caps.bdVersion}`);
 		});
@@ -224,7 +223,6 @@ describe('Capabilities Probe', () => {
 			expect(caps.gtVersion).toBeNull();
 			expect(caps.bdVersion).toBeNull();
 			expect(caps.available).toBe(false);
-			expect(caps.error).toBeTruthy();
 			expect(caps.error).toContain('CLI tools are not available');
 			logger.success('Fully degraded mode with error message');
 		});
