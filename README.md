@@ -263,7 +263,7 @@ bun test --watch
 
 ### E2E Testing
 
-See `E2E_TESTING_PLAN.md` for comprehensive testing strategy including:
+See `docs/E2E_TESTING_PLAN.md` for comprehensive testing strategy including:
 
 - **Tier 0 (Smoke)**: HTTP 200 checks (zero cost)
 - **Tier 1 (Integration)**: Data validation (zero cost)
