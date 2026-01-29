@@ -151,3 +151,7 @@ pnpm-lock.yaml
 # =============================================================================
 playwright-report/
 test-results/
+
+# Gas Town (added by gt)
+.runtime/
+.logs/
